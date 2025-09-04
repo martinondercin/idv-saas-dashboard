@@ -2,93 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Professional SaaS Identity Verification Dashboard Design System */
+/* Innovatrics Identity Verification Dashboard Design System */
 
 @layer base {
   :root {
-    /* Core palette - Professional blues and teals */
+    /* Core palette - Innovatrics brand colors */
     --background: 0 0% 100%;
-    --foreground: 215 25% 14%;
+    --foreground: 0 0% 7%;
     
-    /* Primary brand colors - Deep professional blue */
-    --primary: 215 84% 35%;
+    /* Primary brand colors - Innovatrics Dark Blue */
+    --primary: 216 94% 13%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 215 84% 45%;
-    --primary-dark: 215 84% 25%;
+    --primary-light: 213 63% 70%;
+    --primary-dark: 216 94% 8%;
     
-    /* Secondary - Sophisticated teal */
-    --secondary: 180 35% 85%;
-    --secondary-foreground: 180 45% 15%;
-    --secondary-vibrant: 180 84% 35%;
+    /* Secondary - Innovatrics Light Blue */
+    --secondary: 213 63% 70%;
+    --secondary-foreground: 216 94% 13%;
+    --secondary-vibrant: 177 100% 37%;
     
-    /* Status colors - High contrast for verification states */
-    --success: 140 70% 35%;
+    /* Status colors - Innovatrics supporting colors */
+    --success: 141 100% 34%;
     --success-foreground: 0 0% 100%;
-    --success-light: 140 70% 95%;
+    --success-light: 141 100% 95%;
     
-    --warning: 45 95% 50%;
-    --warning-foreground: 45 95% 10%;
-    --warning-light: 45 95% 95%;
+    --warning: 30 86% 53%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 30 86% 95%;
     
-    --error: 0 75% 45%;
+    --error: 3 80% 53%;
     --error-foreground: 0 0% 100%;
-    --error-light: 0 75% 95%;
+    --error-light: 3 80% 95%;
     
-    --pending: 220 60% 60%;
+    --pending: 209 100% 41%;
     --pending-foreground: 0 0% 100%;
-    --pending-light: 220 60% 95%;
+    --pending-light: 209 100% 95%;
     
-    --manual-review: 280 60% 50%;
+    --manual-review: 283 48% 41%;
     --manual-review-foreground: 0 0% 100%;
-    --manual-review-light: 280 60% 95%;
+    --manual-review-light: 283 48% 95%;
     
     /* Surface colors */
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 14%;
-    --card-border: 215 20% 90%;
+    --card-foreground: 0 0% 7%;
+    --card-border: 205 8% 90%;
     
-    --surface-elevated: 215 30% 98%;
-    --surface-variant: 215 20% 95%;
+    --surface-elevated: 205 8% 98%;
+    --surface-variant: 205 8% 95%;
     
     /* Interactive elements */
-    --muted: 215 20% 95%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 205 8% 95%;
+    --muted-foreground: 205 8% 52%;
     
-    --accent: 215 84% 35%;
+    --accent: 177 100% 37%;
     --accent-foreground: 0 0% 100%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 14%;
+    --popover-foreground: 0 0% 7%;
     
-    --border: 215 20% 90%;
-    --input: 215 20% 95%;
-    --input-border: 215 30% 80%;
-    --ring: 215 84% 35%;
+    --border: 205 8% 90%;
+    --input: 205 8% 95%;
+    --input-border: 205 8% 80%;
+    --ring: 216 94% 13%;
     
     /* Destructive actions */
-    --destructive: 0 75% 45%;
+    --destructive: 3 80% 53%;
     --destructive-foreground: 0 0% 100%;
     
     /* Sidebar specific */
-    --sidebar-background: 215 30% 98%;
-    --sidebar-foreground: 215 25% 25%;
-    --sidebar-primary: 215 84% 35%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 20% 92%;
-    --sidebar-accent-foreground: 215 25% 25%;
-    --sidebar-border: 215 20% 88%;
-    --sidebar-ring: 215 84% 35%;
+    --sidebar-background: 216 94% 13%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 213 63% 70%;
+    --sidebar-primary-foreground: 216 94% 13%;
+    --sidebar-accent: 216 94% 18%;
+    --sidebar-accent-foreground: 213 63% 70%;
+    --sidebar-border: 216 94% 20%;
+    --sidebar-ring: 213 63% 70%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(215 84% 35%), hsl(180 84% 35%));
-    --gradient-surface: linear-gradient(180deg, hsl(215 30% 98%), hsl(215 20% 95%));
-    --gradient-hero: linear-gradient(135deg, hsl(215 84% 35%) 0%, hsl(180 84% 35%) 50%, hsl(215 84% 45%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(216 94% 13%), hsl(177 100% 37%));
+    --gradient-surface: linear-gradient(180deg, hsl(205 8% 98%), hsl(205 8% 95%));
+    --gradient-hero: linear-gradient(135deg, hsl(216 94% 13%) 0%, hsl(213 63% 70%) 50%, hsl(177 100% 37%) 100%);
     
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(215 25% 14% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(215 25% 14% / 0.1), 0 2px 4px -2px hsl(215 25% 14% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(215 25% 14% / 0.1), 0 4px 6px -4px hsl(215 25% 14% / 0.1);
-    --shadow-elevated: 0 20px 25px -5px hsl(215 25% 14% / 0.1), 0 8px 10px -6px hsl(215 25% 14% / 0.1);
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 7% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 7% / 0.1), 0 2px 4px -2px hsl(0 0% 7% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 7% / 0.1), 0 4px 6px -4px hsl(0 0% 7% / 0.1);
+    --shadow-elevated: 0 20px 25px -5px hsl(0 0% 7% / 0.1), 0 8px 10px -6px hsl(0 0% 7% / 0.1);
     
     /* Layout */
     --radius: 0.5rem;
@@ -103,51 +103,51 @@
 
   .dark {
     /* Dark theme overrides */
-    --background: 215 25% 6%;
+    --background: 188 100% 18%;
     --foreground: 0 0% 98%;
     
-    --primary: 215 84% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-light: 215 84% 55%;
-    --primary-dark: 215 84% 35%;
+    --primary: 213 63% 70%;
+    --primary-foreground: 216 94% 13%;
+    --primary-light: 213 63% 80%;
+    --primary-dark: 213 63% 60%;
     
-    --secondary: 180 35% 15%;
-    --secondary-foreground: 180 35% 85%;
-    --secondary-vibrant: 180 84% 45%;
+    --secondary: 216 94% 18%;
+    --secondary-foreground: 213 63% 70%;
+    --secondary-vibrant: 177 100% 37%;
     
-    --card: 215 25% 8%;
+    --card: 188 100% 15%;
     --card-foreground: 0 0% 95%;
-    --card-border: 215 25% 15%;
+    --card-border: 188 100% 25%;
     
-    --surface-elevated: 215 25% 10%;
-    --surface-variant: 215 25% 12%;
+    --surface-elevated: 188 100% 20%;
+    --surface-variant: 188 100% 22%;
     
-    --muted: 215 25% 12%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 188 100% 22%;
+    --muted-foreground: 205 8% 65%;
     
-    --accent: 215 84% 45%;
+    --accent: 177 100% 37%;
     --accent-foreground: 0 0% 100%;
     
-    --popover: 215 25% 8%;
+    --popover: 188 100% 15%;
     --popover-foreground: 0 0% 95%;
     
-    --border: 215 25% 15%;
-    --input: 215 25% 10%;
-    --input-border: 215 25% 20%;
-    --ring: 215 84% 45%;
+    --border: 188 100% 25%;
+    --input: 188 100% 20%;
+    --input-border: 188 100% 30%;
+    --ring: 213 63% 70%;
     
-    --sidebar-background: 215 25% 7%;
+    --sidebar-background: 216 94% 8%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 215 84% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 25% 12%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 215 25% 15%;
-    --sidebar-ring: 215 84% 45%;
+    --sidebar-primary: 213 63% 70%;
+    --sidebar-primary-foreground: 216 94% 13%;
+    --sidebar-accent: 216 94% 15%;
+    --sidebar-accent-foreground: 213 63% 70%;
+    --sidebar-border: 216 94% 18%;
+    --sidebar-ring: 213 63% 70%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(215 84% 45%), hsl(180 84% 45%));
-    --gradient-surface: linear-gradient(180deg, hsl(215 25% 8%), hsl(215 25% 12%));
-    --gradient-hero: linear-gradient(135deg, hsl(215 84% 45%) 0%, hsl(180 84% 45%) 50%, hsl(215 84% 55%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(216 94% 13%), hsl(177 100% 37%));
+    --gradient-surface: linear-gradient(180deg, hsl(188 100% 15%), hsl(188 100% 22%));
+    --gradient-hero: linear-gradient(135deg, hsl(216 94% 13%) 0%, hsl(213 63% 70%) 50%, hsl(177 100% 37%) 100%);
     
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.15);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.25), 0 2px 4px -2px hsl(0 0% 0% / 0.25);
