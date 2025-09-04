@@ -115,19 +115,32 @@ export function AppSidebar() {
   return (
     <Sidebar className={cn("border-r border-sidebar-border bg-sidebar")}>
       <SidebarHeader className="border-b border-sidebar-border p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Shield className="h-4 w-4 text-primary-foreground" />
-          </div>
-          {!isCollapsed && (
-            <div>
-              <h2 className="text-lg font-semibold text-sidebar-foreground">
-                VerifyID
-              </h2>
-              <p className="text-xs text-sidebar-foreground/70">
-                Identity Dashboard
-              </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
+            {!isCollapsed && (
+              <div>
+                <h2 className="text-lg font-semibold text-sidebar-foreground">
+                  VerifyID
+                </h2>
+                <p className="text-xs text-sidebar-foreground/70">
+                  Identity Dashboard
+                </p>
+              </div>
+            )}
+          </div>
+          {isCollapsed && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setOpen(true)}
+              className="h-8 w-8 p-0 text-sidebar-foreground hover:bg-sidebar-accent"
+              title="Expand sidebar"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           )}
         </div>
       </SidebarHeader>
@@ -193,8 +206,25 @@ export function AppSidebar() {
             ))}
           </Accordion>
         ) : (
-          // Collapsed sidebar - show only icons
+          // Collapsed sidebar - show only icons with expand hint at top
           <div className="space-y-2">
+            <div className="px-2 py-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setOpen(true)}
+                className="w-full h-10 flex items-center justify-center text-sidebar-foreground hover:bg-sidebar-accent group transition-all duration-200"
+                title="Expand sidebar to see full menu"
+              >
+                <div className="relative">
+                  <ChevronRight className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <div className="absolute -right-1 -top-1 w-2 h-2 bg-primary rounded-full animate-pulse group-hover:animate-none" />
+                </div>
+              </Button>
+              <p className="text-center text-xs text-sidebar-foreground/50 mt-1 leading-tight">
+                Click to expand
+              </p>
+            </div>
             {navigationItems.map((section) => (
               <SidebarGroup key={section.title}>
                 <SidebarGroupContent>
@@ -203,13 +233,17 @@ export function AppSidebar() {
                       <SidebarMenuButton 
                         asChild
                         className={cn(
-                          "w-full justify-center transition-colors",
+                          "w-full justify-center transition-colors h-10",
                           isActiveRoute(section.url) || hasActiveChild(section.items || [])
                             ? "bg-sidebar-accent text-sidebar-accent-foreground"
                             : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                         )}
                       >
-                        <NavLink to={section.url} className="flex items-center justify-center">
+                        <NavLink 
+                          to={section.url} 
+                          className="flex items-center justify-center"
+                          title={section.title}
+                        >
                           <section.icon className="h-4 w-4" />
                         </NavLink>
                       </SidebarMenuButton>
@@ -222,23 +256,19 @@ export function AppSidebar() {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setOpen(state === "collapsed" ? true : false)}
-          className="w-full justify-center text-sidebar-foreground hover:bg-sidebar-accent"
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <>
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Collapse
-            </>
-          )}
-        </Button>
-      </SidebarFooter>
+      {!isCollapsed && (
+        <SidebarFooter className="border-t border-sidebar-border p-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setOpen(false)}
+            className="w-full justify-center text-sidebar-foreground hover:bg-sidebar-accent"
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Collapse
+          </Button>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 }
