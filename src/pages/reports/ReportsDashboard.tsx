@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { Download, Calendar, TrendingUp, AlertTriangle, Users, Clock } from "lucide-react";
 
 const transactionData = [
@@ -14,21 +13,6 @@ const transactionData = [
   { name: "Fri", completed: 1380, failed: 55, review: 35 },
   { name: "Sat", completed: 980, failed: 40, review: 28 },
   { name: "Sun", completed: 850, failed: 30, review: 22 },
-];
-
-const riskDistribution = [
-  { name: "Low Risk", value: 78, color: "#10b981" },
-  { name: "Medium Risk", value: 18, color: "#f59e0b" },
-  { name: "High Risk", value: 4, color: "#ef4444" },
-];
-
-const performanceData = [
-  { time: "00:00", avgTime: 2.1, throughput: 45 },
-  { time: "04:00", avgTime: 1.8, throughput: 32 },
-  { time: "08:00", avgTime: 2.4, throughput: 120 },
-  { time: "12:00", avgTime: 2.8, throughput: 180 },
-  { time: "16:00", avgTime: 3.1, throughput: 210 },
-  { time: "20:00", avgTime: 2.6, throughput: 150 },
 ];
 
 const customReports = [
@@ -115,22 +99,19 @@ export default function ReportsDashboard() {
 
         <TabsContent value="overview">
           <div className="grid gap-6">
-            {/* Transaction Volume Chart */}
+            {/* Transaction Volume Chart Placeholder */}
             <Card>
               <CardHeader>
                 <CardTitle>Transaction Volume (Last 7 Days)</CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={transactionData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Bar dataKey="completed" fill="hsl(var(--primary))" name="Completed" />
-                    <Bar dataKey="review" fill="hsl(var(--secondary))" name="Under Review" />
-                    <Bar dataKey="failed" fill="hsl(var(--destructive))" name="Failed" />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="h-80 flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
+                  <div className="text-center">
+                    <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-semibold">Transaction Analytics</p>
+                    <p className="text-sm text-muted-foreground">Chart visualization will be displayed here</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -141,23 +122,35 @@ export default function ReportsDashboard() {
                   <CardTitle>Risk Score Distribution</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <PieChart>
-                      <Pie
-                        data={riskDistribution}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ name, value }) => `${name}: ${value}%`}
-                      >
-                        {riskDistribution.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Low Risk (0-30)</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 h-2 bg-muted rounded-full">
+                          <div className="w-16 h-2 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">78%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Medium Risk (31-69)</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 h-2 bg-muted rounded-full">
+                          <div className="w-4 h-2 bg-yellow-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">18%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">High Risk (70-100)</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-20 h-2 bg-muted rounded-full">
+                          <div className="w-1 h-2 bg-red-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">4%</span>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -217,16 +210,13 @@ export default function ReportsDashboard() {
               <CardTitle>System Performance (24 Hours)</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={performanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="time" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
-                  <Line yAxisId="left" type="monotone" dataKey="avgTime" stroke="hsl(var(--primary))" name="Avg Processing Time (s)" />
-                  <Line yAxisId="right" type="monotone" dataKey="throughput" stroke="hsl(var(--secondary))" name="Throughput (req/min)" />
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="h-96 flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
+                <div className="text-center">
+                  <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-lg font-semibold">Performance Metrics</p>
+                  <p className="text-sm text-muted-foreground">Real-time performance charts will be displayed here</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

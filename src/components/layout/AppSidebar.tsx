@@ -142,7 +142,7 @@ export function AppSidebar() {
             {navigationItems.map((section) => (
               <AccordionItem key={section.title} value={section.title} className="border-none">
                 <AccordionTrigger className="py-2 px-3 hover:no-underline hover:bg-sidebar-accent/50 rounded-md [&[data-state=open]>div>svg]:rotate-180">
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className="flex items-center gap-3 flex-1 text-left">
                     <section.icon className="h-4 w-4 flex-shrink-0" />
                     <span className="text-sm font-medium">{section.title}</span>
                   </div>

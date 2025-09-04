@@ -15,7 +15,10 @@ import ApiKeysPage from "./pages/integration/ApiKeysPage";
 import EndpointsPage from "./pages/integration/EndpointsPage";
 import EnvironmentsPage from "./pages/integration/EnvironmentsPage";
 import TransactionsOverview from "./pages/transactions/TransactionsOverview";
+import RealTimeFeed from "./pages/transactions/RealTimeFeed";
+import FailedTransactions from "./pages/transactions/FailedTransactions";
 import CaseManagement from "./pages/cases/CaseManagement";
+import EscalationRules from "./pages/cases/EscalationRules";
 import WorkflowSettings from "./pages/workflows/WorkflowSettings";
 import ReportsDashboard from "./pages/reports/ReportsDashboard";
 import UsersAccess from "./pages/users/UsersAccess";
@@ -48,13 +51,13 @@ const App = () => (
 
           {/* Transaction Routes */}
           <Route path="/transactions" element={<DashboardLayout><TransactionsOverview /></DashboardLayout>} />
-          <Route path="/transactions/feed" element={<DashboardLayout><div className="p-8">Real-time Feed coming soon...</div></DashboardLayout>} />
-          <Route path="/transactions/failed" element={<DashboardLayout><div className="p-8">Failed Transactions coming soon...</div></DashboardLayout>} />
+          <Route path="/transactions/feed" element={<DashboardLayout><RealTimeFeed /></DashboardLayout>} />
+          <Route path="/transactions/failed" element={<DashboardLayout><FailedTransactions /></DashboardLayout>} />
 
           {/* Case Management Routes */}
           <Route path="/cases" element={<DashboardLayout><CaseManagement /></DashboardLayout>} />
           <Route path="/cases/review" element={<DashboardLayout><CaseManagement /></DashboardLayout>} />
-          <Route path="/cases/escalation" element={<DashboardLayout><div className="p-8">Escalation Rules coming soon...</div></DashboardLayout>} />
+          <Route path="/cases/escalation" element={<DashboardLayout><EscalationRules /></DashboardLayout>} />
           <Route path="/cases/details" element={<DashboardLayout><div className="p-8">Transaction Details coming soon...</div></DashboardLayout>} />
 
           {/* Workflow Routes */}
