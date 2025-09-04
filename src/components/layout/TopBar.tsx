@@ -1,0 +1,148 @@
+import { useState } from "react";
+import { Search, Bell, ChevronDown, Globe, TestTube } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
+export function TopBar() {
+  const [environment, setEnvironment] = useState("production");
+  const [tenant, setTenant] = useState("acme-corp");
+
+  return (
+    <header className="h-16 border-b border-border bg-background px-6 flex items-center justify-between">
+      {/* Left section - Tenant and Environment */}
+      <div className="flex items-center gap-4">
+        <Select value={tenant} onValueChange={setTenant}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select tenant" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="acme-corp">ACME Corporation</SelectItem>
+            <SelectItem value="tech-startup">TechStartup Inc</SelectItem>
+            <SelectItem value="fintech-co">FinTech Solutions</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <div className="flex items-center gap-2">
+          <Globe className="h-4 w-4 text-muted-foreground" />
+          <Select value={environment} onValueChange={setEnvironment}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="production">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-success" />
+                  Production
+                </div>
+              </SelectItem>
+              <SelectItem value="sandbox">
+                <div className="flex items-center gap-2">
+                  <TestTube className="w-3 h-3" />
+                  Sandbox
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Center section - Search */}
+      <div className="flex-1 max-w-md mx-8">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search transactions, customers, or settings..."
+            className="pl-10 bg-muted/30 border-border focus:bg-background"
+          />
+        </div>
+      </div>
+
+      {/* Right section - Notifications and Profile */}
+      <div className="flex items-center gap-4">
+        {/* Notifications */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5" />
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-error text-error-foreground text-xs">
+                3
+              </Badge>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="flex-col items-start p-4 cursor-pointer">
+              <div className="flex items-center justify-between w-full">
+                <span className="font-medium">SLA Breach Alert</span>
+                <Badge variant="outline" className="text-xs bg-error-light text-error">
+                  Critical
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Manual review queue has 15 transactions exceeding 24h SLA
+              </p>
+              <span className="text-xs text-muted-foreground mt-2">5 min ago</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex-col items-start p-4 cursor-pointer">
+              <div className="flex items-center justify-between w-full">
+                <span className="font-medium">High Failure Rate</span>
+                <Badge variant="outline" className="text-xs bg-warning-light text-warning">
+                  Warning
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                OCR failure rate increased to 15% in the last hour
+              </p>
+              <span className="text-xs text-muted-foreground mt-2">12 min ago</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* User Profile */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="flex items-center gap-2 px-3">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                  JD
+                </AvatarFallback>
+              </Avatar>
+              <div className="hidden md:block text-left">
+                <div className="text-sm font-medium">John Doe</div>
+                <div className="text-xs text-muted-foreground">Admin</div>
+              </div>
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile Settings</DropdownMenuItem>
+            <DropdownMenuItem>Security</DropdownMenuItem>
+            <DropdownMenuItem>API Keys</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Sign Out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+}
