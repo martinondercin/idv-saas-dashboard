@@ -162,22 +162,6 @@ export function AppSidebar() {
                 </AccordionTrigger>
                 <AccordionContent className="pb-1">
                   <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton 
-                        asChild
-                        className={cn(
-                          "w-full justify-start transition-colors ml-7",
-                          isActiveRoute(section.url)
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50"
-                        )}
-                      >
-                        <NavLink to={section.url} className="flex items-center gap-3">
-                          <span className="text-sm">Overview</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    
                     {section.items && (
                       <>
                         {section.items.map((item) => (

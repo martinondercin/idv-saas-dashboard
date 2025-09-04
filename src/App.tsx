@@ -20,7 +20,12 @@ import FailedTransactions from "./pages/transactions/FailedTransactions";
 import CaseManagement from "./pages/cases/CaseManagement";
 import EscalationRules from "./pages/cases/EscalationRules";
 import WorkflowSettings from "./pages/workflows/WorkflowSettings";
+import RuleSets from "./pages/workflows/RuleSets";
+import FeatureToggles from "./pages/workflows/FeatureToggles";
+import TransactionDetails from "./pages/cases/TransactionDetails";
 import ReportsDashboard from "./pages/reports/ReportsDashboard";
+import CustomReports from "./pages/reports/CustomReports";
+import ExportCenter from "./pages/reports/ExportCenter";
 import UsersAccess from "./pages/users/UsersAccess";
 
 const queryClient = new QueryClient();
@@ -58,19 +63,19 @@ const App = () => (
           <Route path="/cases" element={<DashboardLayout><CaseManagement /></DashboardLayout>} />
           <Route path="/cases/review" element={<DashboardLayout><CaseManagement /></DashboardLayout>} />
           <Route path="/cases/escalation" element={<DashboardLayout><EscalationRules /></DashboardLayout>} />
-          <Route path="/cases/details" element={<DashboardLayout><div className="p-8">Transaction Details coming soon...</div></DashboardLayout>} />
+          <Route path="/cases/details" element={<DashboardLayout><TransactionDetails /></DashboardLayout>} />
 
           {/* Workflow Routes */}
           <Route path="/workflows" element={<DashboardLayout><WorkflowSettings /></DashboardLayout>} />
           <Route path="/workflows/risk-scoring" element={<DashboardLayout><WorkflowSettings /></DashboardLayout>} />
-          <Route path="/workflows/rules" element={<DashboardLayout><div className="p-8">Rule Sets coming soon...</div></DashboardLayout>} />
-          <Route path="/workflows/features" element={<DashboardLayout><div className="p-8">Feature Toggles coming soon...</div></DashboardLayout>} />
+          <Route path="/workflows/rules" element={<DashboardLayout><RuleSets /></DashboardLayout>} />
+          <Route path="/workflows/features" element={<DashboardLayout><FeatureToggles /></DashboardLayout>} />
 
           {/* Reports Routes */}
           <Route path="/reports" element={<DashboardLayout><ReportsDashboard /></DashboardLayout>} />
           <Route path="/reports/kpi" element={<DashboardLayout><ReportsDashboard /></DashboardLayout>} />
-          <Route path="/reports/custom" element={<DashboardLayout><div className="p-8">Custom Reports coming soon...</div></DashboardLayout>} />
-          <Route path="/reports/export" element={<DashboardLayout><div className="p-8">Export Center coming soon...</div></DashboardLayout>} />
+          <Route path="/reports/custom" element={<DashboardLayout><CustomReports /></DashboardLayout>} />
+          <Route path="/reports/export" element={<DashboardLayout><ExportCenter /></DashboardLayout>} />
 
           {/* Users Routes */}
           <Route path="/users" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
