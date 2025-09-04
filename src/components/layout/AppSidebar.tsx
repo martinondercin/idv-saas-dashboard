@@ -226,7 +226,7 @@ export function AppSidebar() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setOpen(!isCollapsed)}
+          onClick={() => setOpen(state === "collapsed" ? true : false)}
           className="w-full justify-center text-sidebar-foreground hover:bg-sidebar-accent"
         >
           {isCollapsed ? (

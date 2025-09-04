@@ -12,10 +12,13 @@ import NotFound from "./pages/NotFound";
 
 // Page imports
 import ApiKeysPage from "./pages/integration/ApiKeysPage";
+import EndpointsPage from "./pages/integration/EndpointsPage";
+import EnvironmentsPage from "./pages/integration/EnvironmentsPage";
 import TransactionsOverview from "./pages/transactions/TransactionsOverview";
 import CaseManagement from "./pages/cases/CaseManagement";
 import WorkflowSettings from "./pages/workflows/WorkflowSettings";
 import ReportsDashboard from "./pages/reports/ReportsDashboard";
+import UsersAccess from "./pages/users/UsersAccess";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +43,8 @@ const App = () => (
           {/* Integration Routes */}
           <Route path="/integration" element={<DashboardLayout><ApiKeysPage /></DashboardLayout>} />
           <Route path="/integration/api-keys" element={<DashboardLayout><ApiKeysPage /></DashboardLayout>} />
-          <Route path="/integration/endpoints" element={<DashboardLayout><div className="p-8">Endpoint Configuration coming soon...</div></DashboardLayout>} />
-          <Route path="/integration/environments" element={<DashboardLayout><div className="p-8">Environment Settings coming soon...</div></DashboardLayout>} />
+          <Route path="/integration/endpoints" element={<DashboardLayout><EndpointsPage /></DashboardLayout>} />
+          <Route path="/integration/environments" element={<DashboardLayout><EnvironmentsPage /></DashboardLayout>} />
 
           {/* Transaction Routes */}
           <Route path="/transactions" element={<DashboardLayout><TransactionsOverview /></DashboardLayout>} />
@@ -67,10 +70,10 @@ const App = () => (
           <Route path="/reports/export" element={<DashboardLayout><div className="p-8">Export Center coming soon...</div></DashboardLayout>} />
 
           {/* Users Routes */}
-          <Route path="/users" element={<DashboardLayout><div className="p-8">Users & Access pages coming soon...</div></DashboardLayout>} />
-          <Route path="/users/roles" element={<DashboardLayout><div className="p-8">Role Management coming soon...</div></DashboardLayout>} />
-          <Route path="/users/sso" element={<DashboardLayout><div className="p-8">SSO & MFA coming soon...</div></DashboardLayout>} />
-          <Route path="/users/audit" element={<DashboardLayout><div className="p-8">Audit Log coming soon...</div></DashboardLayout>} />
+          <Route path="/users" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
+          <Route path="/users/roles" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
+          <Route path="/users/sso" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
+          <Route path="/users/audit" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
