@@ -198,6 +198,20 @@
   .focus-ring:focus {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
+  
+  /* Fade-in animation for tiles */
+  .animate-fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {

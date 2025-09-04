@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Shield, Lock, Eye } from "lucide-react";
+import { Shield, Settings, BarChart3, Users, CheckCircle } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,40 +33,70 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Brand Section */}
+      {/* Left Side - Brand Section with Moving Tiles */}
       <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-hero opacity-90" />
+        <div className="absolute inset-0 bg-gradient-hero" />
         
-        {/* Geometric Background Elements */}
+        {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-32 h-32 border-2 border-secondary/30 rounded-full" />
-          <div className="absolute top-40 right-32 w-4 h-4 bg-accent rounded-full" />
-          <div className="absolute bottom-32 left-32 w-2 h-24 bg-secondary/40 transform rotate-45" />
-          <div className="absolute bottom-20 right-20 w-16 h-16 border border-secondary/50 transform rotate-12" />
+          {/* Floating geometric shapes */}
+          <div className="absolute top-20 left-20 w-16 h-16 border-2 border-secondary/20 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }} />
+          <div className="absolute top-32 right-32 w-3 h-3 bg-accent rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-40 left-16 w-8 h-8 border border-secondary/30 transform rotate-45 animate-spin" style={{ animationDuration: '8s' }} />
+          <div className="absolute bottom-32 right-24 w-12 h-12 border-2 border-secondary/20 rounded-lg animate-pulse" style={{ animationDelay: '2s' }} />
           
-          {/* Tech Pattern */}
-          <div className="absolute top-1/2 left-1/4 transform -translate-y-1/2">
-            <div className="relative">
-              <Shield className="w-24 h-24 text-secondary/80" />
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-                <Lock className="w-4 h-4 text-primary" />
-              </div>
-            </div>
-          </div>
-          
-          {/* Dotted lines */}
-          <div className="absolute top-1/3 left-1/3 w-32 h-px bg-gradient-to-r from-transparent via-secondary/60 to-transparent" />
-          <div className="absolute bottom-1/3 right-1/4 w-24 h-px bg-gradient-to-l from-transparent via-accent/60 to-transparent transform rotate-45" />
+          {/* Moving dotted lines */}
+          <div className="absolute top-1/3 left-1/4 w-24 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent animate-pulse" />
+          <div className="absolute bottom-1/3 right-1/4 w-32 h-px bg-gradient-to-l from-transparent via-accent/40 to-transparent transform rotate-45 animate-pulse" style={{ animationDelay: '1.5s' }} />
         </div>
         
         <div className="relative z-10 flex flex-col justify-center px-12 text-primary-foreground">
-          <div className="max-w-md">
+          <div className="max-w-md mb-12">
             <h1 className="text-4xl font-bold mb-6">
               Secure Identity Verification
             </h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
               Protect your business with our advanced verification services
             </p>
+          </div>
+          
+          {/* Moving Feature Tiles */}
+          <div className="space-y-6">
+            {/* Integration & Configuration Tile */}
+            <div className="flex items-center space-x-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 transform transition-transform duration-300 hover:translate-x-2 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Settings className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-primary-foreground">Integration & Configuration</h3>
+                <p className="text-sm text-primary-foreground/80">API keys, webhooks, and endpoint management</p>
+              </div>
+              <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
+            </div>
+            
+            {/* Real-time Monitoring Tile */}
+            <div className="flex items-center space-x-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 transform transition-transform duration-300 hover:translate-x-2 animate-fade-in" style={{ animationDelay: '1s' }}>
+              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-primary-foreground">Real-time Monitoring</h3>
+                <p className="text-sm text-primary-foreground/80">Live transaction feeds and performance metrics</p>
+              </div>
+              <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
+            </div>
+            
+            {/* Case Management Tile */}
+            <div className="flex items-center space-x-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 transform transition-transform duration-300 hover:translate-x-2 animate-fade-in" style={{ animationDelay: '1.5s' }}>
+              <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-secondary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-primary-foreground">Case Management</h3>
+                <p className="text-sm text-primary-foreground/80">Manual review queue and escalation rules</p>
+              </div>
+              <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
+            </div>
           </div>
         </div>
       </div>
