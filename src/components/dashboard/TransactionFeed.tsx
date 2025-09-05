@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Eye, Download } from "lucide-react";
+import { ExternalLink, Eye, Download, Filter } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -71,25 +79,86 @@ const mockTransactions: Transaction[] = [
 ];
 
 export function TransactionFeed() {
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [flowTypeFilter, setFlowTypeFilter] = useState("all");
+  const [regionFilter, setRegionFilter] = useState("all");
+
   const getRiskScoreColor = (score: number) => {
     if (score >= 0.8) return "bg-error-light text-error";
     if (score >= 0.5) return "bg-warning-light text-warning";
     return "bg-success-light text-success";
   };
 
+  const filteredTransactions = mockTransactions.filter(transaction => {
+    if (statusFilter !== "all" && transaction.status !== statusFilter) return false;
+    if (flowTypeFilter !== "all" && transaction.flowType !== flowTypeFilter) return false;
+    if (regionFilter !== "all" && transaction.region !== regionFilter) return false;
+    return true;
+  });
+
+  const uniqueFlowTypes = [...new Set(mockTransactions.map(t => t.flowType))];
+  const uniqueRegions = [...new Set(mockTransactions.map(t => t.region))];
+
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-semibold">Real-time Transaction Feed</CardTitle>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button variant="outline" size="sm">
-            <ExternalLink className="h-4 w-4 mr-2" />
-            View All
-          </Button>
+      <CardHeader>
+        <div className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg font-semibold">Real-time Transaction Feed</CardTitle>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button variant="outline" size="sm">
+              <ExternalLink className="h-4 w-4 mr-2" />
+              View All
+            </Button>
+          </div>
+        </div>
+        
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 mt-4">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">Filters:</span>
+          </div>
+          
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="success">Success</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="error">Error</SelectItem>
+              <SelectItem value="manual-review">Manual Review</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={flowTypeFilter} onValueChange={setFlowTypeFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Flow Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Flow Types</SelectItem>
+              {uniqueFlowTypes.map(flowType => (
+                <SelectItem key={flowType} value={flowType}>{flowType}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={regionFilter} onValueChange={setRegionFilter}>
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="Region" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Regions</SelectItem>
+              {uniqueRegions.map(region => (
+                <SelectItem key={region} value={region}>{region}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
       <CardContent>
@@ -107,7 +176,7 @@ export function TransactionFeed() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockTransactions.map((transaction) => (
+            {filteredTransactions.map((transaction) => (
               <TableRow key={transaction.id} className="hover:bg-muted/50">
                 <TableCell className="font-mono text-sm">
                   {transaction.id}

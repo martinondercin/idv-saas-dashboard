@@ -69,115 +69,41 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {/* System Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5" />
-              System Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm">API Gateway</span>
-              <Badge className="bg-success-light text-success">
-                Operational
-              </Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">OCR Service</span>
-              <Badge className="bg-success-light text-success">
-                Operational
-              </Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Liveness Detection</span>
-              <Badge className="bg-warning-light text-warning">
-                Degraded
-              </Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Webhook Delivery</span>
-              <Badge className="bg-success-light text-success">
-                Operational
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button variant="outline" className="w-full justify-start">
-              <Users className="h-4 w-4 mr-2" />
-              Review Queue (15)
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <Settings className="h-4 w-4 mr-2" />
-              Configure Webhooks
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Generate Report
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <AlertTriangle className="h-4 w-4 mr-2" />
-              View Alerts
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Recent Alerts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5" />
-              Recent Alerts
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-error flex-shrink-0 mt-2" />
-                <div>
-                  <p className="text-sm font-medium">SLA Breach</p>
-                  <p className="text-xs text-muted-foreground">
-                    Manual review queue exceeding 24h SLA
-                  </p>
-                  <p className="text-xs text-muted-foreground">5 min ago</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-warning flex-shrink-0 mt-2" />
-                <div>
-                  <p className="text-sm font-medium">High Failure Rate</p>
-                  <p className="text-xs text-muted-foreground">
-                    OCR service showing 15% failure rate
-                  </p>
-                  <p className="text-xs text-muted-foreground">12 min ago</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-success flex-shrink-0 mt-2" />
-                <div>
-                  <p className="text-sm font-medium">System Recovery</p>
-                  <p className="text-xs text-muted-foreground">
-                    Liveness service back to normal
-                  </p>
-                  <p className="text-xs text-muted-foreground">1h ago</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* System Status */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            System Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">API Gateway</span>
+            <Badge className="bg-success-light text-success">
+              Operational
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">OCR Service</span>
+            <Badge className="bg-success-light text-success">
+              Operational
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Liveness Detection</span>
+            <Badge className="bg-warning-light text-warning">
+              Degraded
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Webhook Delivery</span>
+            <Badge className="bg-success-light text-success">
+              Operational
+            </Badge>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Transaction Feed */}
       <TransactionFeed />

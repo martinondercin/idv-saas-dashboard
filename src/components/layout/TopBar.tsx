@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Bell, ChevronDown, Globe, TestTube } from "lucide-react";
+import { Search, Bell, ChevronDown, Globe, TestTube, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,23 +22,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function TopBar() {
   const [environment, setEnvironment] = useState("production");
-  const [tenant, setTenant] = useState("acme-corp");
+  const [language, setLanguage] = useState("en");
 
   return (
     <header className="h-16 border-b border-border bg-background px-6 flex items-center justify-between">
-      {/* Left section - Tenant and Environment */}
+      {/* Left section - Environment and Language */}
       <div className="flex items-center gap-4">
-        <Select value={tenant} onValueChange={setTenant}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select tenant" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="acme-corp">ACME Corporation</SelectItem>
-            <SelectItem value="tech-startup">TechStartup Inc</SelectItem>
-            <SelectItem value="fintech-co">FinTech Solutions</SelectItem>
-          </SelectContent>
-        </Select>
-
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-muted-foreground" />
           <Select value={environment} onValueChange={setEnvironment}>
@@ -58,6 +47,23 @@ export function TopBar() {
                   Sandbox
                 </div>
               </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Languages className="h-4 w-4 text-muted-foreground" />
+          <Select value={language} onValueChange={setLanguage}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="es">Español</SelectItem>
+              <SelectItem value="fr">Français</SelectItem>
+              <SelectItem value="de">Deutsch</SelectItem>
+              <SelectItem value="it">Italiano</SelectItem>
+              <SelectItem value="pt">Português</SelectItem>
             </SelectContent>
           </Select>
         </div>
