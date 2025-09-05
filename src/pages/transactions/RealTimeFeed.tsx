@@ -87,11 +87,11 @@ const liveTransactions: Transaction[] = [
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "Accepted":
-      return <Badge variant="default">Accepted</Badge>;
+      return <Badge variant="success">Accepted</Badge>;
     case "Under Review":
-      return <Badge variant="outline">Under Review</Badge>;
+      return <Badge variant="warning">Under Review</Badge>;
     case "Rejected":
-      return <Badge variant="destructive">Rejected</Badge>;
+      return <Badge variant="muted">Rejected</Badge>;
     default:
       return <Badge variant="secondary">{status}</Badge>;
   }
