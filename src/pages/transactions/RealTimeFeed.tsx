@@ -80,7 +80,7 @@ const liveTransactions: Transaction[] = [
     status: "Accepted",
     country: "CA", 
     riskScore: 18,
-    stage: "Completed"
+    stage: "Final Review"
   }
 ];
 
@@ -125,7 +125,7 @@ export default function RealTimeFeed() {
         status: ["Under Review", "Accepted", "Rejected"][Math.floor(Math.random() * 3)],
         country: ["US", "GB", "DE", "FR", "CA", "AU"][Math.floor(Math.random() * 6)],
         riskScore: Math.floor(Math.random() * 100),
-        stage: ["Document Analysis", "Face Match", "Liveness Detection", "Final Review", "Quality Check"][Math.floor(Math.random() * 5)]
+        stage: ["Document Analysis", "Face Match", "Liveness Detection", "Final Review", "Quality Check", "Manual Review"][Math.floor(Math.random() * 6)]
       };
       
       setTransactions(prev => [newTransaction, ...prev.slice(0, 19)]);
@@ -169,7 +169,7 @@ export default function RealTimeFeed() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">127</div>
-            <p className="text-xs text-muted-foreground">Currently processing</p>
+            <p className="text-xs text-muted-foreground">Currently active</p>
           </CardContent>
         </Card>
         <Card>
