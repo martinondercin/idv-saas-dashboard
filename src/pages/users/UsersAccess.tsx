@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Users, Shield, Key, Activity, Plus, Edit, Trash2, Search } from "lucide-react";
 
 const users = [
@@ -139,14 +140,22 @@ const getRoleBadge = (role: string, color: string) => {
 
 export default function UsersAccess() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Users & Access Management</h1>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New User
-        </Button>
-      </div>
+    <TooltipProvider>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Users & Access Management</h1>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add New User
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Create a new user account</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -247,12 +256,26 @@ export default function UsersAccess() {
                       <TableCell>{user.lastLogin}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Edit user profile</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Delete user account</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -278,10 +301,17 @@ export default function UsersAccess() {
                       </CardTitle>
                       <p className="text-sm text-muted-foreground mt-1">{role.description}</p>
                     </div>
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit Role
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Role
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Modify role permissions</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -322,9 +352,16 @@ export default function UsersAccess() {
                       <Badge variant={provider.status === "Connected" ? "default" : "secondary"}>
                         {provider.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
-                        {provider.status === "Connected" ? "Configure" : "Connect"}
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            {provider.status === "Connected" ? "Configure" : "Connect"}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{provider.status === "Connected" ? "Configure SSO settings" : "Connect SSO provider"}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 ))}
@@ -379,10 +416,17 @@ export default function UsersAccess() {
                       <SelectItem value="user">User Management</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="outline">
-                    <Search className="h-4 w-4 mr-2" />
-                    Export Log
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline">
+                        <Search className="h-4 w-4 mr-2" />
+                        Export Log
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Export audit log to file</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               </div>
             </CardHeader>
@@ -420,5 +464,6 @@ export default function UsersAccess() {
         </TabsContent>
       </Tabs>
     </div>
+    </TooltipProvider>
   );
 }

@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Server, Globe, Shield, Database, Plus, Settings, AlertTriangle } from "lucide-react";
 
 const environments = [
@@ -98,14 +99,22 @@ const getLoadColor = (load: number) => {
 
 export default function EnvironmentsPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Environment Settings</h1>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          New Environment
-        </Button>
-      </div>
+    <TooltipProvider>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Environment Settings</h1>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                New Environment
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Create a new deployment environment</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -174,10 +183,17 @@ export default function EnvironmentsPage() {
                         Region: {env.region} • {env.instances} instances
                       </p>
                     </div>
-                    <Button variant="outline" size="sm">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Configure
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Settings className="h-4 w-4 mr-2" />
+                          Configure
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Configure environment parameters</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -235,9 +251,16 @@ export default function EnvironmentsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       {getStatusBadge(db.status)}
-                      <Button variant="outline" size="sm">
-                        Configure
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            Configure
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Configure database connection</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </CardHeader>
@@ -273,10 +296,17 @@ export default function EnvironmentsPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Environment Variables</CardTitle>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Variable
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Variable
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add new environment variable</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -339,5 +369,6 @@ export default function EnvironmentsPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </TooltipProvider>
   );
 }

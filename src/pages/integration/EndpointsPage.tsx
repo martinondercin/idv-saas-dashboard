@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Globe, Server, Settings, Plus, Edit, Trash2, Activity } from "lucide-react";
 
 const endpoints = [
@@ -115,14 +116,22 @@ const getStatusBadge = (status: string) => {
 
 export default function EndpointsPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Endpoint Configuration</h1>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Endpoint
-        </Button>
-      </div>
+    <TooltipProvider>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Endpoint Configuration</h1>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Endpoint
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Create a new API endpoint configuration</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -210,12 +219,26 @@ export default function EndpointsPage() {
                       <TableCell>{endpoint.requests24h.toLocaleString()}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Settings className="h-4 w-4" />
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Edit endpoint configuration</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <Settings className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Configure endpoint settings</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -241,10 +264,17 @@ export default function EndpointsPage() {
                         {env.baseUrl}
                       </p>
                     </div>
-                    <Button variant="outline" size="sm">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Configure
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Settings className="h-4 w-4 mr-2" />
+                          Configure
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Configure environment settings</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -303,15 +333,23 @@ export default function EndpointsPage() {
               ))}
               
               <div className="pt-4 border-t">
-                <Button variant="outline" className="w-full">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Adjust Rate Limits
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" className="w-full">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Adjust Rate Limits
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Modify rate limiting rules</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
+    </TooltipProvider>
   );
 }

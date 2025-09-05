@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Key, Plus, RotateCw, Trash2 } from "lucide-react";
 
 const apiKeys = [
@@ -17,14 +18,22 @@ const webhooks = [
 
 export default function ApiKeysPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">API Keys & Webhooks</h1>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          New API Key
-        </Button>
-      </div>
+    <TooltipProvider>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">API Keys & Webhooks</h1>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                New API Key
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Create a new API key for integration</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
       <div className="grid gap-6">
         {/* API Keys Section */}
@@ -67,12 +76,26 @@ export default function ApiKeysPage() {
                     <TableCell>{key.lastUsed}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">
-                          <RotateCw className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <RotateCw className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Regenerate API key</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Delete API key</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -99,8 +122,22 @@ export default function ApiKeysPage() {
                       </Badge>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="sm">Edit</Button>
-                      <Button variant="ghost" size="sm">Test</Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="sm">Edit</Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Edit webhook configuration</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="sm">Test</Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Send test webhook payload</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                   <div className="text-sm text-muted-foreground">
@@ -113,5 +150,6 @@ export default function ApiKeysPage() {
         </Card>
       </div>
     </div>
+    </TooltipProvider>
   );
 }
