@@ -267,6 +267,81 @@ export default function RealTimeFeed() {
         </CardContent>
       </Card>
 
+      {/* Manual Review Queue */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Manual Review Queue</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="max-h-96 overflow-y-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Last Update</TableHead>
+                  <TableHead>Verification type</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Session ID</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.filter(t => t.status === "Under Review").map((transaction, index) => (
+                  <TableRow 
+                    key={transaction.id}
+                    className={`cursor-pointer hover:bg-muted/50 ${index === 0 && autoRefresh ? 'bg-primary/5' : ''}`}
+                  >
+                    <TableCell className="font-medium">
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {transaction.timestamp}
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {transaction.type}
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {transaction.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        <div>
+                          <div className="font-medium text-sm">{transaction.sessionId}</div>
+                          <div className="text-xs text-muted-foreground">{transaction.userId}</div>
+                        </div>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {getStatusBadge(transaction.status)}
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Link to={`/transactions/${transaction.id}`}>
+                          <Button size="sm" variant="default">
+                            Review
+                          </Button>
+                        </Link>
+                        <Button size="sm" variant="outline" onClick={() => {
+                          // Handle escalation
+                          console.log(`Escalating transaction ${transaction.id} to supervisor`);
+                        }}>
+                          Escalate
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Transaction List */}
       <Card>
         <CardHeader>

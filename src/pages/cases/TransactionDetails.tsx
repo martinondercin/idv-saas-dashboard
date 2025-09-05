@@ -304,11 +304,36 @@ export default function TransactionDetails() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button className="w-full" variant="default">
+              <Button 
+                className="w-full" 
+                variant="default"
+                onClick={() => {
+                  console.log(`Approving transaction ${id}`);
+                  // Handle approval logic
+                }}
+              >
                 Approve Transaction
               </Button>
-              <Button className="w-full" variant="destructive">
-                Decline Transaction
+              <Button 
+                className="w-full" 
+                variant="destructive"
+                onClick={() => {
+                  console.log(`Rejecting transaction ${id}`);
+                  // Handle rejection logic
+                }}
+              >
+                Reject Transaction
+              </Button>
+              <Button 
+                className="w-full" 
+                variant="outline"
+                onClick={() => {
+                  console.log(`Escalating transaction ${id} to supervisor`);
+                  // Handle escalation logic
+                }}
+              >
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                Escalate to Supervisor
               </Button>
               <Button className="w-full" variant="outline">
                 Request More Info
