@@ -29,7 +29,7 @@ const liveTransactions: Transaction[] = [
     name: "John Smith",
     userId: "usr_98765",
     type: "Full Identity Verification",
-    status: "Processing",
+    status: "Under Review",
     country: "US",
     riskScore: 25,
     stage: "Document Analysis"
@@ -41,7 +41,7 @@ const liveTransactions: Transaction[] = [
     name: "Emma Johnson",
     userId: "usr_54321",
     type: "Age Verification",
-    status: "Completed",
+    status: "Accepted",
     country: "GB",
     riskScore: 15,
     stage: "Final Review"
@@ -53,7 +53,7 @@ const liveTransactions: Transaction[] = [
     name: "Hans Mueller",
     userId: "usr_13579",
     type: "OCR", 
-    status: "Failed",
+    status: "Rejected",
     country: "DE",
     riskScore: 85,
     stage: "Quality Check"
@@ -77,7 +77,7 @@ const liveTransactions: Transaction[] = [
     name: "Sarah Wilson",
     userId: "usr_11223",
     type: "Full Identity Verification",
-    status: "Completed",
+    status: "Accepted",
     country: "CA", 
     riskScore: 18,
     stage: "Completed"
@@ -86,14 +86,12 @@ const liveTransactions: Transaction[] = [
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case "Completed":
-      return <Badge variant="default">Completed</Badge>;
-    case "Processing":
-      return <Badge variant="secondary">Processing</Badge>;
+    case "Accepted":
+      return <Badge variant="default">Accepted</Badge>;
     case "Under Review":
       return <Badge variant="outline">Under Review</Badge>;
-    case "Failed":
-      return <Badge variant="destructive">Failed</Badge>;
+    case "Rejected":
+      return <Badge variant="destructive">Rejected</Badge>;
     default:
       return <Badge variant="secondary">{status}</Badge>;
   }
@@ -124,7 +122,7 @@ export default function RealTimeFeed() {
         name: names[Math.floor(Math.random() * names.length)],
         userId: `usr_${userId}`,
         type: ["Full Identity Verification", "Age Verification", "Passive Liveness Check", "OCR"][Math.floor(Math.random() * 4)],
-        status: ["Processing", "Completed", "Under Review", "Failed"][Math.floor(Math.random() * 4)],
+        status: ["Under Review", "Accepted", "Rejected"][Math.floor(Math.random() * 3)],
         country: ["US", "GB", "DE", "FR", "CA", "AU"][Math.floor(Math.random() * 6)],
         riskScore: Math.floor(Math.random() * 100),
         stage: ["Document Analysis", "Face Match", "Liveness Detection", "Final Review", "Quality Check"][Math.floor(Math.random() * 5)]
@@ -230,10 +228,9 @@ export default function RealTimeFeed() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all-status">All Status</SelectItem>
-                  <SelectItem value="processing">Processing</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="failed">Failed</SelectItem>
-                  <SelectItem value="review">Under Review</SelectItem>
+                  <SelectItem value="under-review">Under Review</SelectItem>
+                  <SelectItem value="accepted">Accepted</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
               <Button variant="outline" size="sm">
