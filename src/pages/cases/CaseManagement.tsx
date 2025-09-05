@@ -6,6 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Clock, User, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const pendingCases = [
   {
@@ -84,6 +86,28 @@ const getResolutionBadge = (resolution: string) => {
 };
 
 export default function CaseManagement() {
+  const { toast } = useToast();
+  const [cases, setCases] = useState(pendingCases);
+  const [escalatedCases, setEscalatedCases] = useState<any[]>([]);
+
+  const handleEscalate = (caseItem: any) => {
+    // Move case to escalated cases
+    setEscalatedCases(prev => [...prev, {
+      ...caseItem,
+      escalatedAt: new Date().toLocaleString('sv-SE').replace(' ', ' '),
+      escalatedBy: "Current User", // In real app, get from auth context
+      supervisorAssigned: "Supervisor Team"
+    }]);
+    
+    // Remove from pending cases
+    setCases(prev => prev.filter(c => c.id !== caseItem.id));
+    
+    // Show success toast
+    toast({
+      title: "Case Escalated",
+      description: `Case ${caseItem.id} has been escalated to supervisor for assessment.`,
+    });
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -187,7 +211,7 @@ export default function CaseManagement() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pendingCases.map((case_) => (
+                  {cases.map((case_) => (
                     <TableRow key={case_.id}>
                       <TableCell className="font-mono text-sm">{case_.id}</TableCell>
                       <TableCell className="font-mono text-sm">{case_.transactionId}</TableCell>
@@ -202,7 +226,13 @@ export default function CaseManagement() {
                           <Link to={`/transactions/${case_.transactionId}`}>
                             <Button size="sm" variant="default">Review</Button>
                           </Link>
-                          <Button size="sm" variant="outline">Escalate</Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleEscalate(case_)}
+                          >
+                            Escalate
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -259,10 +289,47 @@ export default function CaseManagement() {
               <CardTitle>Escalated Cases</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8">
-                <XCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No escalated cases at the moment</p>
-              </div>
+              {escalatedCases.length === 0 ? (
+                <div className="text-center py-8">
+                  <XCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No escalated cases at the moment</p>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Case ID</TableHead>
+                      <TableHead>Transaction ID</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Priority</TableHead>
+                      <TableHead>Escalated By</TableHead>
+                      <TableHead>Escalated At</TableHead>
+                      <TableHead>Supervisor Assigned</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {escalatedCases.map((case_) => (
+                      <TableRow key={case_.id}>
+                        <TableCell className="font-mono text-sm">{case_.id}</TableCell>
+                        <TableCell className="font-mono text-sm">{case_.transactionId}</TableCell>
+                        <TableCell>{case_.type}</TableCell>
+                        <TableCell>{getPriorityBadge(case_.priority)}</TableCell>
+                        <TableCell>{case_.escalatedBy}</TableCell>
+                        <TableCell>{case_.escalatedAt}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">{case_.supervisorAssigned}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Link to={`/transactions/${case_.transactionId}`}>
+                            <Button size="sm" variant="ghost">View Details</Button>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
