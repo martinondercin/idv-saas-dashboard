@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useParams } from "react-router-dom";
 import { 
   User, 
   CreditCard, 
@@ -74,12 +75,16 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function TransactionDetails() {
+  const { id } = useParams<{ id: string }>();
+  
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Transaction Details</h1>
-          <p className="text-muted-foreground">Comprehensive transaction analysis and review</p>
+          <p className="text-muted-foreground">
+            Comprehensive transaction analysis and review {id && `- Transaction ID: ${id}`}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">
@@ -108,7 +113,7 @@ export default function TransactionDetails() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Transaction ID</label>
-                  <p className="font-mono text-sm bg-muted p-2 rounded">{mockTransaction.id}</p>
+                  <p className="font-mono text-sm bg-muted p-2 rounded">{id || mockTransaction.id}</p>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Type</label>

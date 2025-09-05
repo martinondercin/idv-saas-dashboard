@@ -6,11 +6,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const liveTransactions = [
+interface Transaction {
+  id: string;
+  sessionId: string;
+  timestamp: string;
+  name: string;
+  userId: string;
+  type: string;
+  status: string;
+  country: string;
+  riskScore: number;
+  stage: string;
+}
+
+const liveTransactions: Transaction[] = [
   {
     id: "txn_live_001",
+    sessionId: "sess_98765_001",
     timestamp: "2024-01-22 15:42:33",
+    name: "John Smith",
     userId: "usr_98765",
     type: "Full Identity Verification",
     status: "Processing",
@@ -19,8 +35,10 @@ const liveTransactions = [
     stage: "Document Analysis"
   },
   {
-    id: "txn_live_002", 
+    id: "txn_live_002",
+    sessionId: "sess_54321_002", 
     timestamp: "2024-01-22 15:42:31",
+    name: "Emma Johnson",
     userId: "usr_54321",
     type: "Age Verification",
     status: "Completed",
@@ -30,7 +48,9 @@ const liveTransactions = [
   },
   {
     id: "txn_live_003",
+    sessionId: "sess_13579_003",
     timestamp: "2024-01-22 15:42:28",
+    name: "Hans Mueller",
     userId: "usr_13579",
     type: "OCR", 
     status: "Failed",
@@ -40,7 +60,9 @@ const liveTransactions = [
   },
   {
     id: "txn_live_004",
+    sessionId: "sess_24680_004",
     timestamp: "2024-01-22 15:42:26",
+    name: "Marie Dubois",
     userId: "usr_24680",
     type: "Passive Liveness Check",
     status: "Under Review",
@@ -50,7 +72,9 @@ const liveTransactions = [
   },
   {
     id: "txn_live_005",
+    sessionId: "sess_11223_005",
     timestamp: "2024-01-22 15:42:23",
+    name: "Sarah Wilson",
     userId: "usr_11223",
     type: "Full Identity Verification",
     status: "Completed",
@@ -83,7 +107,7 @@ const getRiskColor = (score: number) => {
 
 export default function RealTimeFeed() {
   const [isLive, setIsLive] = useState(true);
-  const [transactions, setTransactions] = useState(liveTransactions);
+  const [transactions, setTransactions] = useState<Transaction[]>(liveTransactions);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
@@ -93,7 +117,7 @@ export default function RealTimeFeed() {
       // Simulate new transaction
       const names = ["Alex Morgan", "David Chen", "Lisa Garcia", "Michael Brown", "Sophie Anderson", "James Taylor"];
       const userId = Math.floor(Math.random() * 100000);
-      const newTransaction = {
+      const newTransaction: Transaction = {
         id: `txn_live_${Date.now()}`,
         sessionId: `sess_${userId}_${Date.now().toString().slice(-3)}`,
         timestamp: new Date().toLocaleString('sv-SE').replace(' ', ' '),
@@ -264,25 +288,35 @@ export default function RealTimeFeed() {
                 {transactions.map((transaction, index) => (
                   <TableRow 
                     key={transaction.id}
-                    className={index === 0 && autoRefresh ? 'bg-primary/5' : ''}
+                    className={`cursor-pointer hover:bg-muted/50 ${index === 0 && autoRefresh ? 'bg-primary/5' : ''}`}
                   >
                     <TableCell className="font-medium">
-                      {transaction.timestamp}
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {transaction.timestamp}
+                      </Link>
                     </TableCell>
                     <TableCell>
-                      {transaction.type}
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {transaction.type}
+                      </Link>
                     </TableCell>
                     <TableCell>
-                      {transaction.name}
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {transaction.name}
+                      </Link>
                     </TableCell>
                     <TableCell>
-                      <div>
-                        <div className="font-medium text-sm">{transaction.sessionId}</div>
-                        <div className="text-xs text-muted-foreground">{transaction.userId}</div>
-                      </div>
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        <div>
+                          <div className="font-medium text-sm">{transaction.sessionId}</div>
+                          <div className="text-xs text-muted-foreground">{transaction.userId}</div>
+                        </div>
+                      </Link>
                     </TableCell>
                     <TableCell>
-                      {getStatusBadge(transaction.status)}
+                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                        {getStatusBadge(transaction.status)}
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}

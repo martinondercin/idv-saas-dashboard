@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter, Download, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const transactions = [
   { 
@@ -173,19 +174,53 @@ export default function TransactionsOverview() {
             </TableHeader>
             <TableBody>
               {transactions.map((transaction) => (
-                <TableRow key={transaction.id}>
-                  <TableCell className="font-mono text-sm">{transaction.id}</TableCell>
-                  <TableCell className="font-mono text-sm">{transaction.userId}</TableCell>
-                  <TableCell>{transaction.type}</TableCell>
-                  <TableCell>{getStatusBadge(transaction.status)}</TableCell>
-                  <TableCell>{getRiskBadge(transaction.riskScore)}</TableCell>
-                  <TableCell>{transaction.amount}</TableCell>
-                  <TableCell>{transaction.country}</TableCell>
-                  <TableCell>{transaction.timestamp}</TableCell>
+                <TableRow key={transaction.id} className="cursor-pointer hover:bg-muted/50">
+                  <TableCell className="font-mono text-sm">
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {transaction.id}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="font-mono text-sm">
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {transaction.userId}
+                    </Link>
+                  </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {transaction.type}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {getStatusBadge(transaction.status)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {getRiskBadge(transaction.riskScore)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {transaction.amount}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {transaction.country}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/transactions/${transaction.id}`} className="block w-full">
+                      {transaction.timestamp}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/transactions/${transaction.id}`}>
+                      <Button variant="ghost" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

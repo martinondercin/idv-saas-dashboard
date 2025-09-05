@@ -45,7 +45,6 @@ const navigationItems = [
     items: [
       { title: "Manual Review Queue", url: "/cases/review" },
       { title: "Escalation Rules", url: "/cases/escalation" },
-      { title: "Transaction Details", url: "/cases/details" },
     ],
   },
   {

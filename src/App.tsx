@@ -63,7 +63,9 @@ const App = () => (
           <Route path="/cases" element={<DashboardLayout><CaseManagement /></DashboardLayout>} />
           <Route path="/cases/review" element={<DashboardLayout><CaseManagement /></DashboardLayout>} />
           <Route path="/cases/escalation" element={<DashboardLayout><EscalationRules /></DashboardLayout>} />
-          <Route path="/cases/details" element={<DashboardLayout><TransactionDetails /></DashboardLayout>} />
+          
+          {/* Transaction Details - Dynamic Route */}
+          <Route path="/transactions/:id" element={<DashboardLayout><TransactionDetails /></DashboardLayout>} />
 
           {/* Workflow Routes */}
           <Route path="/workflows" element={<DashboardLayout><WorkflowSettings /></DashboardLayout>} />
