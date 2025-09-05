@@ -364,34 +364,25 @@ export default function RealTimeFeed() {
                   <TableRow 
                     key={transaction.id}
                     className={`cursor-pointer hover:bg-muted/50 ${index === 0 && autoRefresh ? 'bg-primary/5' : ''}`}
+                    onClick={() => window.location.href = `/transactions/${transaction.id}`}
                   >
                     <TableCell className="font-medium">
-                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
-                        {transaction.timestamp}
-                      </Link>
+                      {transaction.timestamp}
                     </TableCell>
                     <TableCell>
-                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
-                        {transaction.type}
-                      </Link>
+                      {transaction.type}
                     </TableCell>
                     <TableCell>
-                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
-                        {transaction.name}
-                      </Link>
+                      {transaction.name}
                     </TableCell>
                     <TableCell>
-                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
-                        <div>
-                          <div className="font-medium text-sm">{transaction.sessionId}</div>
-                          <div className="text-xs text-muted-foreground">{transaction.userId}</div>
-                        </div>
-                      </Link>
+                      <div>
+                        <div className="font-medium text-sm">{transaction.sessionId}</div>
+                        <div className="text-xs text-muted-foreground">{transaction.userId}</div>
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <Link to={`/transactions/${transaction.id}`} className="block w-full">
-                        {getStatusBadge(transaction.status)}
-                      </Link>
+                      {getStatusBadge(transaction.status)}
                     </TableCell>
                   </TableRow>
                 ))}
