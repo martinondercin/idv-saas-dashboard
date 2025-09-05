@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Clock, User, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const pendingCases = [
   {
@@ -198,7 +199,9 @@ export default function CaseManagement() {
                       <TableCell className="max-w-xs truncate">{case_.reason}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="default">Review</Button>
+                          <Link to={`/transactions/${case_.transactionId}`}>
+                            <Button size="sm" variant="default">Review</Button>
+                          </Link>
                           <Button size="sm" variant="outline">Escalate</Button>
                         </div>
                       </TableCell>
@@ -238,7 +241,9 @@ export default function CaseManagement() {
                       <TableCell>{case_.resolvedAt}</TableCell>
                       <TableCell>{case_.timeToResolve}</TableCell>
                       <TableCell>
-                        <Button size="sm" variant="ghost">View Details</Button>
+                        <Link to={`/transactions/${case_.transactionId}`}>
+                          <Button size="sm" variant="ghost">View Details</Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
