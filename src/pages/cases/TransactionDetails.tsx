@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { 
   User, 
   CreditCard, 
@@ -221,13 +222,25 @@ export default function TransactionDetails() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Verification Selfie</label>
-                <div className="flex justify-center">
-                  <img 
-                    src={userSelfie} 
-                    alt="Identity verification selfie"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-muted"
-                  />
-                </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer hover:opacity-80 transition-opacity">
+                      <img 
+                        src={userSelfie} 
+                        alt="Identity verification selfie"
+                        className="w-full h-32 rounded-lg object-cover border-2 border-muted hover:border-primary transition-colors"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <img 
+                      src={userSelfie} 
+                      alt="Identity verification selfie - enlarged view"
+                      className="w-full h-auto rounded-lg"
+                    />
+                  </DialogContent>
+                </Dialog>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">Name</label>
