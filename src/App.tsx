@@ -23,6 +23,7 @@ import WorkflowSettings from "./pages/workflows/WorkflowSettings";
 import RuleSets from "./pages/workflows/RuleSets";
 import FeatureToggles from "./pages/workflows/FeatureToggles";
 import TransactionDetails from "./pages/cases/TransactionDetails";
+import IntegrationGuide from "./pages/integration/IntegrationGuide";
 import MonitoringDashboard from "./pages/monitoring/MonitoringDashboard";
 import UsersAccess from "./pages/users/UsersAccess";
 
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/integration/api-keys" element={<DashboardLayout><ApiKeysPage /></DashboardLayout>} />
           <Route path="/integration/endpoints" element={<DashboardLayout><EndpointsPage /></DashboardLayout>} />
           <Route path="/integration/environments" element={<DashboardLayout><EnvironmentsPage /></DashboardLayout>} />
+          <Route path="/integration/guide" element={<DashboardLayout><IntegrationGuide /></DashboardLayout>} />
 
           {/* Transaction Routes */}
           <Route path="/transactions" element={<DashboardLayout><TransactionsOverview /></DashboardLayout>} />
@@ -72,8 +74,6 @@ const App = () => (
           {/* Monitoring Routes */}
           <Route path="/monitoring" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
           <Route path="/monitoring/status" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
-          <Route path="/monitoring/performance" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
-          <Route path="/monitoring/health" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
 
           {/* Users Routes */}
           <Route path="/users" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />

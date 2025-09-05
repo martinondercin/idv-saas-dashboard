@@ -64,8 +64,6 @@ const navigationItems = [
     icon: Monitor,
     items: [
       { title: "System Status", url: "/monitoring/status" },
-      { title: "Performance Metrics", url: "/monitoring/performance" },
-      { title: "Service Health", url: "/monitoring/health" },
     ],
   },
   {
@@ -86,6 +84,7 @@ const navigationItems = [
       { title: "API Keys & Webhooks", url: "/integration/api-keys" },
       { title: "Endpoint Configuration", url: "/integration/endpoints" },
       { title: "Environment Settings", url: "/integration/environments" },
+      { title: "Integration Guide", url: "/integration/guide" },
     ],
   },
 ];
