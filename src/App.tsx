@@ -23,9 +23,7 @@ import WorkflowSettings from "./pages/workflows/WorkflowSettings";
 import RuleSets from "./pages/workflows/RuleSets";
 import FeatureToggles from "./pages/workflows/FeatureToggles";
 import TransactionDetails from "./pages/cases/TransactionDetails";
-import ReportsDashboard from "./pages/reports/ReportsDashboard";
-import CustomReports from "./pages/reports/CustomReports";
-import ExportCenter from "./pages/reports/ExportCenter";
+import MonitoringDashboard from "./pages/monitoring/MonitoringDashboard";
 import UsersAccess from "./pages/users/UsersAccess";
 
 const queryClient = new QueryClient();
@@ -71,11 +69,11 @@ const App = () => (
           <Route path="/workflows/rules" element={<DashboardLayout><RuleSets /></DashboardLayout>} />
           <Route path="/workflows/features" element={<DashboardLayout><FeatureToggles /></DashboardLayout>} />
 
-          {/* Reports Routes */}
-          <Route path="/reports" element={<DashboardLayout><ReportsDashboard /></DashboardLayout>} />
-          <Route path="/reports/kpi" element={<DashboardLayout><ReportsDashboard /></DashboardLayout>} />
-          <Route path="/reports/custom" element={<DashboardLayout><CustomReports /></DashboardLayout>} />
-          <Route path="/reports/export" element={<DashboardLayout><ExportCenter /></DashboardLayout>} />
+          {/* Monitoring Routes */}
+          <Route path="/monitoring" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
+          <Route path="/monitoring/status" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
+          <Route path="/monitoring/performance" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
+          <Route path="/monitoring/health" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />
 
           {/* Users Routes */}
           <Route path="/users" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />

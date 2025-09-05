@@ -5,7 +5,7 @@ import {
   Activity,
   FileCheck,
   Workflow,
-  BarChart3,
+  Monitor,
   Users,
   Shield,
   ChevronLeft,
@@ -59,13 +59,13 @@ const navigationItems = [
     ],
   },
   {
-    title: "Reporting",
-    url: "/reports",
-    icon: BarChart3,
+    title: "Monitoring",
+    url: "/monitoring",
+    icon: Monitor,
     items: [
-      { title: "KPI Dashboard", url: "/reports/kpi" },
-      { title: "Custom Reports", url: "/reports/custom" },
-      { title: "Export Center", url: "/reports/export" },
+      { title: "System Status", url: "/monitoring/status" },
+      { title: "Performance Metrics", url: "/monitoring/performance" },
+      { title: "Service Health", url: "/monitoring/health" },
     ],
   },
   {
