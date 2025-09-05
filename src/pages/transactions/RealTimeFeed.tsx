@@ -11,7 +11,7 @@ const liveTransactions = [
     id: "txn_live_001",
     timestamp: "2024-01-22 15:42:33",
     userId: "usr_98765",
-    type: "Identity Verification",
+    type: "Full Identity Verification",
     status: "Processing",
     country: "US",
     riskScore: 25,
@@ -21,7 +21,7 @@ const liveTransactions = [
     id: "txn_live_002", 
     timestamp: "2024-01-22 15:42:31",
     userId: "usr_54321",
-    type: "Liveness Check",
+    type: "Age Verification",
     status: "Completed",
     country: "GB",
     riskScore: 15,
@@ -31,7 +31,7 @@ const liveTransactions = [
     id: "txn_live_003",
     timestamp: "2024-01-22 15:42:28",
     userId: "usr_13579",
-    type: "Document Verification", 
+    type: "OCR", 
     status: "Failed",
     country: "DE",
     riskScore: 85,
@@ -41,7 +41,7 @@ const liveTransactions = [
     id: "txn_live_004",
     timestamp: "2024-01-22 15:42:26",
     userId: "usr_24680",
-    type: "Face Verification",
+    type: "Passive Liveness Check",
     status: "Under Review",
     country: "FR",
     riskScore: 72,
@@ -51,7 +51,7 @@ const liveTransactions = [
     id: "txn_live_005",
     timestamp: "2024-01-22 15:42:23",
     userId: "usr_11223",
-    type: "Address Verification",
+    type: "Full Identity Verification",
     status: "Completed",
     country: "CA", 
     riskScore: 18,
@@ -94,7 +94,7 @@ export default function RealTimeFeed() {
         id: `txn_live_${Date.now()}`,
         timestamp: new Date().toLocaleString('sv-SE').replace(' ', ' '),
         userId: `usr_${Math.floor(Math.random() * 100000)}`,
-        type: ["Identity Verification", "Document Verification", "Liveness Check", "Face Verification"][Math.floor(Math.random() * 4)],
+        type: ["Full Identity Verification", "Age Verification", "Passive Liveness Check", "OCR"][Math.floor(Math.random() * 4)],
         status: ["Processing", "Completed", "Under Review", "Failed"][Math.floor(Math.random() * 4)],
         country: ["US", "GB", "DE", "FR", "CA", "AU"][Math.floor(Math.random() * 6)],
         riskScore: Math.floor(Math.random() * 100),
@@ -189,10 +189,10 @@ export default function RealTimeFeed() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="identity">Identity Verification</SelectItem>
-                  <SelectItem value="document">Document Verification</SelectItem>
-                  <SelectItem value="liveness">Liveness Check</SelectItem>
-                  <SelectItem value="face">Face Verification</SelectItem>
+                  <SelectItem value="identity">Full Identity Verification</SelectItem>
+                  <SelectItem value="age">Age Verification</SelectItem>
+                  <SelectItem value="liveness">Passive Liveness Check</SelectItem>
+                  <SelectItem value="ocr">OCR</SelectItem>
                 </SelectContent>
               </Select>
               <Select defaultValue="all-status">

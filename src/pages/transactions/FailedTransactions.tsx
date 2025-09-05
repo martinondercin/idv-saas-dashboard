@@ -11,7 +11,7 @@ const failedTransactions = [
   {
     id: "txn_fail_001",
     userId: "usr_12345",
-    type: "Document Verification", 
+    type: "OCR", 
     failureReason: "Poor document quality - image too blurry",
     errorCode: "DOC_QUALITY_001",
     timestamp: "2024-01-22 14:15:32",
@@ -23,7 +23,7 @@ const failedTransactions = [
   {
     id: "txn_fail_002",
     userId: "usr_67890",
-    type: "Liveness Check",
+    type: "Passive Liveness Check",
     failureReason: "Multiple faces detected in frame",
     errorCode: "LIVENESS_002", 
     timestamp: "2024-01-22 13:42:18",
@@ -35,9 +35,9 @@ const failedTransactions = [
   {
     id: "txn_fail_003",
     userId: "usr_24680",
-    type: "Face Verification",
-    failureReason: "No face match found - confidence too low",
-    errorCode: "FACE_MATCH_001",
+    type: "Age Verification",
+    failureReason: "Age verification failed - document not supported",
+    errorCode: "AGE_VERIFY_001",
     timestamp: "2024-01-22 12:30:45",
     country: "DE", 
     riskScore: 92,
@@ -47,7 +47,7 @@ const failedTransactions = [
   {
     id: "txn_fail_004",
     userId: "usr_13579",
-    type: "Identity Verification",
+    type: "Full Identity Verification",
     failureReason: "Document tampering detected",
     errorCode: "DOC_TAMPER_001", 
     timestamp: "2024-01-22 11:15:22",
@@ -59,7 +59,7 @@ const failedTransactions = [
   {
     id: "txn_fail_005",
     userId: "usr_97531",
-    type: "Address Verification", 
+    type: "OCR", 
     failureReason: "Unsupported document type",
     errorCode: "DOC_TYPE_001",
     timestamp: "2024-01-22 10:45:12",
@@ -168,7 +168,7 @@ export default function FailedTransactions() {
                       <SelectItem value="all">All Errors</SelectItem>
                       <SelectItem value="quality">Document Quality</SelectItem>
                       <SelectItem value="liveness">Liveness Failed</SelectItem>
-                      <SelectItem value="face">Face Match</SelectItem>
+                      <SelectItem value="age">Age Verification</SelectItem>
                       <SelectItem value="tamper">Document Tampering</SelectItem>
                     </SelectContent>
                   </Select>

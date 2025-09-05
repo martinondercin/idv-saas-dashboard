@@ -10,7 +10,7 @@ const transactions = [
   { 
     id: "txn_001", 
     userId: "user_12345", 
-    type: "Identity Verification", 
+    type: "Full Identity Verification", 
     status: "Completed", 
     riskScore: 12, 
     amount: "$0.50", 
@@ -20,7 +20,7 @@ const transactions = [
   { 
     id: "txn_002", 
     userId: "user_67890", 
-    type: "Document Verification", 
+    type: "OCR", 
     status: "Under Review", 
     riskScore: 78, 
     amount: "$0.75", 
@@ -30,7 +30,7 @@ const transactions = [
   { 
     id: "txn_003", 
     userId: "user_11111", 
-    type: "Liveness Check", 
+    type: "Passive Liveness Check", 
     status: "Failed", 
     riskScore: 95, 
     amount: "$0.25", 
@@ -40,7 +40,7 @@ const transactions = [
   { 
     id: "txn_004", 
     userId: "user_22222", 
-    type: "Address Verification", 
+    type: "Age Verification", 
     status: "Completed", 
     riskScore: 25, 
     amount: "$0.30", 
