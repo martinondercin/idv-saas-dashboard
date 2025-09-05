@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -90,10 +91,14 @@ export default function RealTimeFeed() {
 
     const interval = setInterval(() => {
       // Simulate new transaction
+      const names = ["Alex Morgan", "David Chen", "Lisa Garcia", "Michael Brown", "Sophie Anderson", "James Taylor"];
+      const userId = Math.floor(Math.random() * 100000);
       const newTransaction = {
         id: `txn_live_${Date.now()}`,
+        sessionId: `sess_${userId}_${Date.now().toString().slice(-3)}`,
         timestamp: new Date().toLocaleString('sv-SE').replace(' ', ' '),
-        userId: `usr_${Math.floor(Math.random() * 100000)}`,
+        name: names[Math.floor(Math.random() * names.length)],
+        userId: `usr_${userId}`,
         type: ["Full Identity Verification", "Age Verification", "Passive Liveness Check", "OCR"][Math.floor(Math.random() * 4)],
         status: ["Processing", "Completed", "Under Review", "Failed"][Math.floor(Math.random() * 4)],
         country: ["US", "GB", "DE", "FR", "CA", "AU"][Math.floor(Math.random() * 6)],
@@ -238,41 +243,51 @@ export default function RealTimeFeed() {
         </CardContent>
       </Card>
 
-      {/* Live Feed */}
+      {/* Transaction List */}
       <Card>
         <CardHeader>
-          <CardTitle>Live Transaction Stream</CardTitle>
+          <CardTitle>Transaction list</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {transactions.map((transaction, index) => (
-              <div 
-                key={transaction.id} 
-                className={`flex items-center justify-between p-3 border rounded-lg ${
-                  index === 0 && autoRefresh ? 'border-primary bg-primary/5' : ''
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="text-xs text-muted-foreground w-16">
-                    {transaction.timestamp.split(' ')[1]}
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">{transaction.type}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {transaction.userId} • {transaction.country} • {transaction.stage}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <p className={`text-sm font-medium ${getRiskColor(transaction.riskScore)}`}>
-                      Risk: {transaction.riskScore}
-                    </p>
-                  </div>
-                  {getStatusBadge(transaction.status)}
-                </div>
-              </div>
-            ))}
+          <div className="max-h-96 overflow-y-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Last Update</TableHead>
+                  <TableHead>Verification type</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Session ID</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.map((transaction, index) => (
+                  <TableRow 
+                    key={transaction.id}
+                    className={index === 0 && autoRefresh ? 'bg-primary/5' : ''}
+                  >
+                    <TableCell className="font-medium">
+                      {transaction.timestamp}
+                    </TableCell>
+                    <TableCell>
+                      {transaction.type}
+                    </TableCell>
+                    <TableCell>
+                      {transaction.name}
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium text-sm">{transaction.sessionId}</div>
+                        <div className="text-xs text-muted-foreground">{transaction.userId}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {getStatusBadge(transaction.status)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
