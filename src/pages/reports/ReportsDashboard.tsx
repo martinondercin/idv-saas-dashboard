@@ -207,7 +207,14 @@ export default function ReportsDashboard() {
         <TabsContent value="performance">
           <Card>
             <CardHeader>
-              <CardTitle>System Performance (24 Hours)</CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle>System Performance (24 Hours)</CardTitle>
+                <Button variant="outline" asChild>
+                  <a href="https://verify-identity.betteruptime.com/" target="_blank" rel="noopener noreferrer">
+                    View Live Monitoring
+                  </a>
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="h-96 flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
