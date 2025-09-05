@@ -111,8 +111,8 @@ export default function TransactionDetails() {
                   <p className="font-mono text-sm bg-muted p-2 rounded">{mockTransaction.id}</p>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">Amount</label>
-                  <p className="text-2xl font-bold text-primary">${mockTransaction.amount.toLocaleString()}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Type</label>
+                  <p className="text-lg font-semibold">{mockTransaction.type}</p>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Status</label>
@@ -219,50 +219,54 @@ export default function TransactionDetails() {
                 User Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Verification Selfie</label>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <div className="cursor-pointer hover:opacity-80 transition-opacity">
+            <CardContent className="flex gap-4">
+              <div className="flex-1 space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Name</label>
+                  <p className="font-medium">{mockTransaction.userInfo.name}</p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Email</label>
+                  <p className="text-sm">{mockTransaction.userInfo.email}</p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                  <p className="text-sm">{mockTransaction.userInfo.phone}</p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Verification Status</label>
+                  <Badge variant={mockTransaction.userInfo.verified ? "default" : "destructive"}>
+                    {mockTransaction.userInfo.verified ? "Verified" : "Unverified"}
+                  </Badge>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Member Since</label>
+                  <p className="text-sm">{mockTransaction.userInfo.memberSince}</p>
+                </div>
+              </div>
+              <div className="flex-shrink-0 w-32">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Verification Selfie</label>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="cursor-pointer hover:opacity-80 transition-opacity">
+                        <img 
+                          src={userSelfie} 
+                          alt="Identity verification selfie"
+                          className="w-full h-40 rounded-lg object-cover border-2 border-muted hover:border-primary transition-colors bg-muted/20"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
                       <img 
                         src={userSelfie} 
-                        alt="Identity verification selfie"
-                        className="w-full h-48 rounded-lg object-contain border-2 border-muted hover:border-primary transition-colors bg-muted/20"
+                        alt="Identity verification selfie - enlarged view"
+                        className="w-full h-auto rounded-lg object-contain"
                       />
-                      <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <img 
-                      src={userSelfie} 
-                      alt="Identity verification selfie - enlarged view"
-                      className="w-full h-auto rounded-lg object-contain"
-                    />
-                  </DialogContent>
-                </Dialog>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Name</label>
-                <p className="font-medium">{mockTransaction.userInfo.name}</p>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Email</label>
-                <p className="text-sm">{mockTransaction.userInfo.email}</p>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Phone</label>
-                <p className="text-sm">{mockTransaction.userInfo.phone}</p>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Verification Status</label>
-                <Badge variant={mockTransaction.userInfo.verified ? "default" : "destructive"}>
-                  {mockTransaction.userInfo.verified ? "Verified" : "Unverified"}
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Member Since</label>
-                <p className="text-sm">{mockTransaction.userInfo.memberSince}</p>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             </CardContent>
           </Card>
