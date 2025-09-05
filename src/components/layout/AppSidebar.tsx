@@ -30,21 +30,10 @@ import { cn } from "@/lib/utils";
 
 const navigationItems = [
   {
-    title: "Integration & Configuration",
-    url: "/integration",
-    icon: Settings,
-    items: [
-      { title: "API Keys & Webhooks", url: "/integration/api-keys" },
-      { title: "Endpoint Configuration", url: "/integration/endpoints" },
-      { title: "Environment Settings", url: "/integration/environments" },
-    ],
-  },
-  {
     title: "Transactions",
     url: "/transactions",
     icon: Activity,
     items: [
-      { title: "Overview", url: "/transactions" },
       { title: "Real-time Feed", url: "/transactions/feed" },
       { title: "Failed Transactions", url: "/transactions/failed" },
     ],
@@ -87,6 +76,16 @@ const navigationItems = [
       { title: "Role Management", url: "/users/roles" },
       { title: "SSO & MFA", url: "/users/sso" },
       { title: "Audit Log", url: "/users/audit" },
+    ],
+  },
+  {
+    title: "Integration & Configuration",
+    url: "/integration",
+    icon: Settings,
+    items: [
+      { title: "API Keys & Webhooks", url: "/integration/api-keys" },
+      { title: "Endpoint Configuration", url: "/integration/endpoints" },
+      { title: "Environment Settings", url: "/integration/environments" },
     ],
   },
 ];
