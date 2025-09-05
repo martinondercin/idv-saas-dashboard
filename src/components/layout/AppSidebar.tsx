@@ -115,7 +115,11 @@ export function AppSidebar() {
     <Sidebar className={cn("border-r border-sidebar-border bg-sidebar")}>
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <NavLink 
+            to="/dashboard" 
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            title="Go to Dashboard Overview"
+          >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
@@ -129,7 +133,7 @@ export function AppSidebar() {
                 </p>
               </div>
             )}
-          </div>
+          </NavLink>
           {isCollapsed && (
             <Button
               variant="ghost"
