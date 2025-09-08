@@ -78,8 +78,8 @@ const Index = () => {
           {/* Right Hero Image */}
           <div className="relative">
             <img 
-              src="/lovable-uploads/8708d617-d035-4180-bae5-fb7484f47840.png" 
-              alt="Identity verification interface"
+              src="/lovable-uploads/f789ea3d-d256-491e-90b1-c30c6f3cd4bb.png" 
+              alt="Person using tablet for identity verification"
               className="w-full h-auto"
             />
           </div>
