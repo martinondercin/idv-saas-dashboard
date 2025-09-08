@@ -96,16 +96,8 @@ export default function NoCodeVerification() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Banner */}
-      <div className="bg-primary text-primary-foreground px-6 py-3 flex justify-between items-center">
+      <div className="bg-primary text-primary-foreground px-6 py-3">
         <span className="font-medium">No-code free trial</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={navigateToApiIntegration}
-          className="text-primary-foreground hover:bg-primary-foreground/20"
-        >
-          API Integration
-        </Button>
       </div>
 
       <div className="p-8">
@@ -293,6 +285,20 @@ export default function NoCodeVerification() {
               </div>
             </CollapsibleContent>
           </Collapsible>
+
+          {/* API Integration Section */}
+          <div className="bg-muted/50 p-6 rounded-lg border border-border mt-8">
+            <p className="text-muted-foreground text-sm mb-4">
+              If the no-code is not enough for you, try API Integration
+            </p>
+            <Button
+              onClick={navigateToApiIntegration}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              API Integration
+            </Button>
+          </div>
         </div>
       </div>
     </div>
