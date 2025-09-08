@@ -21,22 +21,25 @@ const Index = () => {
         
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
+            <div className="mb-4">
+              <Badge variant="secondary" className="text-sm px-3 py-1">
+                IDENTITY VERIFICATION SERVICE
+              </Badge>
+            </div>
             <h1 className="text-4xl font-bold tracking-tight text-primary-foreground sm:text-6xl">
-              Identity Verification
-              <span className="block text-secondary">Made Simple</span>
+              Trusted identity verification you can start using 
+              <span className="block text-secondary">today</span>
             </h1>
-            <p className="mt-6 text-lg leading-8 text-primary-foreground/90">
-              Professional SaaS dashboard for administrators and support teams to monitor verification activity, 
-              configure integration parameters, and generate operational reports.
+            <p className="mt-6 text-lg leading-8 text-primary-foreground/90 max-w-3xl mx-auto">
+              Our effective, ready-made identity verification service is tuned for a seamless user experience, 
+              powered by best-performing biometrics and AI. It is designed for rapid deployment and reliable 
+              performance at any volume, with no-commitment pricing.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Link to="/signup">
+            <div className="mt-10 flex items-center justify-center">
+              <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8">
+                <Link to="/login">
                   Get Started <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="border-secondary text-secondary hover:bg-secondary hover:text-primary">
-                <Link to="/login">Login</Link>
               </Button>
             </div>
           </div>
