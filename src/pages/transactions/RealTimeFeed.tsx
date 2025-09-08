@@ -98,7 +98,7 @@ const getStatusBadge = (status: string) => {
 };
 
 const getRiskColor = (score: number) => {
-  if (score < 30) return "text-green-600";
+  if (score < 30) return "text-accent";
   if (score < 70) return "text-yellow-600"; 
   return "text-red-600";
 };
@@ -140,7 +140,7 @@ export default function RealTimeFeed() {
         <div className="flex items-center gap-4">
           <h1 className="text-3xl font-bold">Real-time Transaction Feed</h1>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+            <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-accent animate-pulse' : 'bg-error'}`} />
             <span className="text-sm text-muted-foreground">{isLive ? 'Live' : 'Paused'}</span>
           </div>
         </div>

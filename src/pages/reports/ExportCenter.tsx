@@ -181,7 +181,7 @@ const getStatusBadge = (status: string) => {
 const getTypeColor = (type: string) => {
   const colors: { [key: string]: string } = {
     "Transaction Data": "bg-blue-100 text-blue-800",
-    "User Data": "bg-green-100 text-green-800", 
+    "User Data": "bg-accent/10 text-accent", 
     "Analytics Data": "bg-purple-100 text-purple-800",
     "Compliance Data": "bg-orange-100 text-orange-800"
   };
@@ -345,7 +345,7 @@ export default function ExportCenter() {
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.completed}</div>
+            <div className="text-2xl font-bold text-accent">{stats.completed}</div>
             <p className="text-xs text-muted-foreground">Ready for download</p>
           </CardContent>
         </Card>

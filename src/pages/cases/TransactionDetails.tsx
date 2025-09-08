@@ -174,7 +174,7 @@ export default function TransactionDetails() {
                   {mockTransaction.timeline.map((event, index) => (
                     <div key={index} className="flex items-center gap-4 pb-4 border-b last:border-b-0">
                       <div className={`w-3 h-3 rounded-full ${
-                        event.status === 'success' ? 'bg-green-500' :
+                        event.status === 'success' ? 'bg-accent' :
                         event.status === 'warning' ? 'bg-yellow-500' :
                         event.status === 'pending' ? 'bg-blue-500' : 'bg-gray-500'
                       }`} />

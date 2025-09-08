@@ -113,7 +113,7 @@ const mockFeatures = [
 
 const getStatusBadge = (status: string) => {
   const variants: { [key: string]: { variant: "default" | "secondary" | "destructive" | "outline", color: string } } = {
-    "Enabled": { variant: "default", color: "text-green-600" },
+    "Enabled": { variant: "default", color: "text-accent" },
     "Testing": { variant: "secondary", color: "text-yellow-600" },
     "Disabled": { variant: "outline", color: "text-gray-600" }
   };
@@ -260,7 +260,7 @@ export default function FeatureToggles() {
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.enabledFeatures}</div>
+            <div className="text-2xl font-bold text-accent">{stats.enabledFeatures}</div>
             <p className="text-xs text-muted-foreground">Currently active</p>
           </CardContent>
         </Card>
@@ -537,7 +537,7 @@ export default function FeatureToggles() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Positive Feedback:</span>
-                    <span className="font-medium text-green-600">87%</span>
+                    <span className="font-medium text-accent">87%</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Feature Requests:</span>

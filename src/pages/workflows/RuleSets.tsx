@@ -420,7 +420,7 @@ export default function RuleSets() {
                   </div>
                   <div className="flex justify-between">
                     <span>True Positives:</span>
-                    <span className="font-medium text-green-600">1,923</span>
+                    <span className="font-medium text-accent">1,923</span>
                   </div>
                   <div className="flex justify-between">
                     <span>False Positives:</span>

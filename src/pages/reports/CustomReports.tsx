@@ -166,7 +166,7 @@ const getTypeBadge = (type: string) => {
     "Risk Assessment": "bg-orange-100 text-orange-800",
     "User Analytics": "bg-blue-100 text-blue-800",
     "Compliance": "bg-purple-100 text-purple-800",
-    "Business Intelligence": "bg-green-100 text-green-800"
+    "Business Intelligence": "bg-accent/10 text-accent"
   };
   return (
     <Badge className={colors[type] || "bg-gray-100 text-gray-800"}>

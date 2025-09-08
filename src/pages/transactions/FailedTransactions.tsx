@@ -323,7 +323,7 @@ export default function FailedTransactions() {
                       <span className="text-sm">Document Quality Issues</span>
                       <div className="flex items-center gap-2">
                         <div className="w-20 h-2 bg-muted rounded-full">
-                          <div className="w-16 h-2 bg-green-500 rounded-full"></div>
+                          <div className="w-16 h-2 bg-accent rounded-full"></div>
                         </div>
                         <span className="text-sm font-medium">78% success</span>
                       </div>
@@ -341,7 +341,7 @@ export default function FailedTransactions() {
                       <span className="text-sm">Face Match Issues</span>
                       <div className="flex items-center gap-2">
                         <div className="w-20 h-2 bg-muted rounded-full">
-                          <div className="w-12 h-2 bg-green-500 rounded-full"></div>
+                          <div className="w-12 h-2 bg-accent rounded-full"></div>
                         </div>
                         <span className="text-sm font-medium">62% success</span>
                       </div>
