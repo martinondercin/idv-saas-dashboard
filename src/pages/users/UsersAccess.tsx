@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Users, Shield, Key, Activity, Plus, Edit, Trash2, Search } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const users = [
   {
@@ -139,6 +140,37 @@ const getRoleBadge = (role: string, color: string) => {
 };
 
 export default function UsersAccess() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Determine active tab based on current route
+  const getActiveTab = () => {
+    const path = location.pathname;
+    if (path === "/users/roles") return "roles";
+    if (path === "/users/sso") return "sso";
+    if (path === "/users/audit") return "audit";
+    return "users"; // default to users tab
+  };
+
+  const handleTabChange = (value: string) => {
+    // Navigate to the appropriate route when tab changes
+    switch (value) {
+      case "users":
+        navigate("/users");
+        break;
+      case "roles":
+        navigate("/users/roles");
+        break;
+      case "sso":
+        navigate("/users/sso");
+        break;
+      case "audit":
+        navigate("/users/audit");
+        break;
+    }
+  };
+
+  const activeTab = getActiveTab();
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -201,7 +233,7 @@ export default function UsersAccess() {
         </Card>
       </div>
 
-      <Tabs defaultValue="users" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
         <TabsList>
           <TabsTrigger value="users">User Management</TabsTrigger>
           <TabsTrigger value="roles">Role Management</TabsTrigger>
