@@ -3,7 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Key, Plus, RotateCw, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 const apiKeys = [
   { id: "ak_live_1", name: "Production API Key", environment: "Live", status: "Active", created: "2024-01-15", lastUsed: "2024-01-22" },
@@ -17,22 +22,76 @@ const webhooks = [
 ];
 
 export default function ApiKeysPage() {
+  const [isNewKeyDialogOpen, setIsNewKeyDialogOpen] = useState(false);
+  const [newKeyData, setNewKeyData] = useState({
+    name: "",
+    environment: "test"
+  });
+
+  const handleCreateKey = () => {
+    // Here you would typically make an API call to create the key
+    console.log("Creating new API key:", newKeyData);
+    setIsNewKeyDialogOpen(false);
+    setNewKeyData({ name: "", environment: "test" });
+  };
+
   return (
     <TooltipProvider>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">API Keys & Webhooks</h1>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                New API Key
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Create a new API key for integration</p>
-            </TooltipContent>
-          </Tooltip>
+          <Dialog open={isNewKeyDialogOpen} onOpenChange={setIsNewKeyDialogOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    New API Key
+                  </Button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Create a new API key for integration</p>
+              </TooltipContent>
+            </Tooltip>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create New API Key</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="key-name">Key Name</Label>
+                  <Input
+                    id="key-name"
+                    placeholder="Enter a descriptive name for this key"
+                    value={newKeyData.name}
+                    onChange={(e) => setNewKeyData({ ...newKeyData, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="environment">Environment</Label>
+                  <Select value={newKeyData.environment} onValueChange={(value) => setNewKeyData({ ...newKeyData, environment: value })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select environment" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="live">Live</SelectItem>
+                      <SelectItem value="test">Test</SelectItem>
+                      <SelectItem value="dev">Development</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsNewKeyDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleCreateKey} disabled={!newKeyData.name}>
+                  Create Key
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
       <div className="grid gap-6">

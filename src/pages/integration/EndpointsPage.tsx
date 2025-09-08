@@ -5,7 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe, Server, Settings, Plus, Edit, Trash2, Activity } from "lucide-react";
+import { useState } from "react";
 
 const endpoints = [
   {
@@ -115,22 +120,98 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function EndpointsPage() {
+  const [isNewEndpointDialogOpen, setIsNewEndpointDialogOpen] = useState(false);
+  const [newEndpointData, setNewEndpointData] = useState({
+    name: "",
+    url: "",
+    method: "POST",
+    rateLimit: ""
+  });
+
+  const handleCreateEndpoint = () => {
+    // Here you would typically make an API call to create the endpoint
+    console.log("Creating new endpoint:", newEndpointData);
+    setIsNewEndpointDialogOpen(false);
+    setNewEndpointData({ name: "", url: "", method: "POST", rateLimit: "" });
+  };
+
   return (
     <TooltipProvider>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Endpoint Configuration</h1>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Endpoint
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Create a new API endpoint configuration</p>
-            </TooltipContent>
-          </Tooltip>
+          <Dialog open={isNewEndpointDialogOpen} onOpenChange={setIsNewEndpointDialogOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Endpoint
+                  </Button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Create a new API endpoint configuration</p>
+              </TooltipContent>
+            </Tooltip>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add New Endpoint</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="endpoint-name">Endpoint Name</Label>
+                  <Input
+                    id="endpoint-name"
+                    placeholder="e.g., Document Verification"
+                    value={newEndpointData.name}
+                    onChange={(e) => setNewEndpointData({ ...newEndpointData, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="endpoint-url">URL Path</Label>
+                  <Input
+                    id="endpoint-url"
+                    placeholder="e.g., /api/v1/verify/document"
+                    value={newEndpointData.url}
+                    onChange={(e) => setNewEndpointData({ ...newEndpointData, url: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="method">HTTP Method</Label>
+                  <Select value={newEndpointData.method} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, method: value })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GET">GET</SelectItem>
+                      <SelectItem value="POST">POST</SelectItem>
+                      <SelectItem value="PUT">PUT</SelectItem>
+                      <SelectItem value="PATCH">PATCH</SelectItem>
+                      <SelectItem value="DELETE">DELETE</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="rate-limit">Rate Limit</Label>
+                  <Input
+                    id="rate-limit"
+                    placeholder="e.g., 1000/min"
+                    value={newEndpointData.rateLimit}
+                    onChange={(e) => setNewEndpointData({ ...newEndpointData, rateLimit: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsNewEndpointDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleCreateEndpoint} disabled={!newEndpointData.name || !newEndpointData.url}>
+                  Create Endpoint
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
       {/* Stats Cards */}
