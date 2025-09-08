@@ -77,14 +77,11 @@ const Index = () => {
 
           {/* Right Hero Image */}
           <div className="relative">
-            <div className="w-full h-96 bg-gradient-to-br from-blue-400/20 to-teal-500/20 rounded-lg flex items-center justify-center">
-              <div className="text-center text-white/60">
-                <div className="w-24 h-24 bg-white/10 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">📱</span>
-                </div>
-                <p>Identity Verification Interface</p>
-              </div>
-            </div>
+            <img 
+              src="/lovable-uploads/7a963833-37c2-46de-a493-e3526cd623c0.png" 
+              alt="Person using tablet for identity verification"
+              className="w-full h-auto rounded-lg"
+            />
           </div>
         </div>
 
