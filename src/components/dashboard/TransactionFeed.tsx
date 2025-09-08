@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Eye, Download, Filter } from "lucide-react";
+import { ExternalLink, Eye, Download, Filter, Calendar } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,6 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format, isWithinInterval, subDays, startOfDay, endOfDay } from "date-fns";
+import { cn } from "@/lib/utils";
+import type { DateRange } from "react-day-picker";
 import {
   Table,
   TableBody,
@@ -25,7 +34,7 @@ interface Transaction {
   timestamp: string;
   customerId: string;
   flowType: string;
-  status: 'success' | 'pending' | 'error' | 'manual-review';
+  status: 'success' | 'pending' | 'error' | 'manual-review' | 'accepted' | 'rejected';
   region: string;
   riskScore?: number;
 }
@@ -36,13 +45,13 @@ const mockTransactions: Transaction[] = [
     timestamp: "2024-01-15 14:32:01",
     customerId: "CUST-789012",
     flowType: "Identity Verification",
-    status: "success",
+    status: "accepted",
     region: "US-East",
     riskScore: 0.15
   },
   {
     id: "TXN-2024-001235", 
-    timestamp: "2024-01-15 14:31:45",
+    timestamp: "2024-01-14 16:31:45",
     customerId: "CUST-789013",
     flowType: "Document Verification",
     status: "manual-review",
@@ -51,7 +60,7 @@ const mockTransactions: Transaction[] = [
   },
   {
     id: "TXN-2024-001236",
-    timestamp: "2024-01-15 14:30:22",
+    timestamp: "2024-01-13 09:30:22",
     customerId: "CUST-789014", 
     flowType: "Liveness Check",
     status: "pending",
@@ -60,21 +69,48 @@ const mockTransactions: Transaction[] = [
   },
   {
     id: "TXN-2024-001237",
-    timestamp: "2024-01-15 14:29:08",
+    timestamp: "2024-01-12 11:29:08",
     customerId: "CUST-789015",
     flowType: "KYC Verification",
-    status: "error",
+    status: "rejected",
     region: "US-West",
     riskScore: 0.95
   },
   {
     id: "TXN-2024-001238",
-    timestamp: "2024-01-15 14:28:33",
+    timestamp: "2024-01-11 08:28:33",
     customerId: "CUST-789016",
     flowType: "Identity Verification", 
-    status: "success",
+    status: "accepted",
     region: "EU-Central",
     riskScore: 0.12
+  },
+  {
+    id: "TXN-2024-001239",
+    timestamp: "2024-01-10 13:45:12",
+    customerId: "CUST-789017",
+    flowType: "Document Verification",
+    status: "rejected",
+    region: "US-East",
+    riskScore: 0.88
+  },
+  {
+    id: "TXN-2024-001240",
+    timestamp: "2024-01-09 10:15:33",
+    customerId: "CUST-789018",
+    flowType: "Biometric Verification",
+    status: "accepted",
+    region: "APAC",
+    riskScore: 0.22
+  },
+  {
+    id: "TXN-2024-001241",
+    timestamp: "2024-01-08 15:22:44",
+    customerId: "CUST-789019",
+    flowType: "Address Verification",
+    status: "error",
+    region: "EU-West",
+    riskScore: 0.67
   }
 ];
 
@@ -82,6 +118,8 @@ export function TransactionFeed() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [flowTypeFilter, setFlowTypeFilter] = useState("all");
   const [regionFilter, setRegionFilter] = useState("all");
+  const [timePeriodFilter, setTimePeriodFilter] = useState("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   const getRiskScoreColor = (score: number) => {
     if (score >= 0.8) return "bg-error-light text-error";
@@ -89,10 +127,44 @@ export function TransactionFeed() {
     return "bg-accent/10 text-accent";
   };
 
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case 'accepted': return 'success';
+      case 'rejected': return 'failed';
+      default: return status as 'success' | 'pending' | 'error' | 'manual-review' | 'warning' | 'processing' | 'completed' | 'failed' | 'expired';
+    }
+  };
+
+  const isTransactionInTimeRange = (transactionDate: string) => {
+    const txDate = new Date(transactionDate);
+    const now = new Date();
+    
+    switch (timePeriodFilter) {
+      case "today":
+        return isWithinInterval(txDate, { start: startOfDay(now), end: endOfDay(now) });
+      case "week":
+        return isWithinInterval(txDate, { start: subDays(now, 7), end: now });
+      case "month":
+        return isWithinInterval(txDate, { start: subDays(now, 30), end: now });
+      case "custom":
+        if (dateRange?.from && dateRange?.to) {
+          return isWithinInterval(txDate, { 
+            start: startOfDay(dateRange.from), 
+            end: endOfDay(dateRange.to) 
+          });
+        }
+        return true;
+      case "all":
+      default:
+        return true;
+    }
+  };
+
   const filteredTransactions = mockTransactions.filter(transaction => {
     if (statusFilter !== "all" && transaction.status !== statusFilter) return false;
     if (flowTypeFilter !== "all" && transaction.flowType !== flowTypeFilter) return false;
     if (regionFilter !== "all" && transaction.region !== regionFilter) return false;
+    if (!isTransactionInTimeRange(transaction.timestamp)) return false;
     return true;
   });
 
@@ -129,7 +201,8 @@ export function TransactionFeed() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="success">Success</SelectItem>
+              <SelectItem value="accepted">Accepted</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="error">Error</SelectItem>
               <SelectItem value="manual-review">Manual Review</SelectItem>
@@ -159,6 +232,58 @@ export function TransactionFeed() {
               ))}
             </SelectContent>
           </Select>
+
+          <Select value={timePeriodFilter} onValueChange={setTimePeriodFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Time Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Time</SelectItem>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="week">Last 7 Days</SelectItem>
+              <SelectItem value="month">Last 30 Days</SelectItem>
+              <SelectItem value="custom">Custom Range</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {timePeriodFilter === "custom" && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-[240px] justify-start text-left font-normal",
+                    !dateRange.from && "text-muted-foreground"
+                  )}
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  {dateRange?.from ? (
+                    dateRange.to ? (
+                      <>
+                        {format(dateRange.from, "LLL dd, y")} -{" "}
+                        {format(dateRange.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(dateRange.from, "LLL dd, y")
+                    )
+                  ) : (
+                    <span>Pick a date range</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  initialFocus
+                  mode="range"
+                  defaultMonth={dateRange?.from}
+                  selected={dateRange}
+                  onSelect={setDateRange}
+                  numberOfMonths={2}
+                  className="p-3 pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
       </CardHeader>
       <CardContent>
@@ -193,7 +318,7 @@ export function TransactionFeed() {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <StatusBadge status={transaction.status}>
+                  <StatusBadge status={getStatusBadgeVariant(transaction.status)}>
                     {transaction.status.replace('-', ' ')}
                   </StatusBadge>
                 </TableCell>
