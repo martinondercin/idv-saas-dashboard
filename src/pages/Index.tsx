@@ -58,8 +58,9 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-md font-medium"
+                asChild
               >
-                Get Started
+                <Link to="/login">Get Started</Link>
               </Button>
               <Button 
                 size="lg" 
