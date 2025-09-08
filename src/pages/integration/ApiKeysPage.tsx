@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { Key, Plus, RotateCw, Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,14 +27,29 @@ export default function ApiKeysPage() {
   const [isNewKeyDialogOpen, setIsNewKeyDialogOpen] = useState(false);
   const [newKeyData, setNewKeyData] = useState({
     name: "",
-    environment: "test"
+    environment: "test",
+    description: "",
+    permissions: [] as string[],
+    expirationDate: "",
+    rateLimit: "1000",
+    ratePeriod: "hour",
+    ipRestrictions: ""
   });
 
   const handleCreateKey = () => {
     // Here you would typically make an API call to create the key
     console.log("Creating new API key:", newKeyData);
     setIsNewKeyDialogOpen(false);
-    setNewKeyData({ name: "", environment: "test" });
+    setNewKeyData({ 
+      name: "", 
+      environment: "test", 
+      description: "", 
+      permissions: [], 
+      expirationDate: "", 
+      rateLimit: "1000", 
+      ratePeriod: "hour", 
+      ipRestrictions: "" 
+    });
   };
 
   return (
@@ -54,32 +71,115 @@ export default function ApiKeysPage() {
                 <p>Create a new API key for integration</p>
               </TooltipContent>
             </Tooltip>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New API Key</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="key-name">Key Name *</Label>
+                    <Input
+                      id="key-name"
+                      placeholder="Enter a descriptive name"
+                      value={newKeyData.name}
+                      onChange={(e) => setNewKeyData({ ...newKeyData, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="environment">Environment *</Label>
+                    <Select value={newKeyData.environment} onValueChange={(value) => setNewKeyData({ ...newKeyData, environment: value })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select environment" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="live">Live</SelectItem>
+                        <SelectItem value="test">Test</SelectItem>
+                        <SelectItem value="dev">Development</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
                 <div className="space-y-2">
-                  <Label htmlFor="key-name">Key Name</Label>
+                  <Label htmlFor="description">Description</Label>
                   <Input
-                    id="key-name"
-                    placeholder="Enter a descriptive name for this key"
-                    value={newKeyData.name}
-                    onChange={(e) => setNewKeyData({ ...newKeyData, name: e.target.value })}
+                    id="description"
+                    placeholder="Brief description of this API key's purpose"
+                    value={newKeyData.description}
+                    onChange={(e) => setNewKeyData({ ...newKeyData, description: e.target.value })}
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="environment">Environment</Label>
-                  <Select value={newKeyData.environment} onValueChange={(value) => setNewKeyData({ ...newKeyData, environment: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select environment" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="live">Live</SelectItem>
-                      <SelectItem value="test">Test</SelectItem>
-                      <SelectItem value="dev">Development</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label>Permissions</Label>
+                  <div className="grid grid-cols-2 gap-2 p-3 border rounded-md">
+                    {["verify:read", "verify:write", "cases:read", "cases:write", "reports:read", "admin:access"].map((permission) => (
+                      <div key={permission} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={permission}
+                          checked={newKeyData.permissions.includes(permission)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewKeyData({ ...newKeyData, permissions: [...newKeyData.permissions, permission] });
+                            } else {
+                              setNewKeyData({ ...newKeyData, permissions: newKeyData.permissions.filter(p => p !== permission) });
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <Label htmlFor={permission} className="text-sm font-normal">{permission}</Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rate-limit">Rate Limit</Label>
+                    <Input
+                      id="rate-limit"
+                      type="number"
+                      placeholder="1000"
+                      value={newKeyData.rateLimit}
+                      onChange={(e) => setNewKeyData({ ...newKeyData, rateLimit: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rate-period">Per</Label>
+                    <Select value={newKeyData.ratePeriod} onValueChange={(value) => setNewKeyData({ ...newKeyData, ratePeriod: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="minute">Minute</SelectItem>
+                        <SelectItem value="hour">Hour</SelectItem>
+                        <SelectItem value="day">Day</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="expiration">Expiration Date (Optional)</Label>
+                  <Input
+                    id="expiration"
+                    type="date"
+                    value={newKeyData.expirationDate}
+                    onChange={(e) => setNewKeyData({ ...newKeyData, expirationDate: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="ip-restrictions">IP Restrictions (Optional)</Label>
+                  <Input
+                    id="ip-restrictions"
+                    placeholder="192.168.1.0/24, 10.0.0.1 (comma separated)"
+                    value={newKeyData.ipRestrictions}
+                    onChange={(e) => setNewKeyData({ ...newKeyData, ipRestrictions: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground">Leave empty to allow all IPs</p>
                 </div>
               </div>
               <div className="flex justify-end gap-2">

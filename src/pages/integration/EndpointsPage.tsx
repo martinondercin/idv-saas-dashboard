@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { Globe, Server, Settings, Plus, Edit, Trash2, Activity } from "lucide-react";
 import { useState } from "react";
 
@@ -125,14 +126,37 @@ export default function EndpointsPage() {
     name: "",
     url: "",
     method: "POST",
-    rateLimit: ""
+    rateLimit: "1000",
+    ratePeriod: "minute",
+    description: "",
+    environment: "test",
+    authType: "api_key",
+    headers: "",
+    timeout: "30",
+    retryAttempts: "3",
+    retryDelay: "1000",
+    status: "active"
   });
 
   const handleCreateEndpoint = () => {
     // Here you would typically make an API call to create the endpoint
     console.log("Creating new endpoint:", newEndpointData);
     setIsNewEndpointDialogOpen(false);
-    setNewEndpointData({ name: "", url: "", method: "POST", rateLimit: "" });
+    setNewEndpointData({ 
+      name: "", 
+      url: "", 
+      method: "POST", 
+      rateLimit: "1000", 
+      ratePeriod: "minute", 
+      description: "", 
+      environment: "test", 
+      authType: "api_key", 
+      headers: "", 
+      timeout: "30", 
+      retryAttempts: "3", 
+      retryDelay: "1000", 
+      status: "active" 
+    });
   };
 
   return (
@@ -154,22 +178,39 @@ export default function EndpointsPage() {
                 <p>Create a new API endpoint configuration</p>
               </TooltipContent>
             </Tooltip>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Endpoint</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="endpoint-name">Endpoint Name</Label>
-                  <Input
-                    id="endpoint-name"
-                    placeholder="e.g., Document Verification"
-                    value={newEndpointData.name}
-                    onChange={(e) => setNewEndpointData({ ...newEndpointData, name: e.target.value })}
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="endpoint-name">Endpoint Name *</Label>
+                    <Input
+                      id="endpoint-name"
+                      placeholder="e.g., Document Verification"
+                      value={newEndpointData.name}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="environment">Environment *</Label>
+                    <Select value={newEndpointData.environment} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, environment: value })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select environment" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="production">Production</SelectItem>
+                        <SelectItem value="staging">Staging</SelectItem>
+                        <SelectItem value="test">Test</SelectItem>
+                        <SelectItem value="development">Development</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="endpoint-url">URL Path</Label>
+                  <Label htmlFor="endpoint-url">URL Path *</Label>
                   <Input
                     id="endpoint-url"
                     placeholder="e.g., /api/v1/verify/document"
@@ -177,29 +218,132 @@ export default function EndpointsPage() {
                     onChange={(e) => setNewEndpointData({ ...newEndpointData, url: e.target.value })}
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="method">HTTP Method</Label>
-                  <Select value={newEndpointData.method} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, method: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="GET">GET</SelectItem>
-                      <SelectItem value="POST">POST</SelectItem>
-                      <SelectItem value="PUT">PUT</SelectItem>
-                      <SelectItem value="PATCH">PATCH</SelectItem>
-                      <SelectItem value="DELETE">DELETE</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rate-limit">Rate Limit</Label>
+                  <Label htmlFor="description">Description</Label>
                   <Input
-                    id="rate-limit"
-                    placeholder="e.g., 1000/min"
-                    value={newEndpointData.rateLimit}
-                    onChange={(e) => setNewEndpointData({ ...newEndpointData, rateLimit: e.target.value })}
+                    id="description"
+                    placeholder="Brief description of endpoint functionality"
+                    value={newEndpointData.description}
+                    onChange={(e) => setNewEndpointData({ ...newEndpointData, description: e.target.value })}
                   />
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="method">HTTP Method *</Label>
+                    <Select value={newEndpointData.method} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, method: value })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="GET">GET</SelectItem>
+                        <SelectItem value="POST">POST</SelectItem>
+                        <SelectItem value="PUT">PUT</SelectItem>
+                        <SelectItem value="PATCH">PATCH</SelectItem>
+                        <SelectItem value="DELETE">DELETE</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="auth-type">Authentication</Label>
+                    <Select value={newEndpointData.authType} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, authType: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="api_key">API Key</SelectItem>
+                        <SelectItem value="bearer_token">Bearer Token</SelectItem>
+                        <SelectItem value="basic_auth">Basic Auth</SelectItem>
+                        <SelectItem value="oauth2">OAuth 2.0</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="status">Status</Label>
+                    <Select value={newEndpointData.status} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, status: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
+                        <SelectItem value="maintenance">Maintenance</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rate-limit">Rate Limit</Label>
+                    <Input
+                      id="rate-limit"
+                      type="number"
+                      placeholder="1000"
+                      value={newEndpointData.rateLimit}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, rateLimit: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rate-period">Per</Label>
+                    <Select value={newEndpointData.ratePeriod} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, ratePeriod: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="second">Second</SelectItem>
+                        <SelectItem value="minute">Minute</SelectItem>
+                        <SelectItem value="hour">Hour</SelectItem>
+                        <SelectItem value="day">Day</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="headers">Custom Headers (Optional)</Label>
+                  <Input
+                    id="headers"
+                    placeholder='{"Content-Type": "application/json", "X-Custom-Header": "value"}'
+                    value={newEndpointData.headers}
+                    onChange={(e) => setNewEndpointData({ ...newEndpointData, headers: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground">JSON format for custom headers</p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="timeout">Timeout (seconds)</Label>
+                    <Input
+                      id="timeout"
+                      type="number"
+                      placeholder="30"
+                      value={newEndpointData.timeout}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, timeout: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="retry-attempts">Retry Attempts</Label>
+                    <Input
+                      id="retry-attempts"
+                      type="number"
+                      placeholder="3"
+                      value={newEndpointData.retryAttempts}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, retryAttempts: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="retry-delay">Retry Delay (ms)</Label>
+                    <Input
+                      id="retry-delay"
+                      type="number"
+                      placeholder="1000"
+                      value={newEndpointData.retryDelay}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, retryDelay: e.target.value })}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex justify-end gap-2">
