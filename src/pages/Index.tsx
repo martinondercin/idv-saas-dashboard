@@ -34,132 +34,135 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="grid lg:grid-cols-2 gap-12 items-center px-6 py-16 lg:px-12">
-        {/* Left Content */}
-        <div>
-          <Badge className="bg-white/20 text-white/80 border-white/30 text-xs px-3 py-1 mb-6 uppercase tracking-wider">
-            IDENTITY VERIFICATION SERVICE
-          </Badge>
-          
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6">
-            Trusted identity verification you can start using <span className="text-blue-300">today</span>
-          </h1>
-          
-          <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-xl">
-            Our effective, ready-made identity verification service is tuned for a seamless user experience, 
-            powered by best-performing biometrics and AI. It is designed for rapid deployment and reliable 
-            performance at any volume, with no-commitment pricing.
-          </p>
-          
-          <div className="flex space-x-4">
-            <Button 
-              size="lg" 
-              asChild
-              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-md font-medium"
-            >
-              <Link to="/login">Get Started</Link>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 px-8 py-3 rounded-md font-medium bg-transparent"
-              asChild
-            >
-              <a href="https://verify-identity.innovatrics.com/demo-iframe" target="_blank" rel="noopener noreferrer">
-                Try demo
-              </a>
-            </Button>
+      {/* Main Content Container */}
+      <div className="max-w-7xl mx-auto">
+        {/* Hero Section */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center px-6 py-16 lg:px-12">
+          {/* Left Content */}
+          <div>
+            <Badge className="bg-white/20 text-white/80 border-white/30 text-xs px-3 py-1 mb-6 uppercase tracking-wider">
+              IDENTITY VERIFICATION SERVICE
+            </Badge>
+            
+            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6">
+              Trusted identity verification you can start using <span className="text-blue-300">today</span>
+            </h1>
+            
+            <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-xl">
+              Our effective, ready-made identity verification service is tuned for a seamless user experience, 
+              powered by best-performing biometrics and AI. It is designed for rapid deployment and reliable 
+              performance at any volume, with no-commitment pricing.
+            </p>
+            
+            <div className="flex space-x-4">
+              <Button 
+                size="lg" 
+                asChild
+                className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-md font-medium"
+              >
+                <Link to="/login">Get Started</Link>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white/30 text-white hover:bg-white/10 px-8 py-3 rounded-md font-medium bg-transparent"
+                asChild
+              >
+                <a href="https://verify-identity.innovatrics.com/demo-iframe" target="_blank" rel="noopener noreferrer">
+                  Try demo
+                </a>
+              </Button>
+            </div>
+          </div>
+
+          {/* Right Hero Image */}
+          <div className="relative">
+            <img 
+              src="/lovable-uploads/8708d617-d035-4180-bae5-fb7484f47840.png" 
+              alt="Identity verification interface"
+              className="w-full h-auto"
+            />
           </div>
         </div>
 
-        {/* Right Hero Image */}
-        <div className="relative">
-          <img 
-            src="/lovable-uploads/8708d617-d035-4180-bae5-fb7484f47840.png" 
-            alt="Identity verification interface"
-            className="w-full h-auto"
-          />
+        {/* Features Section */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 py-16 lg:px-12">
+          <Card className="bg-transparent border-white/10 text-white">
+            <CardHeader>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="text-xs uppercase tracking-wider text-blue-400">EFFORTLESS</span>
+              </div>
+              <CardTitle className="text-xl mb-4">Out-of-the-box SaaS</CardTitle>
+              <CardDescription className="text-white/70 text-sm leading-relaxed">
+                Our identity verification can be launched in minutes with low-code integration. The universal 
+                verification process keeps setup light and UX clean.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
+                Learn more
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-transparent border-white/10 text-white">
+            <CardHeader>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="text-xs uppercase tracking-wider text-blue-400">SCALABLE</span>
+              </div>
+              <CardTitle className="text-xl mb-4">Elastic by design</CardTitle>
+              <CardDescription className="text-white/70 text-sm leading-relaxed">
+                Whether you verify hundreds or millions, performance and uptime remain steady on our 
+                fully-managed, cloud-hosted infrastructure.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
+                Learn more
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-transparent border-white/10 text-white">
+            <CardHeader>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="text-xs uppercase tracking-wider text-blue-400">FLEXIBLE</span>
+              </div>
+              <CardTitle className="text-xl mb-4">Pay-as-you-go</CardTitle>
+              <CardDescription className="text-white/70 text-sm leading-relaxed">
+                Transparent, commitment-free pricing with zero implementation or hosting fees. 
+                You only pay for all finished checks.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
+                Learn more
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-transparent border-white/10 text-white">
+            <CardHeader>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="text-xs uppercase tracking-wider text-blue-400">USER-FRIENDLY</span>
+              </div>
+              <CardTitle className="text-xl mb-4">Omnichannel experience</CardTitle>
+              <CardDescription className="text-white/70 text-sm leading-relaxed">
+                Our identity verification process is designed for the best user experience. A low-friction, 
+                smooth cross‑device flow lifts completion rates and satisfaction.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
+                Learn more
+              </Button>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-
-      {/* Features Section */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 py-16 lg:px-12">
-        <Card className="bg-transparent border-white/10 text-white">
-          <CardHeader>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-              <span className="text-xs uppercase tracking-wider text-blue-400">EFFORTLESS</span>
-            </div>
-            <CardTitle className="text-xl mb-4">Out-of-the-box SaaS</CardTitle>
-            <CardDescription className="text-white/70 text-sm leading-relaxed">
-              Our identity verification can be launched in minutes with low-code integration. The universal 
-              verification process keeps setup light and UX clean.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
-              Learn more
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-transparent border-white/10 text-white">
-          <CardHeader>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-              <span className="text-xs uppercase tracking-wider text-blue-400">SCALABLE</span>
-            </div>
-            <CardTitle className="text-xl mb-4">Elastic by design</CardTitle>
-            <CardDescription className="text-white/70 text-sm leading-relaxed">
-              Whether you verify hundreds or millions, performance and uptime remain steady on our 
-              fully-managed, cloud-hosted infrastructure.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
-              Learn more
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-transparent border-white/10 text-white">
-          <CardHeader>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-              <span className="text-xs uppercase tracking-wider text-blue-400">FLEXIBLE</span>
-            </div>
-            <CardTitle className="text-xl mb-4">Pay-as-you-go</CardTitle>
-            <CardDescription className="text-white/70 text-sm leading-relaxed">
-              Transparent, commitment-free pricing with zero implementation or hosting fees. 
-              You only pay for all finished checks.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
-              Learn more
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-transparent border-white/10 text-white">
-          <CardHeader>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-              <span className="text-xs uppercase tracking-wider text-blue-400">USER-FRIENDLY</span>
-            </div>
-            <CardTitle className="text-xl mb-4">Omnichannel experience</CardTitle>
-            <CardDescription className="text-white/70 text-sm leading-relaxed">
-              Our identity verification process is designed for the best user experience. A low-friction, 
-              smooth cross‑device flow lifts completion rates and satisfaction.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="link" className="p-0 text-teal-400 hover:text-teal-300 text-sm">
-              Learn more
-            </Button>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
