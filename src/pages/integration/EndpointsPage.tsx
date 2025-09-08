@@ -123,19 +123,11 @@ const getStatusBadge = (status: string) => {
 export default function EndpointsPage() {
   const [isNewEndpointDialogOpen, setIsNewEndpointDialogOpen] = useState(false);
   const [newEndpointData, setNewEndpointData] = useState({
-    name: "",
-    url: "",
-    method: "POST",
-    rateLimit: "1000",
-    ratePeriod: "minute",
-    description: "",
-    environment: "test",
-    authType: "api_key",
-    headers: "",
-    timeout: "30",
-    retryAttempts: "3",
-    retryDelay: "1000",
-    status: "active"
+    verifiedUrl: "",
+    rejectedUrl: "",
+    unverifiedUrl: "",
+    callbackUrl: "",
+    logoUrl: ""
   });
 
   const handleCreateEndpoint = () => {
@@ -143,20 +135,17 @@ export default function EndpointsPage() {
     console.log("Creating new endpoint:", newEndpointData);
     setIsNewEndpointDialogOpen(false);
     setNewEndpointData({ 
-      name: "", 
-      url: "", 
-      method: "POST", 
-      rateLimit: "1000", 
-      ratePeriod: "minute", 
-      description: "", 
-      environment: "test", 
-      authType: "api_key", 
-      headers: "", 
-      timeout: "30", 
-      retryAttempts: "3", 
-      retryDelay: "1000", 
-      status: "active" 
+      verifiedUrl: "",
+      rejectedUrl: "",
+      unverifiedUrl: "",
+      callbackUrl: "",
+      logoUrl: ""
     });
+  };
+
+  const handleGenerateCredentials = () => {
+    // Generate API credentials logic here
+    console.log("Generating API credentials...");
   };
 
   return (
@@ -178,180 +167,150 @@ export default function EndpointsPage() {
                 <p>Create a new API endpoint configuration</p>
               </TooltipContent>
             </Tooltip>
-            <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Add New Endpoint</DialogTitle>
+                <DialogTitle>API Integration Setup</DialogTitle>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Configure your integration endpoints and generate secure API credentials for identity verification
+                </p>
               </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-6 py-4">
+                <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="endpoint-name">Endpoint Name *</Label>
+                    <Label htmlFor="verified-url" className="flex items-center gap-2">
+                      Verified URL
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <span className="h-4 w-4 rounded-full bg-muted flex items-center justify-center text-xs">?</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>URL where successful verification results are sent</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
                     <Input
-                      id="endpoint-name"
-                      placeholder="e.g., Document Verification"
-                      value={newEndpointData.name}
-                      onChange={(e) => setNewEndpointData({ ...newEndpointData, name: e.target.value })}
+                      id="verified-url"
+                      placeholder="https://yourdomain.com/verification/success"
+                      value={newEndpointData.verifiedUrl}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, verifiedUrl: e.target.value })}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="environment">Environment *</Label>
-                    <Select value={newEndpointData.environment} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, environment: value })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select environment" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="production">Production</SelectItem>
-                        <SelectItem value="staging">Staging</SelectItem>
-                        <SelectItem value="test">Test</SelectItem>
-                        <SelectItem value="development">Development</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="endpoint-url">URL Path *</Label>
-                  <Input
-                    id="endpoint-url"
-                    placeholder="e.g., /api/v1/verify/document"
-                    value={newEndpointData.url}
-                    onChange={(e) => setNewEndpointData({ ...newEndpointData, url: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Input
-                    id="description"
-                    placeholder="Brief description of endpoint functionality"
-                    value={newEndpointData.description}
-                    onChange={(e) => setNewEndpointData({ ...newEndpointData, description: e.target.value })}
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="method">HTTP Method *</Label>
-                    <Select value={newEndpointData.method} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, method: value })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select method" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="GET">GET</SelectItem>
-                        <SelectItem value="POST">POST</SelectItem>
-                        <SelectItem value="PUT">PUT</SelectItem>
-                        <SelectItem value="PATCH">PATCH</SelectItem>
-                        <SelectItem value="DELETE">DELETE</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="auth-type">Authentication</Label>
-                    <Select value={newEndpointData.authType} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, authType: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="api_key">API Key</SelectItem>
-                        <SelectItem value="bearer_token">Bearer Token</SelectItem>
-                        <SelectItem value="basic_auth">Basic Auth</SelectItem>
-                        <SelectItem value="oauth2">OAuth 2.0</SelectItem>
-                        <SelectItem value="none">None</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="status">Status</Label>
-                    <Select value={newEndpointData.status} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, status: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                        <SelectItem value="maintenance">Maintenance</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="rate-limit">Rate Limit</Label>
+                    <Label htmlFor="rejected-url" className="flex items-center gap-2">
+                      Rejected URL
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <span className="h-4 w-4 rounded-full bg-muted flex items-center justify-center text-xs">?</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>URL where failed verification results are sent</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
                     <Input
-                      id="rate-limit"
-                      type="number"
-                      placeholder="1000"
-                      value={newEndpointData.rateLimit}
-                      onChange={(e) => setNewEndpointData({ ...newEndpointData, rateLimit: e.target.value })}
+                      id="rejected-url"
+                      placeholder="https://yourdomain.com/verification/failed"
+                      value={newEndpointData.rejectedUrl}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, rejectedUrl: e.target.value })}
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="rate-period">Per</Label>
-                    <Select value={newEndpointData.ratePeriod} onValueChange={(value) => setNewEndpointData({ ...newEndpointData, ratePeriod: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="second">Second</SelectItem>
-                        <SelectItem value="minute">Minute</SelectItem>
-                        <SelectItem value="hour">Hour</SelectItem>
-                        <SelectItem value="day">Day</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="unverified-url" className="flex items-center gap-2">
+                      Unverified URL
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <span className="h-4 w-4 rounded-full bg-muted flex items-center justify-center text-xs">?</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>URL where pending verification results are sent</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
+                    <Input
+                      id="unverified-url"
+                      placeholder="https://yourdomain.com/verification/pending"
+                      value={newEndpointData.unverifiedUrl}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, unverifiedUrl: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="callback-url" className="flex items-center gap-2">
+                      Callback URL
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <span className="h-4 w-4 rounded-full bg-muted flex items-center justify-center text-xs">?</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Webhook endpoint for real-time verification updates</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
+                    <Input
+                      id="callback-url"
+                      placeholder="https://yourdomain.com/api/webhook/verification"
+                      value={newEndpointData.callbackUrl}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, callbackUrl: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="logo-url" className="flex items-center gap-2">
+                      Logo URL
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <span className="h-4 w-4 rounded-full bg-muted flex items-center justify-center text-xs">?</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>URL to your company logo for verification screens</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </Label>
+                    <Input
+                      id="logo-url"
+                      placeholder="https://yourdomain.com/assets/logo.png"
+                      value={newEndpointData.logoUrl}
+                      onChange={(e) => setNewEndpointData({ ...newEndpointData, logoUrl: e.target.value })}
+                    />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="headers">Custom Headers (Optional)</Label>
-                  <Input
-                    id="headers"
-                    placeholder='{"Content-Type": "application/json", "X-Custom-Header": "value"}'
-                    value={newEndpointData.headers}
-                    onChange={(e) => setNewEndpointData({ ...newEndpointData, headers: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground">JSON format for custom headers</p>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="timeout">Timeout (seconds)</Label>
-                    <Input
-                      id="timeout"
-                      type="number"
-                      placeholder="30"
-                      value={newEndpointData.timeout}
-                      onChange={(e) => setNewEndpointData({ ...newEndpointData, timeout: e.target.value })}
-                    />
+                <div className="border-t pt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-lg font-medium">API Credentials</h3>
+                      <p className="text-sm text-muted-foreground">Generate secure API keys after URL validation</p>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleGenerateCredentials}
+                      disabled={!newEndpointData.verifiedUrl || !newEndpointData.callbackUrl}
+                      className="bg-accent/10 border-accent text-accent hover:bg-accent/20"
+                    >
+                      Generate API Credentials
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="retry-attempts">Retry Attempts</Label>
-                    <Input
-                      id="retry-attempts"
-                      type="number"
-                      placeholder="3"
-                      value={newEndpointData.retryAttempts}
-                      onChange={(e) => setNewEndpointData({ ...newEndpointData, retryAttempts: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="retry-delay">Retry Delay (ms)</Label>
-                    <Input
-                      id="retry-delay"
-                      type="number"
-                      placeholder="1000"
-                      value={newEndpointData.retryDelay}
-                      onChange={(e) => setNewEndpointData({ ...newEndpointData, retryDelay: e.target.value })}
-                    />
-                  </div>
+                  
+                  {(!newEndpointData.verifiedUrl || !newEndpointData.callbackUrl) && (
+                    <div className="flex items-center gap-2 p-3 bg-warning/10 border border-warning/20 rounded-md">
+                      <span className="text-warning">⚠</span>
+                      <span className="text-sm text-warning">Complete URL validation to enable credential generation</span>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsNewEndpointDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={handleCreateEndpoint} disabled={!newEndpointData.name || !newEndpointData.url}>
-                  Create Endpoint
+                <Button 
+                  onClick={handleCreateEndpoint} 
+                  disabled={!newEndpointData.verifiedUrl && !newEndpointData.rejectedUrl && !newEndpointData.unverifiedUrl && !newEndpointData.callbackUrl}
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                >
+                  Save Configuration
                 </Button>
               </div>
             </DialogContent>
