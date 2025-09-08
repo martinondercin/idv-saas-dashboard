@@ -46,8 +46,8 @@ export default function NoCodeVerification() {
     setCurrentUrl(newUrl);
     setIsUrlGenerated(true);
     toast({
-      title: "Link Generated",
-      description: "Your verification link has been created successfully.",
+      title: "Link & QR Code Generated",
+      description: "Your verification link and QR code have been created successfully.",
     });
   };
 
@@ -96,13 +96,13 @@ export default function NoCodeVerification() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Banner */}
-      <div className="bg-green-500 text-white px-6 py-3 flex justify-between items-center">
+      <div className="bg-primary text-primary-foreground px-6 py-3 flex justify-between items-center">
         <span className="font-medium">No-code free trial</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={navigateToApiIntegration}
-          className="text-white hover:bg-white/20"
+          className="text-primary-foreground hover:bg-primary-foreground/20"
         >
           API Integration
         </Button>
@@ -133,23 +133,23 @@ export default function NoCodeVerification() {
               </div>
               <span className="text-sm text-muted-foreground">{usageLimit} free limit</span>
             </div>
-            <Progress value={usagePercentage} className="h-2 bg-gray-200" />
+            <Progress value={usagePercentage} className="h-2" />
           </div>
 
           {/* Success Message */}
-          <div className="bg-green-50 text-green-700 p-4 rounded-lg">
+          <div className="bg-primary/10 text-primary p-4 rounded-lg border border-primary/20">
             <p className="font-medium">
               You've successfully completed {usageCount} identity verifications with our service.
             </p>
           </div>
 
           {/* Limit Reached Message */}
-          <div className="bg-gray-50 text-gray-700 p-4 rounded-lg">
-            <p>
+          <div className="bg-muted p-4 rounded-lg border">
+            <p className="text-foreground">
               Your free trial has reached its limit, but we'd love to help you continue growing. Let's discuss a custom plan that fits your verification volume and business needs.{" "}
               <button
                 onClick={contactUs}
-                className="text-blue-600 hover:underline font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 Contact Us
               </button>
@@ -161,7 +161,7 @@ export default function NoCodeVerification() {
             <Button
               onClick={generateLink}
               disabled={isLimitReached}
-              className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+              className="flex items-center gap-2"
             >
               <Link2 className="h-4 w-4" />
               Generate Link
@@ -171,7 +171,7 @@ export default function NoCodeVerification() {
               onClick={revokeLink}
               disabled={!isUrlGenerated}
               variant="outline"
-              className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+              className="flex items-center gap-2 text-destructive border-destructive hover:bg-destructive/10"
             >
               <Trash2 className="h-4 w-4" />
               Revoke Link
@@ -192,7 +192,7 @@ export default function NoCodeVerification() {
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center gap-2 text-green-600 hover:text-green-700 p-0"
+                className="flex items-center gap-2 text-primary hover:text-primary/80 p-0"
               >
                 {isViewCurrentOpen ? (
                   <ChevronUp className="h-4 w-4" />
@@ -208,19 +208,19 @@ export default function NoCodeVerification() {
                 {/* Left Side - Link and QR Code */}
                 <div className="space-y-6">
                   {/* Verification Link */}
-                  <div className="bg-white border rounded-lg p-4">
-                    <Label className="text-sm font-medium text-gray-600 mb-2 block">
+                  <div className="bg-card border rounded-lg p-4">
+                    <Label className="text-sm font-medium text-muted-foreground mb-2 block">
                       Verification Link
                     </Label>
-                    <div className="bg-gray-50 p-3 rounded border font-mono text-sm">
+                    <div className="bg-muted p-3 rounded border font-mono text-sm">
                       {currentUrl}
                     </div>
                   </div>
 
                   {/* QR Code */}
-                  <div className="bg-white border rounded-lg p-4">
+                  <div className="bg-card border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-4">
-                      <Label className="text-sm font-medium text-gray-600">
+                      <Label className="text-sm font-medium text-muted-foreground">
                         Verification QR Code
                       </Label>
                       <Button
@@ -235,15 +235,15 @@ export default function NoCodeVerification() {
                     </div>
                     
                     {/* QR Code Display */}
-                    <div className="bg-white border-2 border-gray-200 rounded p-4 text-center">
-                      <div className="w-32 h-32 mx-auto bg-white border rounded flex items-center justify-center">
+                    <div className="bg-card border-2 border-border rounded p-4 text-center">
+                      <div className="w-32 h-32 mx-auto bg-card border rounded flex items-center justify-center">
                         {/* QR Code Pattern */}
                         <div className="grid grid-cols-8 gap-[1px] w-24 h-24">
                           {Array.from({ length: 64 }).map((_, i) => (
                             <div
                               key={i}
                               className={`w-full h-full ${
-                                Math.random() > 0.5 ? 'bg-black' : 'bg-white'
+                                Math.random() > 0.5 ? 'bg-foreground' : 'bg-background'
                               }`}
                             />
                           ))}
@@ -252,39 +252,39 @@ export default function NoCodeVerification() {
                     </div>
                   </div>
                   
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     You can re-use this link or QR code on other websites or channels until it is revoked.
                   </p>
                 </div>
 
                 {/* Right Side - No-Code Integration Info */}
-                <div className="bg-white border rounded-lg p-6">
+                <div className="bg-card border rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4">No-Code Integration</h3>
                   
                   <div className="mb-6">
-                    <h4 className="font-medium text-green-600 mb-2">Simplicity First</h4>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <h4 className="font-medium text-primary mb-2">Simplicity First</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
                       Our no-code solution allows you to implement identity verification without writing a single line of code.
                     </p>
                   </div>
 
                   <div>
                     <h4 className="font-medium mb-3">Key Benefits:</h4>
-                    <ul className="space-y-2 text-sm text-gray-600">
+                    <ul className="space-y-2 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2">
-                        <span className="text-green-500 mt-1">•</span>
+                        <span className="text-primary mt-1">•</span>
                         Instant setup with no technical knowledge required
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-green-500 mt-1">•</span>
+                        <span className="text-primary mt-1">•</span>
                         Share links via email, SMS or embed in your website
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-green-500 mt-1">•</span>
+                        <span className="text-primary mt-1">•</span>
                         QR code support for mobile verification
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-green-500 mt-1">•</span>
+                        <span className="text-primary mt-1">•</span>
                         Perfect for small businesses and quick implementations
                       </li>
                     </ul>
