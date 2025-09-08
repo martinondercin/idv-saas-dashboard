@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw } from "lucide-react";
+import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -107,7 +107,8 @@ export default function RealTimeFeed() {
   const [isLive, setIsLive] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>(liveTransactions);
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [displayCount, setDisplayCount] = useState(10); // Show 10 transactions by default
+  const [currentPage, setCurrentPage] = useState(1);
+  const transactionsPerPage = 10;
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -135,12 +136,30 @@ export default function RealTimeFeed() {
     return () => clearInterval(interval);
   }, [autoRefresh]);
 
-  const handleLoadMore = () => {
-    setDisplayCount(prev => Math.min(prev + 10, transactions.length));
+  // Pagination logic
+  const totalPages = Math.ceil(transactions.length / transactionsPerPage);
+  const startIndex = (currentPage - 1) * transactionsPerPage;
+  const endIndex = startIndex + transactionsPerPage;
+  const displayedTransactions = transactions.slice(startIndex, endIndex);
+
+  const goToNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
-  const displayedTransactions = transactions.slice(0, displayCount);
-  const hasMoreTransactions = displayCount < transactions.length;
+  const goToPrevPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
+
+  // Reset to first page when new transactions arrive
+  useEffect(() => {
+    if (autoRefresh && currentPage > 1) {
+      setCurrentPage(1);
+    }
+  }, [transactions.length, autoRefresh]); // Remove currentPage from dependencies to avoid infinite loop
 
   return (
     <div className="space-y-6">
@@ -319,21 +338,80 @@ export default function RealTimeFeed() {
               </TableBody>
             </Table>
           </div>
-          {hasMoreTransactions && (
-            <div className="flex justify-center pt-4 border-t">
-              <Button 
-                variant="outline" 
-                onClick={handleLoadMore}
-                className="flex items-center gap-2"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Load More Transactions ({transactions.length - displayCount} remaining)
-              </Button>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div className="text-sm text-muted-foreground">
+                Showing {startIndex + 1}-{Math.min(endIndex, transactions.length)} of {transactions.length} transactions
+              </div>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={goToPrevPage}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-1"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {/* Show page numbers */}
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => goToPage(pageNum)}
+                        className="w-8 h-8 p-0"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                  
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <>
+                      <span className="text-muted-foreground">...</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => goToPage(totalPages)}
+                        className="w-8 h-8 p-0"
+                      >
+                        {totalPages}
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-1"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           )}
-          <div className="flex justify-between items-center pt-4 border-t text-sm text-muted-foreground">
-            <span>Showing {displayedTransactions.length} of {transactions.length} transactions</span>
-            <span>Total transactions in feed: {transactions.length}</span>
+          <div className="flex justify-center pt-2 text-xs text-muted-foreground">
+            Page {currentPage} of {totalPages} • {transactions.length} total transactions
           </div>
         </CardContent>
       </Card>
