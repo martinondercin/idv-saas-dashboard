@@ -26,6 +26,7 @@ import TransactionDetails from "./pages/cases/TransactionDetails";
 import IntegrationGuide from "./pages/integration/IntegrationGuide";
 import MonitoringDashboard from "./pages/monitoring/MonitoringDashboard";
 import UsersAccess from "./pages/users/UsersAccess";
+import BillingDashboard from "./pages/billing/BillingDashboard";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,12 @@ const App = () => (
           <Route path="/users/roles" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
           <Route path="/users/sso" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
           <Route path="/users/audit" element={<DashboardLayout><UsersAccess /></DashboardLayout>} />
+
+          {/* Billing Routes */}
+          <Route path="/billing" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
+          <Route path="/billing/usage" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
+          <Route path="/billing/payment-methods" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
+          <Route path="/billing/invoices" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

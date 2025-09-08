@@ -6,6 +6,7 @@ import {
   FileCheck,
   Workflow,
   Monitor,
+  CreditCard,
   Users,
   Shield,
   ChevronLeft,
@@ -63,6 +64,16 @@ const navigationItems = [
     icon: Monitor,
     items: [
       { title: "System Status", url: "/monitoring/status" },
+    ],
+  },
+  {
+    title: "Billing",
+    url: "/billing",
+    icon: CreditCard,
+    items: [
+      { title: "Usage & Billing", url: "/billing/usage" },
+      { title: "Payment Methods", url: "/billing/payment-methods" },
+      { title: "Invoice History", url: "/billing/invoices" },
     ],
   },
   {
