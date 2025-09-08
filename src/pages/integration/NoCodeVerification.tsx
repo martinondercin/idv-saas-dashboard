@@ -18,6 +18,12 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function NoCodeVerification() {
   const { toast } = useToast();
@@ -27,6 +33,7 @@ export default function NoCodeVerification() {
   const [usageCount, setUsageCount] = useState(150);
   const [usageLimit, setUsageLimit] = useState(150);
   const [isViewCurrentOpen, setIsViewCurrentOpen] = useState(false);
+  const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
   
   const usagePercentage = (usageCount / usageLimit) * 100;
   const isLimitReached = usageCount >= usageLimit;
@@ -63,10 +70,7 @@ export default function NoCodeVerification() {
   };
 
   const learnMore = () => {
-    toast({
-      title: "Documentation",
-      description: "Opening help documentation...",
-    });
+    setIsLearnMoreOpen(true);
   };
 
   const copyToClipboard = () => {
@@ -303,6 +307,46 @@ export default function NoCodeVerification() {
           </div>
         </div>
       </div>
+
+      {/* Learn More Dialog */}
+      <Dialog open={isLearnMoreOpen} onOpenChange={setIsLearnMoreOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold">No-Code Integration</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium text-primary mb-2">Simplicity First</h4>
+              <p className="text-sm text-muted-foreground">
+                Our no-code solution allows you to implement identity verification without writing a single line of code.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-medium mb-3">Key Benefits:</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  Instant setup with no technical knowledge required
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  Share links via email, SMS or embed in your website
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  QR code support for mobile verification
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  Perfect for small businesses and quick implementations
+                </li>
+              </ul>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
