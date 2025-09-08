@@ -76,7 +76,7 @@ const Index = () => {
         {/* Right Hero Image */}
         <div className="relative">
           <img 
-            src="/lovable-uploads/76854368-893e-46da-9384-9ce7aea33f8a.png" 
+            src="/lovable-uploads/8708d617-d035-4180-bae5-fb7484f47840.png" 
             alt="Identity verification interface"
             className="w-full h-auto"
           />
