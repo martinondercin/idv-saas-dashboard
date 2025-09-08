@@ -45,6 +45,7 @@ export default function NoCodeVerification() {
     const newUrl = `https://verify-identity.info/${randomId}`;
     setCurrentUrl(newUrl);
     setIsUrlGenerated(true);
+    setIsViewCurrentOpen(true); // Auto-open the collapsible to show the new link
     toast({
       title: "Link & QR Code Generated",
       description: "Your verification link and QR code have been created successfully.",
@@ -54,9 +55,10 @@ export default function NoCodeVerification() {
   const revokeLink = () => {
     setCurrentUrl("");
     setIsUrlGenerated(false);
+    setIsViewCurrentOpen(false); // Also close the collapsible when revoking
     toast({
       title: "Link Revoked",
-      description: "Your verification link has been disabled.",
+      description: "Your verification link has been disabled. You can now generate a new one.",
     });
   };
 
