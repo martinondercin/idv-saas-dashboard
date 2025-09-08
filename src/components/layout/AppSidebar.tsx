@@ -95,6 +95,7 @@ const navigationItems = [
       { title: "Endpoint Configuration", url: "/integration/endpoints" },
       { title: "Environment Settings", url: "/integration/environments" },
       { title: "Integration Guide", url: "/integration/guide" },
+      { title: "No-Code Verification", url: "/integration/no-code" },
     ],
   },
 ];

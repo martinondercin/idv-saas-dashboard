@@ -27,6 +27,7 @@ import IntegrationGuide from "./pages/integration/IntegrationGuide";
 import MonitoringDashboard from "./pages/monitoring/MonitoringDashboard";
 import UsersAccess from "./pages/users/UsersAccess";
 import BillingDashboard from "./pages/billing/BillingDashboard";
+import NoCodeVerification from "./pages/integration/NoCodeVerification";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
           <Route path="/integration/endpoints" element={<DashboardLayout><EndpointsPage /></DashboardLayout>} />
           <Route path="/integration/environments" element={<DashboardLayout><EnvironmentsPage /></DashboardLayout>} />
           <Route path="/integration/guide" element={<DashboardLayout><IntegrationGuide /></DashboardLayout>} />
+          <Route path="/integration/no-code" element={<DashboardLayout><NoCodeVerification /></DashboardLayout>} />
 
           {/* Transaction Routes */}
           <Route path="/transactions" element={<DashboardLayout><TransactionsOverview /></DashboardLayout>} />
