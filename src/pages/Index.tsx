@@ -64,8 +64,11 @@ const Index = () => {
               size="lg" 
               variant="outline" 
               className="border-white/30 text-white hover:bg-white/10 px-8 py-3 rounded-md font-medium bg-transparent"
+              asChild
             >
-              Try demo
+              <a href="https://verify-identity.innovatrics.com/demo-iframe" target="_blank" rel="noopener noreferrer">
+                Try demo
+              </a>
             </Button>
           </div>
         </div>
