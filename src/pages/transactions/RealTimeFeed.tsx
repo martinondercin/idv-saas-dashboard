@@ -107,6 +107,7 @@ export default function RealTimeFeed() {
   const [isLive, setIsLive] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>(liveTransactions);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [displayCount, setDisplayCount] = useState(10); // Show 10 transactions by default
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -128,11 +129,18 @@ export default function RealTimeFeed() {
         stage: ["Document Analysis", "Face Match", "Liveness Detection", "Final Review", "Quality Check", "Manual Review"][Math.floor(Math.random() * 6)]
       };
       
-      setTransactions(prev => [newTransaction, ...prev.slice(0, 19)]);
+      setTransactions(prev => [newTransaction, ...prev.slice(0, 49)]); // Keep up to 50 transactions
     }, 3000);
 
     return () => clearInterval(interval);
   }, [autoRefresh]);
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => Math.min(prev + 10, transactions.length));
+  };
+
+  const displayedTransactions = transactions.slice(0, displayCount);
+  const hasMoreTransactions = displayCount < transactions.length;
 
   return (
     <div className="space-y-6">
@@ -282,7 +290,7 @@ export default function RealTimeFeed() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactions.map((transaction, index) => (
+                {displayedTransactions.map((transaction, index) => (
                   <TableRow 
                     key={transaction.id}
                     className={`cursor-pointer hover:bg-muted/50 ${index === 0 && autoRefresh ? 'bg-primary/5' : ''}`}
@@ -310,6 +318,22 @@ export default function RealTimeFeed() {
                 ))}
               </TableBody>
             </Table>
+          </div>
+          {hasMoreTransactions && (
+            <div className="flex justify-center pt-4 border-t">
+              <Button 
+                variant="outline" 
+                onClick={handleLoadMore}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Load More Transactions ({transactions.length - displayCount} remaining)
+              </Button>
+            </div>
+          )}
+          <div className="flex justify-between items-center pt-4 border-t text-sm text-muted-foreground">
+            <span>Showing {displayedTransactions.length} of {transactions.length} transactions</span>
+            <span>Total transactions in feed: {transactions.length}</span>
           </div>
         </CardContent>
       </Card>
