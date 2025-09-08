@@ -171,7 +171,7 @@ export default function Login() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-success hover:bg-success/90 text-success-foreground font-medium"
+              className="w-full h-12 bg-accent hover:bg-accent/90 text-accent-foreground font-medium"
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">

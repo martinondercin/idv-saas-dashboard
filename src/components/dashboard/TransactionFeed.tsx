@@ -86,7 +86,7 @@ export function TransactionFeed() {
   const getRiskScoreColor = (score: number) => {
     if (score >= 0.8) return "bg-error-light text-error";
     if (score >= 0.5) return "bg-warning-light text-warning";
-    return "bg-success-light text-success";
+    return "bg-accent/10 text-accent";
   };
 
   const filteredTransactions = mockTransactions.filter(transaction => {

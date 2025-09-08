@@ -20,7 +20,7 @@ export function KPICard({ title, value, change, icon: Icon, description, classNa
   const getChangeColor = (type: 'increase' | 'decrease' | 'neutral') => {
     switch (type) {
       case 'increase':
-        return 'bg-success-light text-success';
+        return 'bg-accent/10 text-accent';
       case 'decrease':
         return 'bg-error-light text-error';
       default:

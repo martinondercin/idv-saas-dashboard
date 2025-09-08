@@ -21,10 +21,10 @@ export default function MonitoringDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">System Status</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-success" />
+            <CheckCircle2 className="h-4 w-4 text-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">Operational</div>
+            <div className="text-2xl font-bold text-accent">Operational</div>
             <p className="text-xs text-muted-foreground">All services running</p>
           </CardContent>
         </Card>
@@ -74,37 +74,37 @@ export default function MonitoringDashboard() {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="flex items-center justify-between p-3 border rounded-lg">
             <span className="font-medium">Identity Verification API</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
           <div className="flex items-center justify-between p-3 border rounded-lg">
             <span className="font-medium">Document Processing</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
           <div className="flex items-center justify-between p-3 border rounded-lg">
             <span className="font-medium">Liveness Detection</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
           <div className="flex items-center justify-between p-3 border rounded-lg">
             <span className="font-medium">Webhook Services</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
           <div className="flex items-center justify-between p-3 border rounded-lg">
             <span className="font-medium">Database Cluster</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
           <div className="flex items-center justify-between p-3 border rounded-lg">
             <span className="font-medium">CDN & Storage</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>

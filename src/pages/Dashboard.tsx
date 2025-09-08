@@ -80,13 +80,13 @@ export default function Dashboard() {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex items-center justify-between">
             <span className="text-sm">API Gateway</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">OCR Service</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>
@@ -98,7 +98,7 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">Webhook Delivery</span>
-            <Badge className="bg-success-light text-success">
+            <Badge className="bg-accent/10 text-accent">
               Operational
             </Badge>
           </div>

@@ -159,7 +159,7 @@
 /* Component Variants and Utilities */
 @layer utilities {
   /* Status colors for various UI states */
-  .status-success { @apply bg-success text-success-foreground; }
+  .status-success { @apply bg-accent text-accent-foreground; }
   .status-pending { @apply bg-pending text-pending-foreground; }
   .status-error { @apply bg-error text-error-foreground; }
   .status-warning { @apply bg-warning text-warning-foreground; }

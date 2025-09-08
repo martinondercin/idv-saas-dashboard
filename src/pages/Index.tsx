@@ -30,7 +30,7 @@ const Index = () => {
               configure integration parameters, and generate operational reports.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="lg" asChild className="bg-success hover:bg-success/90 text-success-foreground">
+              <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
                 <Link to="/signup">
                   Get Started <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -69,15 +69,15 @@ const Index = () => {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">API Key Management</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">Webhook Configuration</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">Environment Settings</span>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ const Index = () => {
                     <span className="text-sm text-muted-foreground">Alert Management</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">Performance Metrics</span>
                   </div>
                 </div>
@@ -125,15 +125,15 @@ const Index = () => {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">Manual Review Queue</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">Escalation Rules</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-success" />
+                    <CheckCircle className="h-4 w-4 text-accent" />
                     <span className="text-sm text-muted-foreground">Audit Trails</span>
                   </div>
                 </div>
@@ -161,7 +161,7 @@ const Index = () => {
                 <div className="text-sm text-muted-foreground">Uptime</div>
               </div>
               <div className="bg-card p-8 text-center">
-                <div className="text-3xl font-bold text-success">2.5s</div>
+                <div className="text-3xl font-bold text-accent">2.5s</div>
                 <div className="text-sm text-muted-foreground">Avg Processing</div>
               </div>
               <div className="bg-card p-8 text-center">
@@ -188,7 +188,7 @@ const Index = () => {
               Join thousands of businesses using our identity verification platform
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="lg" asChild className="bg-success hover:bg-success/90 text-success-foreground">
+              <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
                 <Link to="/signup">
                   Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

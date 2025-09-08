@@ -6,13 +6,13 @@ const statusBadgeVariants = cva(
   {
     variants: {
       status: {
-        success: "bg-success-light text-success border border-success/20",
+        success: "bg-accent/10 text-accent border border-accent/20",
         pending: "bg-pending-light text-pending border border-pending/20", 
         error: "bg-error-light text-error border border-error/20",
         warning: "bg-warning-light text-warning border border-warning/20",
         "manual-review": "bg-manual-review-light text-manual-review border border-manual-review/20",
         processing: "bg-secondary text-secondary-foreground border border-secondary-vibrant/20",
-        completed: "bg-success-light text-success border border-success/20",
+        completed: "bg-accent/10 text-accent border border-accent/20",
         failed: "bg-error-light text-error border border-error/20",
         expired: "bg-muted text-muted-foreground border border-border",
       },
