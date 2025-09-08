@@ -57,10 +57,9 @@ const Index = () => {
             <div className="flex space-x-4">
               <Button 
                 size="lg" 
-                asChild
                 className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-md font-medium"
               >
-                <Link to="/login">Get Started</Link>
+                Talk to a specialist
               </Button>
               <Button 
                 size="lg" 
@@ -82,6 +81,34 @@ const Index = () => {
               alt="Person using tablet for identity verification"
               className="w-full h-auto rounded-lg"
             />
+            
+            {/* Floating UI Elements */}
+            <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+              <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                </div>
+                Rapid deployment
+              </div>
+            </div>
+            
+            <div className="absolute top-32 right-0 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+              <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                </div>
+                Omnichannel
+              </div>
+            </div>
+            
+            <div className="absolute bottom-32 left-4 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+              <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                </div>
+                Seamless UX
+              </div>
+            </div>
           </div>
         </div>
 
