@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Eye, Download, Filter, Calendar } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ExternalLink, Eye, Download, Filter, Calendar, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -115,6 +116,7 @@ const mockTransactions: Transaction[] = [
 ];
 
 export function TransactionFeed() {
+  const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [flowTypeFilter, setFlowTypeFilter] = useState("all");
   const [regionFilter, setRegionFilter] = useState("all");
@@ -161,6 +163,20 @@ export function TransactionFeed() {
   };
 
   const filteredTransactions = mockTransactions.filter(transaction => {
+    // Search filter - check multiple fields for the search term
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = 
+        transaction.id.toLowerCase().includes(searchLower) ||
+        transaction.customerId.toLowerCase().includes(searchLower) ||
+        transaction.flowType.toLowerCase().includes(searchLower) ||
+        transaction.status.toLowerCase().includes(searchLower) ||
+        transaction.region.toLowerCase().includes(searchLower) ||
+        transaction.timestamp.toLowerCase().includes(searchLower);
+      
+      if (!matchesSearch) return false;
+    }
+    
     if (statusFilter !== "all" && transaction.status !== statusFilter) return false;
     if (flowTypeFilter !== "all" && transaction.flowType !== flowTypeFilter) return false;
     if (regionFilter !== "all" && transaction.region !== regionFilter) return false;
@@ -188,12 +204,26 @@ export function TransactionFeed() {
           </div>
         </div>
         
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 mt-4">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Filters:</span>
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-4 mt-4">
+          {/* Search Field */}
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search transactions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
+          
+          {/* Filters */}
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Filters:</span>
+            </div>
           
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-40">
@@ -283,7 +313,8 @@ export function TransactionFeed() {
                 />
               </PopoverContent>
             </Popover>
-          )}
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
