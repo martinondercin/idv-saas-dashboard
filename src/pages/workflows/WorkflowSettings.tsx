@@ -23,6 +23,7 @@ type Workflow = {
   steps: string[];
   estimatedTime: string;
   isActive: boolean;
+  isDefault: boolean;
   isUpdating?: boolean;
   iconName: string;
 };
@@ -44,7 +45,8 @@ const initialWorkflows: Workflow[] = [
     iconName: "Shield",
     steps: ["Document capture", "Document validation", "Selfie", "Face match", "Liveness check"],
     estimatedTime: "60-90 seconds",
-    isActive: true
+    isActive: true,
+    isDefault: true
   },
   {
     id: "age-verification",
@@ -53,7 +55,8 @@ const initialWorkflows: Workflow[] = [
     iconName: "CheckCircle",
     steps: ["Selfie capture", "Age estimation", "Document verification (if needed)"],
     estimatedTime: "30-45 seconds",
-    isActive: true
+    isActive: true,
+    isDefault: false
   },
   {
     id: "ocr-document",
@@ -62,7 +65,8 @@ const initialWorkflows: Workflow[] = [
     iconName: "FileText",
     steps: ["Document capture", "OCR text extraction", "Data validation"],
     estimatedTime: "15-30 seconds",
-    isActive: false
+    isActive: false,
+    isDefault: false
   },
   {
     id: "liveness-only",
@@ -71,7 +75,8 @@ const initialWorkflows: Workflow[] = [
     iconName: "Eye",
     steps: ["Selfie capture", "Liveness detection"],
     estimatedTime: "10-15 seconds",
-    isActive: true
+    isActive: true,
+    isDefault: false
   },
   {
     id: "kyc-compliance",
@@ -80,11 +85,12 @@ const initialWorkflows: Workflow[] = [
     iconName: "Settings",
     steps: ["Identity verification", "AML screening", "Watchlist check", "Compliance review"],
     estimatedTime: "2-3 minutes",
-    isActive: false
+    isActive: false,
+    isDefault: false
   }
 ];
 
-const WorkflowCard = ({ workflow, onToggle }: { workflow: Workflow, onToggle: (id: string, newState: boolean) => void }) => {
+const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow, onToggle: (id: string, newState: boolean) => void, onSetDefault: (id: string) => void }) => {
   const Icon = iconMap[workflow.iconName as keyof typeof iconMap] || Settings; // Fallback to Settings icon
   
   const getStatusColor = () => {
@@ -110,8 +116,15 @@ const WorkflowCard = ({ workflow, onToggle }: { workflow: Workflow, onToggle: (i
                 <p className="text-sm text-muted-foreground">{workflow.description}</p>
               </div>
             </div>
-            <div className={`text-sm font-medium ${getStatusColor()}`}>
-              {getStatusText()}
+            <div className="flex items-center gap-2">
+              {workflow.isDefault && (
+                <Badge variant="default" className="bg-teal-500 text-white">
+                  Default
+                </Badge>
+              )}
+              <div className={`text-sm font-medium ${getStatusColor()}`}>
+                {getStatusText()}
+              </div>
             </div>
           </div>
 
@@ -144,26 +157,37 @@ const WorkflowCard = ({ workflow, onToggle }: { workflow: Workflow, onToggle: (i
               <span className="text-sm">Active</span>
             </div>
             
-            <Button 
-              variant={workflow.isActive ? "default" : "secondary"}
-              size="sm"
-              disabled={workflow.isUpdating}
-              onClick={() => onToggle(workflow.id, !workflow.isActive)}
-            >
-              {workflow.isUpdating ? (
-                "Updating..."
-              ) : workflow.isActive ? (
-                <>
-                  <Pause className="h-3 w-3 mr-1" />
-                  Pause Flow
-                </>
-              ) : (
-                <>
-                  <Zap className="h-3 w-3 mr-1" />
-                  Activate Flow
-                </>
+            <div className="flex items-center gap-2">
+              {workflow.isActive && !workflow.isDefault && (
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onSetDefault(workflow.id)}
+                >
+                  Set as Default
+                </Button>
               )}
-            </Button>
+              <Button 
+                variant={workflow.isActive ? "default" : "secondary"}
+                size="sm"
+                disabled={workflow.isUpdating}
+                onClick={() => onToggle(workflow.id, !workflow.isActive)}
+              >
+                {workflow.isUpdating ? (
+                  "Updating..."
+                ) : workflow.isActive ? (
+                  <>
+                    <Pause className="h-3 w-3 mr-1" />
+                    Pause Flow
+                  </>
+                ) : (
+                  <>
+                    <Zap className="h-3 w-3 mr-1" />
+                    Activate Flow
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>
@@ -202,10 +226,10 @@ export default function WorkflowSettings() {
     // Mock API call with delay
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Update workflow state
+    // Update workflow state - if deactivating the default, remove default status
     setWorkflows(prev =>
       prev.map(w =>
-        w.id === id ? { ...w, isActive: newState, isUpdating: false } : w
+        w.id === id ? { ...w, isActive: newState, isDefault: newState ? w.isDefault : false, isUpdating: false } : w
       )
     );
 
@@ -214,6 +238,18 @@ export default function WorkflowSettings() {
       title: `Workflow ${newState ? 'Activated' : 'Paused'}`,
       description: `${workflow?.name} has been ${newState ? 'activated' : 'paused'} successfully.`,
       variant: newState ? "default" : "destructive",
+    });
+  };
+
+  const handleSetDefault = (id: string) => {
+    setWorkflows(prev =>
+      prev.map(w => ({ ...w, isDefault: w.id === id }))
+    );
+
+    const workflow = workflows.find(w => w.id === id);
+    toast({
+      title: "Default Workflow Set",
+      description: `${workflow?.name} has been set as the default workflow.`,
     });
   };
 
@@ -232,6 +268,7 @@ export default function WorkflowSettings() {
             key={workflow.id} 
             workflow={workflow} 
             onToggle={handleToggle}
+            onSetDefault={handleSetDefault}
           />
         ))}
       </div>

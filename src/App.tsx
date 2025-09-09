@@ -28,6 +28,7 @@ import MonitoringDashboard from "./pages/monitoring/MonitoringDashboard";
 import UsersAccess from "./pages/users/UsersAccess";
 import BillingDashboard from "./pages/billing/BillingDashboard";
 import NoCodeVerification from "./pages/integration/NoCodeVerification";
+import VerificationStart from "./pages/VerificationStart";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify" element={<VerificationStart />} />
           <Route
             path="/dashboard"
             element={
