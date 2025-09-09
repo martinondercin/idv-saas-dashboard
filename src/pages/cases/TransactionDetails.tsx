@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { 
   User, 
   CreditCard, 
@@ -86,19 +87,27 @@ export default function TransactionDetails() {
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [showRejectDialog, setShowRejectDialog] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState(mockTransaction.status);
+  const { toast } = useToast();
 
   const handleApproveIdentity = () => {
     console.log(`Approving identity for transaction ${id}`);
     setTransactionStatus("Approved");
     setShowApproveDialog(false);
-    // Handle approval logic here
+    toast({
+      title: "Identity Approved",
+      description: `Identity for transaction ${id || mockTransaction.id} has been approved successfully.`,
+    });
   };
 
   const handleRejectIdentity = () => {
     console.log(`Rejecting identity for transaction ${id}`);
     setTransactionStatus("Rejected");
     setShowRejectDialog(false);
-    // Handle rejection logic here
+    toast({
+      title: "Identity Rejected",
+      description: `Identity for transaction ${id || mockTransaction.id} has been rejected.`,
+      variant: "destructive",
+    });
   };
   
   return (
@@ -111,11 +120,28 @@ export default function TransactionDetails() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+              toast({
+                title: "Exporting Report",
+                description: `Transaction report for ${id || mockTransaction.id} is being generated.`,
+              });
+            }}
+          >
             <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
-          <Button size="sm">
+          <Button 
+            size="sm"
+            onClick={() => {
+              toast({
+                title: "Note Added",
+                description: "Note has been added to the transaction record.",
+              });
+            }}
+          >
             <MessageSquare className="h-4 w-4 mr-2" />
             Add Note
           </Button>
@@ -441,17 +467,37 @@ export default function TransactionDetails() {
                 className="w-full" 
                 variant="outline"
                 onClick={() => {
-                  console.log(`Escalating transaction ${id} to supervisor`);
-                  // Handle escalation logic
+                  toast({
+                    title: "Transaction Escalated",
+                    description: `Transaction ${id || mockTransaction.id} has been escalated to supervisor for review.`,
+                  });
                 }}
               >
                 <AlertTriangle className="h-4 w-4 mr-2" />
                 Escalate to Supervisor
               </Button>
-              <Button className="w-full" variant="outline">
+              <Button 
+                className="w-full" 
+                variant="outline"
+                onClick={() => {
+                  toast({
+                    title: "Information Request Sent",
+                    description: "A request for additional information has been sent to the user.",
+                  });
+                }}
+              >
                 Request More Info
               </Button>
-              <Button className="w-full" variant="outline">
+              <Button 
+                className="w-full" 
+                variant="outline"
+                onClick={() => {
+                  toast({
+                    title: "Opening User Profile",
+                    description: `Redirecting to user profile for ${mockTransaction.userInfo.name}`,
+                  });
+                }}
+              >
                 <Eye className="h-4 w-4 mr-2" />
                 View User Profile
               </Button>
