@@ -35,9 +35,7 @@ interface Transaction {
   timestamp: string;
   customerId: string;
   flowType: string;
-  status: 'success' | 'pending' | 'error' | 'manual-review' | 'accepted' | 'rejected';
-  region: string;
-  riskScore?: number;
+  status: 'accepted' | 'rejected' | 'manual-review';
 }
 
 const mockTransactions: Transaction[] = [
@@ -46,72 +44,56 @@ const mockTransactions: Transaction[] = [
     timestamp: "2024-01-15 14:32:01",
     customerId: "CUST-789012",
     flowType: "Identity Verification",
-    status: "accepted",
-    region: "US-East",
-    riskScore: 0.15
+    status: "accepted"
   },
   {
     id: "TXN-2024-001235", 
     timestamp: "2024-01-14 16:31:45",
     customerId: "CUST-789013",
     flowType: "Document Verification",
-    status: "manual-review",
-    region: "EU-West",
-    riskScore: 0.85
+    status: "manual-review"
   },
   {
     id: "TXN-2024-001236",
     timestamp: "2024-01-13 09:30:22",
     customerId: "CUST-789014", 
     flowType: "Liveness Check",
-    status: "pending",
-    region: "APAC",
-    riskScore: 0.45
+    status: "rejected"
   },
   {
     id: "TXN-2024-001237",
     timestamp: "2024-01-12 11:29:08",
     customerId: "CUST-789015",
     flowType: "KYC Verification",
-    status: "rejected",
-    region: "US-West",
-    riskScore: 0.95
+    status: "rejected"
   },
   {
     id: "TXN-2024-001238",
     timestamp: "2024-01-11 08:28:33",
     customerId: "CUST-789016",
     flowType: "Identity Verification", 
-    status: "accepted",
-    region: "EU-Central",
-    riskScore: 0.12
+    status: "accepted"
   },
   {
     id: "TXN-2024-001239",
     timestamp: "2024-01-10 13:45:12",
     customerId: "CUST-789017",
     flowType: "Document Verification",
-    status: "rejected",
-    region: "US-East",
-    riskScore: 0.88
+    status: "rejected"
   },
   {
     id: "TXN-2024-001240",
     timestamp: "2024-01-09 10:15:33",
     customerId: "CUST-789018",
     flowType: "Biometric Verification",
-    status: "accepted",
-    region: "APAC",
-    riskScore: 0.22
+    status: "accepted"
   },
   {
     id: "TXN-2024-001241",
     timestamp: "2024-01-08 15:22:44",
     customerId: "CUST-789019",
     flowType: "Address Verification",
-    status: "error",
-    region: "EU-West",
-    riskScore: 0.67
+    status: "manual-review"
   }
 ];
 
@@ -122,45 +104,35 @@ const sandboxTransactions: Transaction[] = [
     timestamp: "2024-01-15 10:00:00",
     customerId: "TEST-USER-001",
     flowType: "Identity Verification",
-    status: "accepted",
-    region: "TEST-ENV",
-    riskScore: 0.05
+    status: "accepted"
   },
   {
     id: "SBX-TEST-002", 
     timestamp: "2024-01-15 10:05:00",
     customerId: "TEST-USER-002",
     flowType: "Document Verification",
-    status: "pending",
-    region: "TEST-ENV",
-    riskScore: 0.25
+    status: "manual-review"
   },
   {
     id: "SBX-TEST-003",
     timestamp: "2024-01-15 10:10:00",
     customerId: "TEST-USER-003", 
     flowType: "Liveness Check",
-    status: "manual-review",
-    region: "TEST-ENV",
-    riskScore: 0.55
+    status: "manual-review"
   },
   {
     id: "SBX-TEST-004",
     timestamp: "2024-01-15 10:15:00",
     customerId: "TEST-USER-004",
     flowType: "KYC Verification",
-    status: "error",
-    region: "TEST-ENV",
-    riskScore: 0.75
+    status: "rejected"
   },
   {
     id: "SBX-TEST-005",
     timestamp: "2024-01-15 10:20:00",
     customerId: "TEST-USER-005",
     flowType: "Identity Verification", 
-    status: "rejected",
-    region: "TEST-ENV",
-    riskScore: 0.95
+    status: "rejected"
   }
 ];
 
@@ -168,7 +140,6 @@ export function TransactionFeed() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [flowTypeFilter, setFlowTypeFilter] = useState("all");
-  const [regionFilter, setRegionFilter] = useState("all");
   const [timePeriodFilter, setTimePeriodFilter] = useState("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [currentEnvironment, setCurrentEnvironment] = useState("production");
@@ -203,17 +174,12 @@ export function TransactionFeed() {
   // Select appropriate data source based on environment
   const transactionData = currentEnvironment === 'sandbox' ? sandboxTransactions : mockTransactions;
 
-  const getRiskScoreColor = (score: number) => {
-    if (score >= 0.8) return "bg-error-light text-error";
-    if (score >= 0.5) return "bg-warning-light text-warning";
-    return "bg-accent/10 text-accent";
-  };
-
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case 'accepted': return 'success';
       case 'rejected': return 'failed';
-      default: return status as 'success' | 'pending' | 'error' | 'manual-review' | 'warning' | 'processing' | 'completed' | 'failed' | 'expired';
+      case 'manual-review': return 'warning';
+      default: return status as 'success' | 'manual-review' | 'warning' | 'failed';
     }
   };
 
@@ -251,7 +217,6 @@ export function TransactionFeed() {
         transaction.customerId.toLowerCase().includes(searchLower) ||
         transaction.flowType.toLowerCase().includes(searchLower) ||
         transaction.status.toLowerCase().includes(searchLower) ||
-        transaction.region.toLowerCase().includes(searchLower) ||
         transaction.timestamp.toLowerCase().includes(searchLower);
       
       if (!matchesSearch) return false;
@@ -259,13 +224,11 @@ export function TransactionFeed() {
     
     if (statusFilter !== "all" && transaction.status !== statusFilter) return false;
     if (flowTypeFilter !== "all" && transaction.flowType !== flowTypeFilter) return false;
-    if (regionFilter !== "all" && transaction.region !== regionFilter) return false;
     if (!isTransactionInTimeRange(transaction.timestamp)) return false;
     return true;
   });
 
   const uniqueFlowTypes: string[] = [...new Set(transactionData.map(t => t.flowType))];
-  const uniqueRegions: string[] = [...new Set(transactionData.map(t => t.region))];
 
   return (
     <Card>
@@ -318,8 +281,6 @@ export function TransactionFeed() {
               <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="accepted">Accepted</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="error">Error</SelectItem>
               <SelectItem value="manual-review">Manual Review</SelectItem>
             </SelectContent>
           </Select>
@@ -332,18 +293,6 @@ export function TransactionFeed() {
               <SelectItem value="all">All Flow Types</SelectItem>
               {uniqueFlowTypes.map(flowType => (
                 <SelectItem key={flowType} value={flowType}>{flowType}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={regionFilter} onValueChange={setRegionFilter}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Region" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Regions</SelectItem>
-              {uniqueRegions.map(region => (
-                <SelectItem key={region} value={region}>{region}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -411,9 +360,6 @@ export function TransactionFeed() {
               <TableHead>Customer</TableHead>
               <TableHead>Flow Type</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Region</TableHead>
-              <TableHead>Risk Score</TableHead>
-              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -437,24 +383,6 @@ export function TransactionFeed() {
                   <StatusBadge status={getStatusBadgeVariant(transaction.status)}>
                     {transaction.status.replace('-', ' ')}
                   </StatusBadge>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {transaction.region}
-                </TableCell>
-                <TableCell>
-                  {transaction.riskScore && (
-                    <Badge 
-                      variant="outline" 
-                      className={getRiskScoreColor(transaction.riskScore)}
-                    >
-                      {(transaction.riskScore * 100).toFixed(0)}%
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm">
-                    <Eye className="h-4 w-4" />
-                  </Button>
                 </TableCell>
               </TableRow>
             ))}
