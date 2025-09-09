@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Play, 
   Pause, 
@@ -14,7 +16,18 @@ import {
   Settings
 } from "lucide-react";
 
-const workflowTemplates = [
+type Workflow = {
+  id: string;
+  name: string;
+  description: string;
+  steps: string[];
+  estimatedTime: string;
+  isActive: boolean;
+  isUpdating?: boolean;
+  icon: any;
+};
+
+const initialWorkflows: Workflow[] = [
   {
     id: "full-kyc",
     name: "Full Identity Verification",
@@ -22,7 +35,7 @@ const workflowTemplates = [
     icon: Shield,
     steps: ["Document capture", "Document validation", "Selfie", "Face match", "Liveness check"],
     estimatedTime: "60-90 seconds",
-    status: "active"
+    isActive: true
   },
   {
     id: "age-verification",
@@ -31,7 +44,7 @@ const workflowTemplates = [
     icon: CheckCircle,
     steps: ["Selfie capture", "Age estimation", "Document verification (if needed)"],
     estimatedTime: "30-45 seconds",
-    status: "active"
+    isActive: true
   },
   {
     id: "ocr-document",
@@ -40,7 +53,7 @@ const workflowTemplates = [
     icon: FileText,
     steps: ["Document capture", "OCR text extraction", "Data validation"],
     estimatedTime: "15-30 seconds",
-    status: "paused"
+    isActive: false
   },
   {
     id: "liveness-only",
@@ -49,7 +62,7 @@ const workflowTemplates = [
     icon: Eye,
     steps: ["Selfie capture", "Liveness detection"],
     estimatedTime: "10-15 seconds",
-    status: "active"
+    isActive: true
   },
   {
     id: "kyc-compliance",
@@ -58,30 +71,20 @@ const workflowTemplates = [
     icon: Settings,
     steps: ["Identity verification", "AML screening", "Watchlist check", "Compliance review"],
     estimatedTime: "2-3 minutes",
-    status: "inactive"
+    isActive: false
   }
 ];
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "active": return "text-green-600";
-    case "paused": return "text-yellow-600"; 
-    case "inactive": return "text-gray-400";
-    default: return "text-gray-400";
-  }
-};
-
-const getStatusText = (status: string) => {
-  switch (status) {
-    case "active": return "Active";
-    case "paused": return "Paused";
-    case "inactive": return "Inactive";
-    default: return "Unknown";
-  }
-};
-
-const WorkflowCard = ({ template, onStatusChange, onActivateFlow }: { template: any, onStatusChange: (id: string, status: string) => void, onActivateFlow: (id: string) => void }) => {
-  const Icon = template.icon;
+const WorkflowCard = ({ workflow, onToggle }: { workflow: Workflow, onToggle: (id: string, newState: boolean) => void }) => {
+  const Icon = workflow.icon;
+  
+  const getStatusColor = () => {
+    return workflow.isActive ? "text-green-600" : "text-yellow-600";
+  };
+  
+  const getStatusText = () => {
+    return workflow.isActive ? "Active" : "Paused";
+  };
   
   return (
     <Card className="hover:shadow-md transition-all duration-200">
@@ -90,16 +93,16 @@ const WorkflowCard = ({ template, onStatusChange, onActivateFlow }: { template: 
           {/* Header */}
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg bg-primary/10`}>
+              <div className="p-2 rounded-lg bg-primary/10">
                 <Icon className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">{template.name}</h3>
-                <p className="text-sm text-muted-foreground">{template.description}</p>
+                <h3 className="font-semibold text-lg">{workflow.name}</h3>
+                <p className="text-sm text-muted-foreground">{workflow.description}</p>
               </div>
             </div>
-            <div className={`text-sm font-medium ${getStatusColor(template.status)}`}>
-              {getStatusText(template.status)}
+            <div className={`text-sm font-medium ${getStatusColor()}`}>
+              {getStatusText()}
             </div>
           </div>
 
@@ -107,7 +110,7 @@ const WorkflowCard = ({ template, onStatusChange, onActivateFlow }: { template: 
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">Workflow Steps:</p>
             <div className="flex flex-wrap gap-1">
-              {template.steps.map((step: string, index: number) => (
+              {workflow.steps.map((step: string, index: number) => (
                 <Badge key={index} variant="outline" className="text-xs">
                   {step}
                 </Badge>
@@ -118,50 +121,39 @@ const WorkflowCard = ({ template, onStatusChange, onActivateFlow }: { template: 
           {/* Time */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
-            <span>Estimated time: {template.estimatedTime}</span>
+            <span>Estimated time: {workflow.estimatedTime}</span>
           </div>
 
           {/* Controls */}
           <div className="flex items-center justify-between pt-4 border-t">
             <div className="flex items-center gap-3">
               <Switch 
-                checked={template.status === "active"}
-                onCheckedChange={(checked) => 
-                  onStatusChange(template.id, checked ? "active" : "inactive")
-                }
+                checked={workflow.isActive}
+                disabled={workflow.isUpdating}
+                onCheckedChange={(checked) => onToggle(workflow.id, checked)}
               />
               <span className="text-sm">Active</span>
-              
-              {template.status === "active" && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => onStatusChange(template.id, "paused")}
-                >
-                  <Pause className="h-3 w-3 mr-1" />
-                  Pause
-                </Button>
-              )}
-              
-              {template.status === "paused" && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => onStatusChange(template.id, "active")}
-                >
-                  <Play className="h-3 w-3 mr-1" />
-                  Resume
-                </Button>
-              )}
             </div>
             
             <Button 
+              variant={workflow.isActive ? "default" : "secondary"}
               size="sm"
-              onClick={() => onActivateFlow(template.id)}
-              disabled={template.status === "inactive"}
+              disabled={workflow.isUpdating}
+              onClick={() => onToggle(workflow.id, !workflow.isActive)}
             >
-              <Zap className="h-3 w-3 mr-1" />
-              Activate Flow
+              {workflow.isUpdating ? (
+                "Updating..."
+              ) : workflow.isActive ? (
+                <>
+                  <Pause className="h-3 w-3 mr-1" />
+                  Pause Flow
+                </>
+              ) : (
+                <>
+                  <Zap className="h-3 w-3 mr-1" />
+                  Activate Flow
+                </>
+              )}
             </Button>
           </div>
         </div>
@@ -171,16 +163,49 @@ const WorkflowCard = ({ template, onStatusChange, onActivateFlow }: { template: 
 };
 
 export default function WorkflowSettings() {
-  const handleStatusChange = (id: string, newStatus: string) => {
-    // Here you would update the workflow status
-    console.log(`Updating workflow ${id} to status: ${newStatus}`);
-  };
+  const [workflows, setWorkflows] = useState<Workflow[]>(initialWorkflows);
+  const { toast } = useToast();
 
-  const handleActivateFlow = (id: string) => {
-    // Here you would activate the specific workflow flow
-    console.log(`Activating workflow flow: ${id}`);
-    // You could redirect to a flow configuration page or start the flow
-    alert(`Activating ${workflowTemplates.find(t => t.id === id)?.name} flow!`);
+  // Load workflows from localStorage on component mount
+  useEffect(() => {
+    const saved = localStorage.getItem('workflows');
+    if (saved) {
+      try {
+        const parsedWorkflows = JSON.parse(saved);
+        setWorkflows(parsedWorkflows);
+      } catch (error) {
+        console.error('Failed to load workflows from localStorage:', error);
+      }
+    }
+  }, []);
+
+  // Save workflows to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('workflows', JSON.stringify(workflows));
+  }, [workflows]);
+
+  const handleToggle = async (id: string, newState: boolean) => {
+    // Set updating state
+    setWorkflows(prev =>
+      prev.map(w => w.id === id ? { ...w, isUpdating: true } : w)
+    );
+
+    // Mock API call with delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Update workflow state
+    setWorkflows(prev =>
+      prev.map(w =>
+        w.id === id ? { ...w, isActive: newState, isUpdating: false } : w
+      )
+    );
+
+    const workflow = workflows.find(w => w.id === id);
+    toast({
+      title: `Workflow ${newState ? 'Activated' : 'Paused'}`,
+      description: `${workflow?.name} has been ${newState ? 'activated' : 'paused'} successfully.`,
+      variant: newState ? "default" : "destructive",
+    });
   };
 
   return (
@@ -193,12 +218,11 @@ export default function WorkflowSettings() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {workflowTemplates.map((template) => (
+        {workflows.map((workflow) => (
           <WorkflowCard 
-            key={template.id} 
-            template={template} 
-            onStatusChange={handleStatusChange}
-            onActivateFlow={handleActivateFlow}
+            key={workflow.id} 
+            workflow={workflow} 
+            onToggle={handleToggle}
           />
         ))}
       </div>
