@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface Transaction {
   id: string;
@@ -91,7 +92,7 @@ const getStatusBadge = (status: string) => {
     case "Under Review":
       return <Badge variant="warning">Under Review</Badge>;
     case "Rejected":
-      return <Badge variant="muted">Rejected</Badge>;
+      return <Badge variant="destructive">Rejected</Badge>;
     default:
       return <Badge variant="secondary">{status}</Badge>;
   }
@@ -312,7 +313,11 @@ export default function RealTimeFeed() {
                 {displayedTransactions.map((transaction, index) => (
                   <TableRow 
                     key={transaction.id}
-                    className={`cursor-pointer hover:bg-muted/50 ${index === 0 && autoRefresh ? 'bg-primary/5' : ''}`}
+                    className={cn(
+                      "cursor-pointer hover:bg-muted/50",
+                      index === 0 && autoRefresh && "bg-primary/5",
+                      transaction.status === 'Rejected' && "bg-error/10 border-l-4 border-l-error hover:bg-error/15"
+                    )}
                     onClick={() => window.location.href = `/transactions/${transaction.id}`}
                   >
                     <TableCell className="font-medium">
