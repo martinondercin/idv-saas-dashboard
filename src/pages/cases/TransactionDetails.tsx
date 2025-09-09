@@ -37,7 +37,7 @@ const mockTransaction = {
   },
   amount: 2500.00,
   currency: "USD",
-  type: "Wire Transfer",
+  type: "Identity Verification",
   status: "Under Review",
   riskScore: 75,
   timestamp: "2024-12-04 14:23:15",
@@ -291,88 +291,6 @@ ${reportData.notes.length > 0 ? reportData.notes.map(note => `[${note.timestamp}
             </CardContent>
           </Card>
 
-          <Tabs defaultValue="flags" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="flags">Risk Flags</TabsTrigger>
-              <TabsTrigger value="timeline">Timeline</TabsTrigger>
-              <TabsTrigger value="location">Location Data</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="flags" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5" />
-                    Risk Analysis
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {mockTransaction.flags.map((flag, index) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">{flag.type}</h4>
-                        <Badge variant={flag.severity === "High" ? "destructive" : flag.severity === "Medium" ? "secondary" : "outline"}>
-                          {flag.severity}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{flag.description}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="timeline" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
-                    Processing Timeline
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {mockTransaction.timeline.map((event, index) => (
-                    <div key={index} className="flex items-center gap-4 pb-4 border-b last:border-b-0">
-                      <div className={`w-3 h-3 rounded-full ${
-                        event.status === 'success' ? 'bg-accent' :
-                        event.status === 'warning' ? 'bg-yellow-500' :
-                        event.status === 'pending' ? 'bg-blue-500' : 'bg-gray-500'
-                      }`} />
-                      <div className="flex-1">
-                        <p className="font-medium">{event.event}</p>
-                        <p className="text-sm text-muted-foreground">{event.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="location" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5" />
-                    Geographic Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Country</label>
-                    <p>{mockTransaction.location.country}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">City</label>
-                    <p>{mockTransaction.location.city}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">IP Address</label>
-                    <p className="font-mono text-sm">{mockTransaction.location.ip}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
         </div>
 
         {/* Sidebar */}
@@ -542,7 +460,7 @@ ${reportData.notes.length > 0 ? reportData.notes.map(note => `[${note.timestamp}
                 <>
                   <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
                     <DialogTrigger asChild>
-                      <Button className="w-full" variant="default">
+                      <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" variant="default">
                         Approve Identity
                       </Button>
                     </DialogTrigger>
@@ -557,7 +475,7 @@ ${reportData.notes.length > 0 ? reportData.notes.map(note => `[${note.timestamp}
                         <Button variant="outline" onClick={() => setShowApproveDialog(false)}>
                           Cancel
                         </Button>
-                        <Button onClick={handleApproveIdentity}>
+                        <Button onClick={handleApproveIdentity} className="bg-accent hover:bg-accent/90 text-accent-foreground">
                           Approve Identity
                         </Button>
                       </DialogFooter>
