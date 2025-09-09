@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -86,7 +87,10 @@ export default function TransactionDetails() {
   const { id } = useParams<{ id: string }>();
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [showNoteDialog, setShowNoteDialog] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState(mockTransaction.status);
+  const [notes, setNotes] = useState<Array<{id: string; text: string; timestamp: string; author: string}>>([]);
+  const [currentNote, setCurrentNote] = useState("");
   const { toast } = useToast();
 
   const handleApproveIdentity = () => {
@@ -109,6 +113,96 @@ export default function TransactionDetails() {
       variant: "destructive",
     });
   };
+
+  const handleAddNote = () => {
+    if (currentNote.trim()) {
+      const newNote = {
+        id: Math.random().toString(36).substr(2, 9),
+        text: currentNote.trim(),
+        timestamp: new Date().toLocaleString(),
+        author: "Current User"
+      };
+      setNotes(prev => [...prev, newNote]);
+      setCurrentNote("");
+      setShowNoteDialog(false);
+      toast({
+        title: "Note Added",
+        description: "Note has been added to the transaction record.",
+      });
+    }
+  };
+
+  const handleExportReport = () => {
+    const reportData = {
+      transactionId: id || mockTransaction.id,
+      userInfo: mockTransaction.userInfo,
+      transaction: {
+        amount: mockTransaction.amount,
+        currency: mockTransaction.currency,
+        type: mockTransaction.type,
+        status: transactionStatus,
+        riskScore: mockTransaction.riskScore,
+        timestamp: mockTransaction.timestamp
+      },
+      location: mockTransaction.location,
+      flags: mockTransaction.flags,
+      notes: notes
+    };
+
+    const reportContent = `
+TRANSACTION REPORT
+==================
+
+Transaction ID: ${reportData.transactionId}
+Generated: ${new Date().toLocaleString()}
+
+USER INFORMATION
+----------------
+Name: ${reportData.userInfo.name}
+Email: ${reportData.userInfo.email}
+Phone: ${reportData.userInfo.phone}
+Verification Status: ${reportData.userInfo.verified ? 'Verified' : 'Unverified'}
+Member Since: ${reportData.userInfo.memberSince}
+Risk Profile: ${reportData.userInfo.riskProfile}
+
+TRANSACTION OVERVIEW
+--------------------
+Amount: ${reportData.transaction.amount} ${reportData.transaction.currency}
+Type: ${reportData.transaction.type}
+Status: ${reportData.transaction.status}
+Risk Score: ${reportData.transaction.riskScore}
+Timestamp: ${reportData.transaction.timestamp}
+
+LOCATION DATA
+-------------
+Country: ${reportData.location.country}
+City: ${reportData.location.city}
+IP Address: ${reportData.location.ip}
+
+RISK FLAGS
+----------
+${reportData.flags.map(flag => `- ${flag.type} (${flag.severity}): ${flag.description}`).join('\n')}
+
+NOTES
+-----
+${reportData.notes.length > 0 ? reportData.notes.map(note => `[${note.timestamp}] ${note.author}: ${note.text}`).join('\n') : 'No notes added'}
+    `;
+
+    const blob = new Blob([reportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transaction-report-${reportData.transactionId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Report Exported",
+      description: `Transaction report for ${reportData.transactionId} has been downloaded.`,
+    });
+  };
   
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
@@ -123,28 +217,44 @@ export default function TransactionDetails() {
           <Button 
             variant="outline" 
             size="sm"
-            onClick={() => {
-              toast({
-                title: "Exporting Report",
-                description: `Transaction report for ${id || mockTransaction.id} is being generated.`,
-              });
-            }}
+            onClick={handleExportReport}
           >
             <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
-          <Button 
-            size="sm"
-            onClick={() => {
-              toast({
-                title: "Note Added",
-                description: "Note has been added to the transaction record.",
-              });
-            }}
-          >
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Add Note
-          </Button>
+          
+          <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Add Note
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add Note</DialogTitle>
+                <DialogDescription>
+                  Add a note to this transaction for future reference.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Textarea
+                  placeholder="Enter your note here..."
+                  value={currentNote}
+                  onChange={(e) => setCurrentNote(e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowNoteDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddNote} disabled={!currentNote.trim()}>
+                  Save Note
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -399,6 +509,29 @@ export default function TransactionDetails() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Notes Section */}
+          {notes.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Transaction Notes
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {notes.map((note) => (
+                  <div key={note.id} className="border rounded-lg p-3 bg-muted/20">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">{note.author}</span>
+                      <span className="text-xs text-muted-foreground">{note.timestamp}</span>
+                    </div>
+                    <p className="text-sm text-foreground">{note.text}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>
