@@ -30,7 +30,7 @@ export default function NoCodeVerification() {
   const navigate = useNavigate();
   const [currentUrl, setCurrentUrl] = useState("https://verify-identity.info/abc123");
   const [isUrlGenerated, setIsUrlGenerated] = useState(true);
-  const [usageCount, setUsageCount] = useState(150);
+  const [usageCount, setUsageCount] = useState(120);
   const [usageLimit, setUsageLimit] = useState(150);
   const [isViewCurrentOpen, setIsViewCurrentOpen] = useState(false);
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
@@ -141,24 +141,35 @@ export default function NoCodeVerification() {
             </p>
           </div>
 
-          {/* Limit Reached Message */}
-          <div className="bg-muted p-4 rounded-lg border">
-            <p className="text-foreground">
-              Your free trial has reached its limit, but we'd love to help you continue growing. Let's discuss a custom plan that fits your verification volume and business needs.{" "}
-              <button
-                onClick={contactUs}
-                className="text-primary hover:underline font-medium"
-              >
-                Contact Us
-              </button>
-            </p>
-          </div>
+          {/* Limit Warning Message - Only show when approaching limit */}
+          {usageCount >= usageLimit * 0.8 && !isLimitReached && (
+            <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-lg">
+              <p className="font-medium">
+                You're approaching your free trial limit. You have {usageLimit - usageCount} verifications remaining.
+              </p>
+            </div>
+          )}
+
+          {/* Limit Reached Message - Only show when limit is reached */}
+          {isLimitReached && (
+            <div className="bg-muted p-4 rounded-lg border">
+              <p className="text-foreground">
+                Your free trial has reached its limit, but we'd love to help you continue growing. Let's discuss a custom plan that fits your verification volume and business needs.{" "}
+                <button
+                  onClick={contactUs}
+                  className="text-primary hover:underline font-medium"
+                >
+                  Contact Us
+                </button>
+              </p>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex items-center gap-4">
             <Button
               onClick={generateLink}
-              disabled={isLimitReached}
+              disabled={isLimitReached && isUrlGenerated}
               className="flex items-center gap-2"
             >
               <Link2 className="h-4 w-4" />
