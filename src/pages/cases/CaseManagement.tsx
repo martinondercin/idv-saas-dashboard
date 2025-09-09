@@ -15,7 +15,6 @@ const pendingCases = [
     transactionId: "txn_002",
     userId: "user_67890",
     type: "Document Verification",
-    priority: "High",
     assignedTo: "John Doe",
     createdAt: "2024-01-22 14:28:42",
     reason: "Suspicious document features detected"
@@ -24,8 +23,7 @@ const pendingCases = [
     id: "case_002",
     transactionId: "txn_005",
     userId: "user_33333",
-    type: "Identity Mismatch",
-    priority: "Medium",
+    type: "Liveness Detection",
     assignedTo: "Sarah Smith",
     createdAt: "2024-01-22 13:45:12",
     reason: "Name mismatch between documents"
@@ -34,8 +32,7 @@ const pendingCases = [
     id: "case_003",
     transactionId: "txn_007",
     userId: "user_44444",
-    type: "Liveness Check",
-    priority: "Low",
+    type: "OCR Verification",
     assignedTo: "Mike Johnson",
     createdAt: "2024-01-22 12:30:55",
     reason: "Multiple verification attempts"
@@ -60,19 +57,6 @@ const completedCases = [
     timeToResolve: "1 hour 20 minutes"
   },
 ];
-
-const getPriorityBadge = (priority: string) => {
-  switch (priority) {
-    case "High":
-      return <Badge variant="destructive">High</Badge>;
-    case "Medium":
-      return <Badge variant="secondary">Medium</Badge>;
-    case "Low":
-      return <Badge variant="default">Low</Badge>;
-    default:
-      return <Badge variant="secondary">{priority}</Badge>;
-  }
-};
 
 const getResolutionBadge = (resolution: string) => {
   switch (resolution) {
@@ -115,13 +99,13 @@ export default function CaseManagement() {
         <div className="flex gap-2">
           <Select>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Filter by Priority" />
+              <SelectValue placeholder="Filter by Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Priorities</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="document">Document Verification</SelectItem>
+              <SelectItem value="liveness">Liveness Detection</SelectItem>
+              <SelectItem value="ocr">OCR Verification</SelectItem>
             </SelectContent>
           </Select>
           <Select>
@@ -152,12 +136,12 @@ export default function CaseManagement() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">High Priority</CardTitle>
+            <CardTitle className="text-sm font-medium">In Review</CardTitle>
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">7</div>
-            <p className="text-xs text-muted-foreground">-2 since yesterday</p>
+            <div className="text-2xl font-bold">12</div>
+            <p className="text-xs text-muted-foreground">Currently being reviewed</p>
           </CardContent>
         </Card>
         <Card>
@@ -203,7 +187,6 @@ export default function CaseManagement() {
                     <TableHead>Transaction ID</TableHead>
                     <TableHead>User ID</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead>Priority</TableHead>
                     <TableHead>Assigned To</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead>Reason</TableHead>
@@ -217,7 +200,6 @@ export default function CaseManagement() {
                       <TableCell className="font-mono text-sm">{case_.transactionId}</TableCell>
                       <TableCell className="font-mono text-sm">{case_.userId}</TableCell>
                       <TableCell>{case_.type}</TableCell>
-                      <TableCell>{getPriorityBadge(case_.priority)}</TableCell>
                       <TableCell>{case_.assignedTo}</TableCell>
                       <TableCell>{case_.createdAt}</TableCell>
                       <TableCell className="max-w-xs truncate">{case_.reason}</TableCell>
@@ -301,7 +283,6 @@ export default function CaseManagement() {
                       <TableHead>Case ID</TableHead>
                       <TableHead>Transaction ID</TableHead>
                       <TableHead>Type</TableHead>
-                      <TableHead>Priority</TableHead>
                       <TableHead>Escalated By</TableHead>
                       <TableHead>Escalated At</TableHead>
                       <TableHead>Supervisor Assigned</TableHead>
@@ -314,7 +295,6 @@ export default function CaseManagement() {
                         <TableCell className="font-mono text-sm">{case_.id}</TableCell>
                         <TableCell className="font-mono text-sm">{case_.transactionId}</TableCell>
                         <TableCell>{case_.type}</TableCell>
-                        <TableCell>{getPriorityBadge(case_.priority)}</TableCell>
                         <TableCell>{case_.escalatedBy}</TableCell>
                         <TableCell>{case_.escalatedAt}</TableCell>
                         <TableCell>
