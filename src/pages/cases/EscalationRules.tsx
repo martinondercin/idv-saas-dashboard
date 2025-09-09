@@ -16,7 +16,7 @@ const escalationRules = [
     name: "High Risk Transaction",
     description: "Escalate transactions with risk score > 85",
     condition: "Risk Score > 85",
-    action: "Escalate to Senior Analyst",
+    action: "Escalate to Supervisor",
     priority: "High",
     enabled: true,
     triggerCount: 45,
@@ -27,7 +27,7 @@ const escalationRules = [
     name: "Long Processing Time",
     description: "Escalate cases pending more than 4 hours",
     condition: "Processing Time > 4 hours",
-    action: "Notify Team Lead",
+    action: "Notify Supervisor",
     priority: "Medium",
     enabled: true,
     triggerCount: 12,
@@ -49,7 +49,7 @@ const escalationRules = [
     name: "Suspicious Document Pattern",
     description: "Escalate documents from flagged regions",
     condition: "Document Region = High Risk",
-    action: "Escalate to Fraud Team", 
+    action: "Escalate to Administrator", 
     priority: "Critical",
     enabled: false,
     triggerCount: 23,
@@ -58,11 +58,9 @@ const escalationRules = [
 ];
 
 const escalationLevels = [
-  { level: 1, name: "Analyst", description: "Standard case review", users: 12, avgTime: "45m" },
-  { level: 2, name: "Senior Analyst", description: "Complex case analysis", users: 5, avgTime: "1.5h" },
-  { level: 3, name: "Team Lead", description: "Supervisory review", users: 3, avgTime: "2.2h" },
-  { level: 4, name: "Fraud Specialist", description: "Specialized fraud investigation", users: 2, avgTime: "4.1h" },
-  { level: 5, name: "Manager", description: "Final escalation level", users: 1, avgTime: "6.5h" }
+  { level: 1, name: "Operator", description: "Basic transaction review and case handling", users: 17, avgTime: "45m" },
+  { level: 2, name: "Supervisor", description: "Advanced case management", users: 8, avgTime: "1.5h" },
+  { level: 3, name: "Administrator", description: "Full system access and user management", users: 3, avgTime: "2.2h" }
 ];
 
 const notifications = [
@@ -354,10 +352,8 @@ export default function EscalationRules() {
                           <SelectValue placeholder="Select target" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="senior-analyst">Senior Analyst</SelectItem>
-                          <SelectItem value="team-lead">Team Lead</SelectItem>
-                          <SelectItem value="fraud-specialist">Fraud Specialist</SelectItem>
-                          <SelectItem value="manager">Manager</SelectItem>
+                          <SelectItem value="supervisor">Supervisor</SelectItem>
+                          <SelectItem value="administrator">Administrator</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
