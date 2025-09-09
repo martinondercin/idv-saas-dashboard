@@ -62,23 +62,16 @@ const roles = [
     color: "destructive"
   },
   {
-    name: "Senior Analyst", 
-    description: "Advanced case management and rule configuration",
+    name: "Supervisor", 
+    description: "Advanced case management",
     userCount: 8,
-    permissions: ["Case Management", "Rule Configuration", "Advanced Reports"],
+    permissions: ["Case Management", "Advanced Reports", "Rule Configuration"],
     color: "default"
   },
   {
-    name: "Team Lead",
-    description: "Team oversight and case approval authority", 
-    userCount: 5,
-    permissions: ["Team Management", "Case Approval", "User Oversight"],
-    color: "secondary"
-  },
-  {
-    name: "Junior Analyst",
+    name: "Operator",
     description: "Basic transaction review and case handling",
-    userCount: 12,
+    userCount: 17,
     permissions: ["Transaction Review", "Case Handling", "Basic Reports"],
     color: "outline"
   }
