@@ -118,7 +118,7 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
             </div>
             <div className="flex items-center gap-2">
               {workflow.isDefault && (
-                <Badge variant="default" className="bg-teal-500 text-white">
+                <Badge className="bg-teal-500 hover:bg-teal-600 text-white border-teal-500">
                   Default
                 </Badge>
               )}
