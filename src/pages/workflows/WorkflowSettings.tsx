@@ -23,6 +23,7 @@ type Workflow = {
   steps: string[];
   estimatedTime: string;
   isActive: boolean;
+  hasBeenActivated: boolean;
   isDefault: boolean;
   isUpdating?: boolean;
   iconName: string;
@@ -46,6 +47,7 @@ const initialWorkflows: Workflow[] = [
     steps: ["Document capture", "Document validation", "Selfie", "Face match", "Liveness check"],
     estimatedTime: "60-90 seconds",
     isActive: true,
+    hasBeenActivated: true,
     isDefault: true
   },
   {
@@ -56,6 +58,7 @@ const initialWorkflows: Workflow[] = [
     steps: ["Selfie capture", "Age estimation", "Document verification (if needed)"],
     estimatedTime: "30-45 seconds",
     isActive: true,
+    hasBeenActivated: true,
     isDefault: false
   },
   {
@@ -66,6 +69,7 @@ const initialWorkflows: Workflow[] = [
     steps: ["Document capture", "OCR text extraction", "Data validation"],
     estimatedTime: "15-30 seconds",
     isActive: false,
+    hasBeenActivated: true,
     isDefault: false
   },
   {
@@ -76,6 +80,7 @@ const initialWorkflows: Workflow[] = [
     steps: ["Selfie capture", "Liveness detection"],
     estimatedTime: "10-15 seconds",
     isActive: true,
+    hasBeenActivated: true,
     isDefault: false
   },
   {
@@ -86,6 +91,7 @@ const initialWorkflows: Workflow[] = [
     steps: ["Identity verification", "AML screening", "Watchlist check", "Compliance review"],
     estimatedTime: "2-3 minutes",
     isActive: false,
+    hasBeenActivated: false,
     isDefault: false
   }
 ];
@@ -94,11 +100,15 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
   const Icon = iconMap[workflow.iconName as keyof typeof iconMap] || Settings; // Fallback to Settings icon
   
   const getStatusColor = () => {
-    return workflow.isActive ? "text-green-600" : "text-yellow-600";
+    if (workflow.isActive) return "text-green-600";
+    if (workflow.hasBeenActivated) return "text-yellow-600";
+    return "text-gray-500";
   };
   
   const getStatusText = () => {
-    return workflow.isActive ? "Active" : "Paused";
+    if (workflow.isActive) return "Active";
+    if (workflow.hasBeenActivated) return "Paused";
+    return "Not Activated";
   };
   
   return (
@@ -229,7 +239,13 @@ export default function WorkflowSettings() {
     // Update workflow state - if deactivating the default, remove default status
     setWorkflows(prev =>
       prev.map(w =>
-        w.id === id ? { ...w, isActive: newState, isDefault: newState ? w.isDefault : false, isUpdating: false } : w
+        w.id === id ? { 
+          ...w, 
+          isActive: newState, 
+          hasBeenActivated: newState || w.hasBeenActivated,
+          isDefault: newState ? w.isDefault : false, 
+          isUpdating: false 
+        } : w
       )
     );
 
