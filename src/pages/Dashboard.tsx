@@ -3,6 +3,7 @@ import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
 import {
   CheckCircle,
   Clock,
@@ -17,6 +18,47 @@ import {
 import dashboardHero from "@/assets/dashboard-hero.jpg";
 
 export default function Dashboard() {
+  const [currentEnvironment, setCurrentEnvironment] = useState("production");
+
+  useEffect(() => {
+    const storedEnv = localStorage.getItem('environment') || 'production';
+    setCurrentEnvironment(storedEnv);
+
+    const interval = setInterval(() => {
+      const newEnv = localStorage.getItem('environment') || 'production';
+      if (newEnv !== currentEnvironment) {
+        setCurrentEnvironment(newEnv);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [currentEnvironment]);
+
+  // Different KPI data for sandbox vs production
+  const kpiData = currentEnvironment === 'sandbox' ? {
+    successRate: { value: "99.8%", change: { value: 0.1, period: "test run", type: "increase" as const } },
+    avgProcessingTime: { value: "0.5s", change: { value: 2.1, period: "test run", type: "decrease" as const } },
+    manualReviews: { value: "5", change: { value: 0, period: "test run", type: "increase" as const } },
+    dailyVolume: { value: "150", change: { value: 25, period: "test run", type: "increase" as const } }
+  } : {
+    successRate: { value: "94.2%", change: { value: 2.4, period: "last 7 days", type: "increase" as const } },
+    avgProcessingTime: { value: "2.3s", change: { value: 0.8, period: "last 7 days", type: "decrease" as const } },
+    manualReviews: { value: "127", change: { value: 15.2, period: "last 7 days", type: "increase" as const } },
+    dailyVolume: { value: "8,429", change: { value: 8.7, period: "yesterday", type: "increase" as const } }
+  };
+
+  // Different system status for environments
+  const systemServices = currentEnvironment === 'sandbox' ? [
+    { name: "API Gateway", status: "Operational", variant: "accent" as const },
+    { name: "OCR Service", status: "Test Mode", variant: "warning" as const },
+    { name: "Liveness Detection", status: "Test Mode", variant: "warning" as const },
+    { name: "Webhook Delivery", status: "Disabled", variant: "secondary" as const }
+  ] : [
+    { name: "API Gateway", status: "Operational", variant: "accent" as const },
+    { name: "OCR Service", status: "Operational", variant: "accent" as const },
+    { name: "Liveness Detection", status: "Degraded", variant: "warning" as const },
+    { name: "Webhook Delivery", status: "Operational", variant: "accent" as const }
+  ];
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -25,7 +67,7 @@ export default function Dashboard() {
           className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{ backgroundImage: `url(${dashboardHero})` }}
         />
-        <div className="relative h-full flex items-center px-8">
+        <div className="relative h-full flex items-center justify-between px-8">
           <div>
             <h1 className="text-2xl font-bold text-white mb-2">
               Identity Verification Dashboard
@@ -34,6 +76,9 @@ export default function Dashboard() {
               Monitor verification activity, manage configurations, and track performance metrics
             </p>
           </div>
+          <Badge variant="outline" className="bg-white/10 text-white border-white/20">
+            {currentEnvironment === 'sandbox' ? 'Sandbox Environment' : 'Production Environment'}
+          </Badge>
         </div>
       </div>
 
@@ -41,31 +86,31 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <KPICard
           title="Success Rate"
-          value="94.2%"
-          change={{ value: 2.4, period: "last 7 days", type: "increase" }}
+          value={kpiData.successRate.value}
+          change={kpiData.successRate.change}
           icon={CheckCircle}
           description="Successful verifications"
         />
         <KPICard
           title="Avg Processing Time"
-          value="2.3s"
-          change={{ value: 0.8, period: "last 7 days", type: "decrease" }}
+          value={kpiData.avgProcessingTime.value}
+          change={kpiData.avgProcessingTime.change}
           icon={Clock}
           description="End-to-end processing"
         />
         <KPICard
           title="Manual Reviews"
-          value="127"
-          change={{ value: 15.2, period: "last 7 days", type: "increase" }}
+          value={kpiData.manualReviews.value}
+          change={kpiData.manualReviews.change}
           icon={AlertTriangle}
           description="Pending manual review"
         />
         <KPICard
           title="Daily Volume"
-          value="8,429"
-          change={{ value: 8.7, period: "yesterday", type: "increase" }}
+          value={kpiData.dailyVolume.value}
+          change={kpiData.dailyVolume.change}
           icon={TrendingUp}
-          description="Transactions today"
+          description={currentEnvironment === 'sandbox' ? 'Test transactions' : 'Transactions today'}
         />
       </div>
 
@@ -78,30 +123,14 @@ export default function Dashboard() {
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm">API Gateway</span>
-            <Badge className="bg-accent/10 text-accent">
-              Operational
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">OCR Service</span>
-            <Badge className="bg-accent/10 text-accent">
-              Operational
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Liveness Detection</span>
-            <Badge className="bg-warning-light text-warning">
-              Degraded
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Webhook Delivery</span>
-            <Badge className="bg-accent/10 text-accent">
-              Operational
-            </Badge>
-          </div>
+          {systemServices.map((service, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <span className="text-sm">{service.name}</span>
+              <Badge className={`bg-${service.variant}/10 text-${service.variant}`}>
+                {service.status}
+              </Badge>
+            </div>
+          ))}
         </CardContent>
       </Card>
 

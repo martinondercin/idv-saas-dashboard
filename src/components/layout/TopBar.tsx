@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Bell, ChevronDown, Globe, TestTube, Languages } from "lucide-react";
+import { Search, Bell, ChevronDown, Globe, TestTube, Languages, User, Shield, Key, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,10 +19,81 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
 
 export function TopBar() {
   const [environment, setEnvironment] = useState("production");
   const [language, setLanguage] = useState("en");
+  const { toast } = useToast();
+
+  const handleEnvironmentChange = (newEnv: string) => {
+    setEnvironment(newEnv);
+    toast({
+      title: "Environment Changed",
+      description: `Switched to ${newEnv === 'production' ? 'Production' : 'Sandbox'} environment`,
+    });
+    // Store in localStorage to persist the choice
+    localStorage.setItem('environment', newEnv);
+    // Trigger a page refresh to load appropriate data
+    window.location.reload();
+  };
+
+  const handleLanguageChange = (newLang: string) => {
+    setLanguage(newLang);
+    toast({
+      title: "Language Changed",
+      description: `Interface language changed to ${getLanguageName(newLang)}`,
+    });
+    // Store language preference
+    localStorage.setItem('language', newLang);
+  };
+
+  const getLanguageName = (code: string) => {
+    const languages: { [key: string]: string } = {
+      'en': 'English',
+      'es': 'Español',
+      'fr': 'Français',
+      'de': 'Deutsch',
+      'it': 'Italiano',
+      'pt': 'Português',
+      'sk': 'Slovenčina',
+      'cs': 'Čeština',
+      'hu': 'Magyar'
+    };
+    return languages[code] || code;
+  };
+
+  const handleProfileAction = (action: string) => {
+    switch (action) {
+      case 'profile':
+        toast({
+          title: "Profile Settings",
+          description: "Opening profile settings...",
+        });
+        break;
+      case 'security':
+        toast({
+          title: "Security Settings",
+          description: "Opening security settings...",
+        });
+        break;
+      case 'api-keys':
+        toast({
+          title: "API Keys",
+          description: "Opening API keys management...",
+        });
+        break;
+      case 'logout':
+        toast({
+          title: "Signing Out",
+          description: "You have been signed out successfully.",
+        });
+        // In a real app, this would clear auth tokens and redirect
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <header className="h-16 border-b border-border bg-background px-6 flex items-center justify-between">
@@ -30,11 +101,11 @@ export function TopBar() {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-muted-foreground" />
-          <Select value={environment} onValueChange={setEnvironment}>
+          <Select value={environment} onValueChange={handleEnvironmentChange}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-background border border-border shadow-lg z-50">
               <SelectItem value="production">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-accent" />
@@ -53,17 +124,20 @@ export function TopBar() {
 
         <div className="flex items-center gap-2">
           <Languages className="h-4 w-4 text-muted-foreground" />
-          <Select value={language} onValueChange={setLanguage}>
+          <Select value={language} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-background border border-border shadow-lg z-50">
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="es">Español</SelectItem>
               <SelectItem value="fr">Français</SelectItem>
               <SelectItem value="de">Deutsch</SelectItem>
               <SelectItem value="it">Italiano</SelectItem>
               <SelectItem value="pt">Português</SelectItem>
+              <SelectItem value="sk">Slovenčina</SelectItem>
+              <SelectItem value="cs">Čeština</SelectItem>
+              <SelectItem value="hu">Magyar</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -92,7 +166,7 @@ export function TopBar() {
               </Badge>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
+          <DropdownMenuContent align="end" className="w-80 bg-background border border-border shadow-lg z-50">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex-col items-start p-4 cursor-pointer">
@@ -138,14 +212,26 @@ export function TopBar() {
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 bg-background border border-border shadow-lg z-50">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile Settings</DropdownMenuItem>
-            <DropdownMenuItem>Security</DropdownMenuItem>
-            <DropdownMenuItem>API Keys</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleProfileAction('profile')} className="cursor-pointer">
+              <User className="h-4 w-4 mr-2" />
+              Profile Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleProfileAction('security')} className="cursor-pointer">
+              <Shield className="h-4 w-4 mr-2" />
+              Security
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleProfileAction('api-keys')} className="cursor-pointer">
+              <Key className="h-4 w-4 mr-2" />
+              API Keys
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleProfileAction('logout')} className="cursor-pointer text-destructive">
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

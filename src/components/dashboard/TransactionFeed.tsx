@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
@@ -115,6 +115,55 @@ const mockTransactions: Transaction[] = [
   }
 ];
 
+// Sandbox test data with different patterns
+const sandboxTransactions: Transaction[] = [
+  {
+    id: "SBX-TEST-001",
+    timestamp: "2024-01-15 10:00:00",
+    customerId: "TEST-USER-001",
+    flowType: "Identity Verification",
+    status: "accepted",
+    region: "TEST-ENV",
+    riskScore: 0.05
+  },
+  {
+    id: "SBX-TEST-002", 
+    timestamp: "2024-01-15 10:05:00",
+    customerId: "TEST-USER-002",
+    flowType: "Document Verification",
+    status: "pending",
+    region: "TEST-ENV",
+    riskScore: 0.25
+  },
+  {
+    id: "SBX-TEST-003",
+    timestamp: "2024-01-15 10:10:00",
+    customerId: "TEST-USER-003", 
+    flowType: "Liveness Check",
+    status: "manual-review",
+    region: "TEST-ENV",
+    riskScore: 0.55
+  },
+  {
+    id: "SBX-TEST-004",
+    timestamp: "2024-01-15 10:15:00",
+    customerId: "TEST-USER-004",
+    flowType: "KYC Verification",
+    status: "error",
+    region: "TEST-ENV",
+    riskScore: 0.75
+  },
+  {
+    id: "SBX-TEST-005",
+    timestamp: "2024-01-15 10:20:00",
+    customerId: "TEST-USER-005",
+    flowType: "Identity Verification", 
+    status: "rejected",
+    region: "TEST-ENV",
+    riskScore: 0.95
+  }
+];
+
 export function TransactionFeed() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -122,6 +171,37 @@ export function TransactionFeed() {
   const [regionFilter, setRegionFilter] = useState("all");
   const [timePeriodFilter, setTimePeriodFilter] = useState("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [currentEnvironment, setCurrentEnvironment] = useState("production");
+
+  // Check environment on mount and listen for changes
+  useEffect(() => {
+    const storedEnv = localStorage.getItem('environment') || 'production';
+    setCurrentEnvironment(storedEnv);
+
+    // Listen for environment changes (from TopBar)
+    const handleStorageChange = () => {
+      const newEnv = localStorage.getItem('environment') || 'production';
+      setCurrentEnvironment(newEnv);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also listen for same-tab changes
+    const interval = setInterval(() => {
+      const newEnv = localStorage.getItem('environment') || 'production';
+      if (newEnv !== currentEnvironment) {
+        setCurrentEnvironment(newEnv);
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [currentEnvironment]);
+
+  // Select appropriate data source based on environment
+  const transactionData = currentEnvironment === 'sandbox' ? sandboxTransactions : mockTransactions;
 
   const getRiskScoreColor = (score: number) => {
     if (score >= 0.8) return "bg-error-light text-error";
@@ -162,7 +242,7 @@ export function TransactionFeed() {
     }
   };
 
-  const filteredTransactions = mockTransactions.filter(transaction => {
+  const filteredTransactions = transactionData.filter(transaction => {
     // Search filter - check multiple fields for the search term
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
@@ -184,14 +264,19 @@ export function TransactionFeed() {
     return true;
   });
 
-  const uniqueFlowTypes = [...new Set(mockTransactions.map(t => t.flowType))];
-  const uniqueRegions = [...new Set(mockTransactions.map(t => t.region))];
+  const uniqueFlowTypes: string[] = [...new Set(transactionData.map(t => t.flowType))];
+  const uniqueRegions: string[] = [...new Set(transactionData.map(t => t.region))];
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg font-semibold">Real-time Transaction Feed</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            Real-time Transaction Feed 
+            <Badge variant="outline" className="ml-2 text-xs">
+              {currentEnvironment === 'sandbox' ? 'Sandbox' : 'Production'}
+            </Badge>
+          </CardTitle>
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
