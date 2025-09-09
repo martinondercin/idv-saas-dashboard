@@ -188,7 +188,7 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
                 ) : workflow.isActive ? (
                   <>
                     <Pause className="h-3 w-3 mr-1" />
-                    Pause Flow
+                    Deactivate Flow
                   </>
                 ) : (
                   <>
