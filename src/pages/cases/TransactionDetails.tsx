@@ -322,7 +322,7 @@ export default function TransactionDetails() {
                         <img 
                           src={mockTransaction.idDocument.frontImage} 
                           alt="ID document front side"
-                          className="w-full h-32 rounded-lg object-cover border-2 border-muted hover:border-primary transition-colors bg-muted/20"
+                          className="w-full h-48 rounded-lg object-contain border-2 border-muted hover:border-primary transition-colors bg-muted/20"
                         />
                         <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
                       </div>
@@ -346,7 +346,7 @@ export default function TransactionDetails() {
                           <img 
                             src={mockTransaction.idDocument.backImage} 
                             alt="ID document back side"
-                            className="w-full h-32 rounded-lg object-cover border-2 border-muted hover:border-primary transition-colors bg-muted/20"
+                            className="w-full h-48 rounded-lg object-contain border-2 border-muted hover:border-primary transition-colors bg-muted/20"
                           />
                           <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
                         </div>
