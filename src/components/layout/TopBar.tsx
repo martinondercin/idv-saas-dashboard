@@ -22,8 +22,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 
 export function TopBar() {
-  const [environment, setEnvironment] = useState("production");
-  const [language, setLanguage] = useState("en");
+  const [environment, setEnvironment] = useState(() => {
+    return localStorage.getItem('environment') || 'production';
+  });
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('language') || 'en';
+  });
   const { toast } = useToast();
 
   const handleEnvironmentChange = (newEnv: string) => {
@@ -34,8 +38,8 @@ export function TopBar() {
     });
     // Store in localStorage to persist the choice
     localStorage.setItem('environment', newEnv);
-    // Trigger a page refresh to load appropriate data
-    window.location.reload();
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('environmentChanged', { detail: newEnv }));
   };
 
   const handleLanguageChange = (newLang: string) => {

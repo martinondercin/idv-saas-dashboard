@@ -142,34 +142,26 @@ export function TransactionFeed() {
   const [flowTypeFilter, setFlowTypeFilter] = useState("all");
   const [timePeriodFilter, setTimePeriodFilter] = useState("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [currentEnvironment, setCurrentEnvironment] = useState("production");
+  const [currentEnvironment, setCurrentEnvironment] = useState(() => {
+    return localStorage.getItem('environment') || 'production';
+  });
 
   // Check environment on mount and listen for changes
   useEffect(() => {
     const storedEnv = localStorage.getItem('environment') || 'production';
     setCurrentEnvironment(storedEnv);
 
-    // Listen for environment changes (from TopBar)
-    const handleStorageChange = () => {
-      const newEnv = localStorage.getItem('environment') || 'production';
-      setCurrentEnvironment(newEnv);
+    const handleEnvironmentChange = (event: CustomEvent) => {
+      setCurrentEnvironment(event.detail);
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    // Listen for custom environment change events
+    window.addEventListener('environmentChanged', handleEnvironmentChange as EventListener);
     
-    // Also listen for same-tab changes
-    const interval = setInterval(() => {
-      const newEnv = localStorage.getItem('environment') || 'production';
-      if (newEnv !== currentEnvironment) {
-        setCurrentEnvironment(newEnv);
-      }
-    }, 1000);
-
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
+      window.removeEventListener('environmentChanged', handleEnvironmentChange as EventListener);
     };
-  }, [currentEnvironment]);
+  }, []);
 
   // Select appropriate data source based on environment
   const transactionData = currentEnvironment === 'sandbox' ? sandboxTransactions : mockTransactions;

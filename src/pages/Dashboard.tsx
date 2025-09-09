@@ -18,21 +18,22 @@ import {
 import dashboardHero from "@/assets/dashboard-hero.jpg";
 
 export default function Dashboard() {
-  const [currentEnvironment, setCurrentEnvironment] = useState("production");
+  const [currentEnvironment, setCurrentEnvironment] = useState(() => {
+    return localStorage.getItem('environment') || 'production';
+  });
 
   useEffect(() => {
-    const storedEnv = localStorage.getItem('environment') || 'production';
-    setCurrentEnvironment(storedEnv);
+    const handleEnvironmentChange = (event: CustomEvent) => {
+      setCurrentEnvironment(event.detail);
+    };
 
-    const interval = setInterval(() => {
-      const newEnv = localStorage.getItem('environment') || 'production';
-      if (newEnv !== currentEnvironment) {
-        setCurrentEnvironment(newEnv);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [currentEnvironment]);
+    // Listen for custom environment change events
+    window.addEventListener('environmentChanged', handleEnvironmentChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('environmentChanged', handleEnvironmentChange as EventListener);
+    };
+  }, []);
 
   // Different KPI data for sandbox vs production
   const kpiData = currentEnvironment === 'sandbox' ? {
