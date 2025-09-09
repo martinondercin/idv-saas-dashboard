@@ -356,7 +356,13 @@ export function TransactionFeed() {
           </TableHeader>
           <TableBody>
             {filteredTransactions.map((transaction) => (
-              <TableRow key={transaction.id} className="hover:bg-muted/50">
+              <TableRow 
+                key={transaction.id} 
+                className={cn(
+                  "hover:bg-muted/50",
+                  transaction.status === 'rejected' && "bg-error-light/20 hover:bg-error-light/30"
+                )}
+              >
                 <TableCell className="font-mono text-sm">
                   {transaction.id}
                 </TableCell>
