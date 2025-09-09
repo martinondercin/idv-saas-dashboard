@@ -319,11 +319,13 @@ export default function TransactionDetails() {
                   <Dialog>
                     <DialogTrigger asChild>
                       <div className="cursor-pointer hover:opacity-80 transition-opacity">
-                        <img 
-                          src={mockTransaction.idDocument.frontImage} 
-                          alt="ID document front side"
-                          className="w-full h-48 rounded-lg object-contain border-2 border-muted hover:border-primary transition-colors bg-muted/20"
-                        />
+                        <div className="w-full aspect-[1.6/1] rounded-lg border-2 border-muted hover:border-primary transition-colors bg-muted/20 overflow-hidden">
+                          <img 
+                            src={mockTransaction.idDocument.frontImage} 
+                            alt="ID document front side"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
                         <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
                       </div>
                     </DialogTrigger>
@@ -343,11 +345,13 @@ export default function TransactionDetails() {
                     <Dialog>
                       <DialogTrigger asChild>
                         <div className="cursor-pointer hover:opacity-80 transition-opacity">
-                          <img 
-                            src={mockTransaction.idDocument.backImage} 
-                            alt="ID document back side"
-                            className="w-full h-48 rounded-lg object-contain border-2 border-muted hover:border-primary transition-colors bg-muted/20"
-                          />
+                          <div className="w-full aspect-[1.6/1] rounded-lg border-2 border-muted hover:border-primary transition-colors bg-muted/20 overflow-hidden">
+                            <img 
+                              src={mockTransaction.idDocument.backImage} 
+                              alt="ID document back side"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
                           <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
                         </div>
                       </DialogTrigger>
