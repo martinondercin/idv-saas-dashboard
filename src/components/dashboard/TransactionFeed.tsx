@@ -360,7 +360,7 @@ export function TransactionFeed() {
                 key={transaction.id} 
                 className={cn(
                   "hover:bg-muted/50",
-                  transaction.status === 'rejected' && "bg-error-light/20 hover:bg-error-light/30"
+                  transaction.status === 'rejected' && "bg-error/10 border-l-4 border-l-error hover:bg-error/15"
                 )}
               >
                 <TableCell className="font-mono text-sm">
