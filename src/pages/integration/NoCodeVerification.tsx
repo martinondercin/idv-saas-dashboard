@@ -169,11 +169,11 @@ export default function NoCodeVerification() {
           <div className="flex items-center gap-4">
             <Button
               onClick={generateLink}
-              disabled={isLimitReached && isUrlGenerated}
+              disabled={isUrlGenerated || isLimitReached}
               className="flex items-center gap-2"
             >
               <Link2 className="h-4 w-4" />
-              Generate Link
+              {isUrlGenerated ? "Link Already Generated" : "Generate Link"}
             </Button>
             
             <Button
@@ -221,8 +221,18 @@ export default function NoCodeVerification() {
                     <Label className="text-sm font-medium text-muted-foreground mb-2 block">
                       Verification Link
                     </Label>
-                    <div className="bg-muted p-3 rounded border font-mono text-sm">
-                      {currentUrl}
+                    <div className="flex items-center gap-2">
+                      <div className="bg-muted p-3 rounded border font-mono text-sm flex-1">
+                        {currentUrl}
+                      </div>
+                      <Button
+                        onClick={copyToClipboard}
+                        size="sm"
+                        variant="outline"
+                        className="flex items-center gap-2 flex-shrink-0"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
 
