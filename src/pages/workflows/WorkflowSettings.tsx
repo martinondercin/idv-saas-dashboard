@@ -24,7 +24,16 @@ type Workflow = {
   estimatedTime: string;
   isActive: boolean;
   isUpdating?: boolean;
-  icon: any;
+  iconName: string;
+};
+
+// Icon mapping to avoid serialization issues
+const iconMap = {
+  Shield,
+  CheckCircle,
+  FileText,
+  Eye,
+  Settings,
 };
 
 const initialWorkflows: Workflow[] = [
@@ -32,7 +41,7 @@ const initialWorkflows: Workflow[] = [
     id: "full-kyc",
     name: "Full Identity Verification",
     description: "Complete identity verification with document capture, selfie, and liveness detection",
-    icon: Shield,
+    iconName: "Shield",
     steps: ["Document capture", "Document validation", "Selfie", "Face match", "Liveness check"],
     estimatedTime: "60-90 seconds",
     isActive: true
@@ -41,7 +50,7 @@ const initialWorkflows: Workflow[] = [
     id: "age-verification",
     name: "Age Verification Flow", 
     description: "Quick age verification starting with selfie analysis and optional document check",
-    icon: CheckCircle,
+    iconName: "CheckCircle",
     steps: ["Selfie capture", "Age estimation", "Document verification (if needed)"],
     estimatedTime: "30-45 seconds",
     isActive: true
@@ -50,7 +59,7 @@ const initialWorkflows: Workflow[] = [
     id: "ocr-document",
     name: "OCR Document Reading",
     description: "Extract and validate document information for form auto-filling and data extraction",
-    icon: FileText,
+    iconName: "FileText",
     steps: ["Document capture", "OCR text extraction", "Data validation"],
     estimatedTime: "15-30 seconds",
     isActive: false
@@ -59,7 +68,7 @@ const initialWorkflows: Workflow[] = [
     id: "liveness-only",
     name: "Liveness Check Only",
     description: "Quick liveness detection for user authentication and session verification",
-    icon: Eye,
+    iconName: "Eye",
     steps: ["Selfie capture", "Liveness detection"],
     estimatedTime: "10-15 seconds",
     isActive: true
@@ -68,7 +77,7 @@ const initialWorkflows: Workflow[] = [
     id: "kyc-compliance",
     name: "KYC Compliance Flow",
     description: "Full regulatory compliance verification with AML screening and watchlist checks",
-    icon: Settings,
+    iconName: "Settings",
     steps: ["Identity verification", "AML screening", "Watchlist check", "Compliance review"],
     estimatedTime: "2-3 minutes",
     isActive: false
@@ -76,7 +85,7 @@ const initialWorkflows: Workflow[] = [
 ];
 
 const WorkflowCard = ({ workflow, onToggle }: { workflow: Workflow, onToggle: (id: string, newState: boolean) => void }) => {
-  const Icon = workflow.icon;
+  const Icon = iconMap[workflow.iconName as keyof typeof iconMap];
   
   const getStatusColor = () => {
     return workflow.isActive ? "text-green-600" : "text-yellow-600";
