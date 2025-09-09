@@ -72,8 +72,10 @@ const getRiskBadge = (score: number) => {
 const getStatusBadge = (status: string) => {
   const variants: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
     "Completed": "default",
+    "Approved": "default",
     "Under Review": "secondary",
     "Failed": "destructive",
+    "Rejected": "destructive",
     "Pending": "outline"
   };
   return <Badge variant={variants[status] || "outline"}>{status}</Badge>;
@@ -83,15 +85,18 @@ export default function TransactionDetails() {
   const { id } = useParams<{ id: string }>();
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [transactionStatus, setTransactionStatus] = useState(mockTransaction.status);
 
   const handleApproveIdentity = () => {
     console.log(`Approving identity for transaction ${id}`);
+    setTransactionStatus("Approved");
     setShowApproveDialog(false);
     // Handle approval logic here
   };
 
   const handleRejectIdentity = () => {
     console.log(`Rejecting identity for transaction ${id}`);
+    setTransactionStatus("Rejected");
     setShowRejectDialog(false);
     // Handle rejection logic here
   };
@@ -140,7 +145,7 @@ export default function TransactionDetails() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Status</label>
-                  {getStatusBadge(mockTransaction.status)}
+                  {getStatusBadge(transactionStatus)}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Risk Level</label>
@@ -374,53 +379,63 @@ export default function TransactionDetails() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
-                <DialogTrigger asChild>
-                  <Button className="w-full" variant="default">
-                    Approve Identity
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Approve Identity</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to approve this identity verification? This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowApproveDialog(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleApproveIdentity}>
-                      Approve Identity
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              {transactionStatus !== "Approved" && transactionStatus !== "Rejected" ? (
+                <>
+                  <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full" variant="default">
+                        Approve Identity
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Approve Identity</DialogTitle>
+                        <DialogDescription>
+                          Are you sure you want to approve this identity verification? This action cannot be undone.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowApproveDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleApproveIdentity}>
+                          Approve Identity
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
 
-              <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-                <DialogTrigger asChild>
-                  <Button className="w-full" variant="destructive">
-                    Reject Identity
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Reject Identity</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to reject this identity verification? This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowRejectDialog(false)}>
-                      Cancel
-                    </Button>
-                    <Button variant="destructive" onClick={handleRejectIdentity}>
-                      Reject Identity
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                  <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full" variant="destructive">
+                        Reject Identity
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Reject Identity</DialogTitle>
+                        <DialogDescription>
+                          Are you sure you want to reject this identity verification? This action cannot be undone.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowRejectDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={handleRejectIdentity}>
+                          Reject Identity
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </>
+              ) : (
+                <div className="p-4 bg-muted rounded-lg text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Identity has been {transactionStatus.toLowerCase()}. Only supervisors can modify this status.
+                  </p>
+                </div>
+              )}
 
               <Button 
                 className="w-full" 
