@@ -80,7 +80,7 @@ const getStatusText = (status: string) => {
   }
 };
 
-const WorkflowCard = ({ template, onStatusChange }: { template: any, onStatusChange: (id: string, status: string) => void }) => {
+const WorkflowCard = ({ template, onStatusChange, onActivateFlow }: { template: any, onStatusChange: (id: string, status: string) => void, onActivateFlow: (id: string) => void }) => {
   const Icon = template.icon;
   
   return (
@@ -155,7 +155,11 @@ const WorkflowCard = ({ template, onStatusChange }: { template: any, onStatusCha
               )}
             </div>
             
-            <Button size="sm">
+            <Button 
+              size="sm"
+              onClick={() => onActivateFlow(template.id)}
+              disabled={template.status === "inactive"}
+            >
               <Zap className="h-3 w-3 mr-1" />
               Activate Flow
             </Button>
@@ -170,6 +174,13 @@ export default function WorkflowSettings() {
   const handleStatusChange = (id: string, newStatus: string) => {
     // Here you would update the workflow status
     console.log(`Updating workflow ${id} to status: ${newStatus}`);
+  };
+
+  const handleActivateFlow = (id: string) => {
+    // Here you would activate the specific workflow flow
+    console.log(`Activating workflow flow: ${id}`);
+    // You could redirect to a flow configuration page or start the flow
+    alert(`Activating ${workflowTemplates.find(t => t.id === id)?.name} flow!`);
   };
 
   return (
@@ -187,6 +198,7 @@ export default function WorkflowSettings() {
             key={template.id} 
             template={template} 
             onStatusChange={handleStatusChange}
+            onActivateFlow={handleActivateFlow}
           />
         ))}
       </div>
