@@ -29,11 +29,11 @@ type Workflow = {
 
 // Icon mapping to avoid serialization issues
 const iconMap = {
-  Shield,
-  CheckCircle,
-  FileText,
-  Eye,
-  Settings,
+  "Shield": Shield,
+  "CheckCircle": CheckCircle,
+  "FileText": FileText,
+  "Eye": Eye,
+  "Settings": Settings,
 };
 
 const initialWorkflows: Workflow[] = [
@@ -85,7 +85,7 @@ const initialWorkflows: Workflow[] = [
 ];
 
 const WorkflowCard = ({ workflow, onToggle }: { workflow: Workflow, onToggle: (id: string, newState: boolean) => void }) => {
-  const Icon = iconMap[workflow.iconName as keyof typeof iconMap];
+  const Icon = iconMap[workflow.iconName as keyof typeof iconMap] || Settings; // Fallback to Settings icon
   
   const getStatusColor = () => {
     return workflow.isActive ? "text-green-600" : "text-yellow-600";
