@@ -73,8 +73,6 @@ const App = () => (
           {/* Workflow Routes */}
           <Route path="/workflows" element={<DashboardLayout><WorkflowSettings /></DashboardLayout>} />
           <Route path="/workflows/risk-scoring" element={<DashboardLayout><WorkflowSettings /></DashboardLayout>} />
-          <Route path="/workflows/rules" element={<DashboardLayout><RuleSets /></DashboardLayout>} />
-          <Route path="/workflows/features" element={<DashboardLayout><FeatureToggles /></DashboardLayout>} />
 
           {/* Monitoring Routes */}
           <Route path="/monitoring" element={<DashboardLayout><MonitoringDashboard /></DashboardLayout>} />

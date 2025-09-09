@@ -54,8 +54,6 @@ const navigationItems = [
     icon: Workflow,
     items: [
       { title: "Workflow Overview", url: "/workflows/risk-scoring" },
-      { title: "Rule Sets", url: "/workflows/rules" },
-      { title: "Feature Toggles", url: "/workflows/features" },
     ],
   },
   {
