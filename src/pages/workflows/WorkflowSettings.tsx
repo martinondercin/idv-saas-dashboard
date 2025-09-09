@@ -111,20 +111,20 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
               <div className="p-2 rounded-lg bg-primary/10">
                 <Icon className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <h3 className="font-semibold text-lg">{workflow.name}</h3>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-semibold text-lg">{workflow.name}</h3>
+                  {workflow.isDefault && (
+                    <Badge className="bg-teal-500 hover:bg-teal-500 text-white border-0 font-medium">
+                      Default
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground">{workflow.description}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              {workflow.isDefault && (
-                <Badge className="bg-teal-500 hover:bg-teal-600 text-white border-teal-500">
-                  Default
-                </Badge>
-              )}
-              <div className={`text-sm font-medium ${getStatusColor()}`}>
-                {getStatusText()}
-              </div>
+            <div className={`text-sm font-medium ${getStatusColor()}`}>
+              {getStatusText()}
             </div>
           </div>
 
