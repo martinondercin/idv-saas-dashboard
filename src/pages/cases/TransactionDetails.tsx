@@ -17,6 +17,9 @@ import {
   MessageSquare
 } from "lucide-react";
 import userSelfie from "@/assets/user-selfie.jpg";
+import nationalIdFront from "@/assets/national-id-front.jpg";
+import nationalIdBack from "@/assets/national-id-back.jpg";
+import passport from "@/assets/passport.jpg";
 
 const mockTransaction = {
   id: "TXN-2024-001234",
@@ -40,10 +43,11 @@ const mockTransaction = {
     city: "New York",
     ip: "192.168.1.100"
   },
-  paymentMethod: {
-    type: "Bank Account",
-    last4: "4521",
-    bank: "Chase Bank"
+  idDocument: {
+    type: "National ID",
+    frontImage: nationalIdFront,
+    backImage: nationalIdBack,
+    documentNumber: "123456789"
   },
   flags: [
     { type: "High Amount", severity: "Medium", description: "Transaction amount exceeds normal pattern" },
@@ -280,21 +284,68 @@ export default function TransactionDetails() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Payment Method
+                ID Document
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Type</label>
-                <p>{mockTransaction.paymentMethod.type}</p>
+                <label className="text-sm font-medium text-muted-foreground">Document Type</label>
+                <p>{mockTransaction.idDocument.type}</p>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Account</label>
-                <p className="font-mono">****{mockTransaction.paymentMethod.last4}</p>
+                <label className="text-sm font-medium text-muted-foreground">Document Number</label>
+                <p className="font-mono">{mockTransaction.idDocument.documentNumber}</p>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">Bank</label>
-                <p>{mockTransaction.paymentMethod.bank}</p>
+              
+              {/* Document Images */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">Front Side</label>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="cursor-pointer hover:opacity-80 transition-opacity">
+                        <img 
+                          src={mockTransaction.idDocument.frontImage} 
+                          alt="ID document front side"
+                          className="w-full h-32 rounded-lg object-cover border-2 border-muted hover:border-primary transition-colors bg-muted/20"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl">
+                      <img 
+                        src={mockTransaction.idDocument.frontImage} 
+                        alt="ID document front side - enlarged view"
+                        className="w-full h-auto rounded-lg object-contain"
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                
+                {mockTransaction.idDocument.backImage && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Back Side</label>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <div className="cursor-pointer hover:opacity-80 transition-opacity">
+                          <img 
+                            src={mockTransaction.idDocument.backImage} 
+                            alt="ID document back side"
+                            className="w-full h-32 rounded-lg object-cover border-2 border-muted hover:border-primary transition-colors bg-muted/20"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1 text-center">Click to enlarge</p>
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl">
+                        <img 
+                          src={mockTransaction.idDocument.backImage} 
+                          alt="ID document back side - enlarged view"
+                          className="w-full h-auto rounded-lg object-contain"
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
