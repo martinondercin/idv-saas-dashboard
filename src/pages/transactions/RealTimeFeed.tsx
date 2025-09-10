@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface Transaction {
@@ -105,6 +105,7 @@ const getRiskColor = (score: number) => {
 };
 
 export default function RealTimeFeed() {
+  const navigate = useNavigate();
   const [isLive, setIsLive] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>(liveTransactions);
   const [autoRefresh, setAutoRefresh] = useState(true);
@@ -318,7 +319,7 @@ export default function RealTimeFeed() {
                       index === 0 && autoRefresh && "bg-primary/5",
                       transaction.status === 'Rejected' && "bg-error/10 border-l-4 border-l-error hover:bg-error/15"
                     )}
-                    onClick={() => window.location.href = `/transactions/${transaction.id}`}
+                    onClick={() => navigate(`/transactions/${transaction.id}`)}
                   >
                     <TableCell className="font-medium">
                       {transaction.timestamp}
