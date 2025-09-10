@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
@@ -137,6 +138,7 @@ const sandboxTransactions: Transaction[] = [
 ];
 
 export function TransactionFeed() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [flowTypeFilter, setFlowTypeFilter] = useState("all");
@@ -359,9 +361,10 @@ export function TransactionFeed() {
               <TableRow 
                 key={transaction.id} 
                 className={cn(
-                  "hover:bg-muted/50",
+                  "cursor-pointer hover:bg-muted/50",
                   transaction.status === 'rejected' && "bg-error/10 border-l-4 border-l-error hover:bg-error/15"
                 )}
+                onClick={() => navigate(`/transactions/${transaction.id}`)}
               >
                 <TableCell className="font-mono text-sm">
                   {transaction.id}
