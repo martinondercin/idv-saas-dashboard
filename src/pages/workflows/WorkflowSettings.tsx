@@ -54,7 +54,7 @@ const initialWorkflows: Workflow[] = [
     description: "Complete identity verification with document capture, selfie, and liveness detection",
     iconName: "Shield",
     steps: ["Document capture", "Document validation", "Selfie", "Face match", "Liveness check"],
-    estimatedTime: "60-90 seconds",
+    estimatedTime: "30-60 seconds",
     isActive: true,
     isDefault: true
   },
@@ -64,7 +64,7 @@ const initialWorkflows: Workflow[] = [
     description: "Quick age verification starting with selfie analysis and optional document check",
     iconName: "CheckCircle",
     steps: ["Selfie capture", "Age estimation", "Document verification (if needed)"],
-    estimatedTime: "30-45 seconds",
+    estimatedTime: "20-30 seconds",
     isActive: true,
     isDefault: false
   },
@@ -74,7 +74,7 @@ const initialWorkflows: Workflow[] = [
     description: "Extract and validate document information for form auto-filling and data extraction",
     iconName: "FileText",
     steps: ["Document capture", "OCR text extraction", "Data validation"],
-    estimatedTime: "15-30 seconds",
+    estimatedTime: "10-20 seconds",
     isActive: false,
     isDefault: false
   },
