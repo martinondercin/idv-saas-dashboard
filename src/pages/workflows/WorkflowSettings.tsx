@@ -4,6 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { 
   Play, 
   Pause, 
@@ -90,7 +100,7 @@ const initialWorkflows: Workflow[] = [
   }
 ];
 
-const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow, onToggle: (id: string, newState: boolean) => void, onSetDefault: (id: string) => void }) => {
+const WorkflowCard = ({ workflow, onToggleRequest, onSetDefault }: { workflow: Workflow, onToggleRequest: (id: string, newState: boolean) => void, onSetDefault: (id: string) => void }) => {
   const Icon = iconMap[workflow.iconName as keyof typeof iconMap] || Settings; // Fallback to Settings icon
   
   const getStatusColor = () => {
@@ -152,7 +162,7 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
               <Switch 
                 checked={workflow.isActive}
                 disabled={workflow.isUpdating}
-                onCheckedChange={(checked) => onToggle(workflow.id, checked)}
+                onCheckedChange={(checked) => onToggleRequest(workflow.id, checked)}
               />
               <span className="text-sm">Active</span>
             </div>
@@ -171,7 +181,7 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
                 variant={workflow.isActive ? "default" : "secondary"}
                 size="sm"
                 disabled={workflow.isUpdating}
-                onClick={() => onToggle(workflow.id, !workflow.isActive)}
+                onClick={() => onToggleRequest(workflow.id, !workflow.isActive)}
               >
                 {workflow.isUpdating ? (
                   "Updating..."
@@ -197,6 +207,17 @@ const WorkflowCard = ({ workflow, onToggle, onSetDefault }: { workflow: Workflow
 
 export default function WorkflowSettings() {
   const [workflows, setWorkflows] = useState<Workflow[]>(initialWorkflows);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    workflowId: string;
+    workflowName: string;
+    newState: boolean;
+  }>({
+    open: false,
+    workflowId: '',
+    workflowName: '',
+    newState: false
+  });
   const { toast } = useToast();
 
   // Load workflows from localStorage on component mount
@@ -217,10 +238,27 @@ export default function WorkflowSettings() {
     localStorage.setItem('workflows', JSON.stringify(workflows));
   }, [workflows]);
 
-  const handleToggle = async (id: string, newState: boolean) => {
+  const handleToggleRequest = (id: string, newState: boolean) => {
+    const workflow = workflows.find(w => w.id === id);
+    if (workflow) {
+      setConfirmDialog({
+        open: true,
+        workflowId: id,
+        workflowName: workflow.name,
+        newState: newState
+      });
+    }
+  };
+
+  const handleConfirmToggle = async () => {
+    const { workflowId, newState } = confirmDialog;
+    
+    // Close dialog first
+    setConfirmDialog(prev => ({ ...prev, open: false }));
+    
     // Set updating state
     setWorkflows(prev =>
-      prev.map(w => w.id === id ? { ...w, isUpdating: true } : w)
+      prev.map(w => w.id === workflowId ? { ...w, isUpdating: true } : w)
     );
 
     // Mock API call with delay
@@ -229,7 +267,7 @@ export default function WorkflowSettings() {
     // Update workflow state - if deactivating the default, remove default status
     setWorkflows(prev =>
       prev.map(w =>
-        w.id === id ? { 
+        w.id === workflowId ? { 
           ...w, 
           isActive: newState, 
           isDefault: newState ? w.isDefault : false, 
@@ -238,7 +276,7 @@ export default function WorkflowSettings() {
       )
     );
 
-    const workflow = workflows.find(w => w.id === id);
+    const workflow = workflows.find(w => w.id === workflowId);
     toast({
       title: `Workflow ${newState ? 'Activated' : 'Deactivated'}`,
       description: `${workflow?.name} has been ${newState ? 'activated' : 'deactivated'} successfully.`,
@@ -272,11 +310,34 @@ export default function WorkflowSettings() {
           <WorkflowCard 
             key={workflow.id} 
             workflow={workflow} 
-            onToggle={handleToggle}
+            onToggleRequest={handleToggleRequest}
             onSetDefault={handleSetDefault}
           />
         ))}
       </div>
+
+      <AlertDialog open={confirmDialog.open} onOpenChange={(open) => setConfirmDialog(prev => ({ ...prev, open }))}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmDialog.newState ? 'Activate' : 'Deactivate'} Workflow
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to {confirmDialog.newState ? 'activate' : 'deactivate'} the "{confirmDialog.workflowName}" workflow?
+              {!confirmDialog.newState && ' This will stop all verification processes using this workflow.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmToggle}
+              className={confirmDialog.newState ? "" : "bg-destructive text-destructive-foreground hover:bg-destructive/90"}
+            >
+              {confirmDialog.newState ? 'Activate' : 'Deactivate'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
