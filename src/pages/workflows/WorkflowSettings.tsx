@@ -226,9 +226,18 @@ export default function WorkflowSettings() {
     if (saved) {
       try {
         const parsedWorkflows = JSON.parse(saved);
-        setWorkflows(parsedWorkflows);
+        // Update any workflows with new estimated times
+        const updatedWorkflows = parsedWorkflows.map((workflow: Workflow) => {
+          const initialWorkflow = initialWorkflows.find(w => w.id === workflow.id);
+          if (initialWorkflow) {
+            return { ...workflow, estimatedTime: initialWorkflow.estimatedTime };
+          }
+          return workflow;
+        });
+        setWorkflows(updatedWorkflows);
       } catch (error) {
         console.error('Failed to load workflows from localStorage:', error);
+        setWorkflows(initialWorkflows);
       }
     }
   }, []);
