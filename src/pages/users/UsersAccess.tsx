@@ -7,25 +7,33 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import { Users, Shield, Key, Activity, Plus, Edit, Trash2, Search } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
 
-const users = [
+const initialUsers = [
   {
     id: "usr_001",
     name: "John Doe",
     email: "john.doe@company.com",
-    role: "Supervisor",
+    role: "Manager",
     status: "Active",
     lastLogin: "2024-01-22 09:15:32",
-    department: "Fraud Prevention",
+    department: "Product Settings",
     permissions: ["view_transactions", "approve_cases", "manage_rules"]
   },
   {
     id: "usr_002", 
     name: "Sarah Smith",
     email: "sarah.smith@company.com",
-    role: "Supervisor",
+    role: "Admin",
     status: "Active", 
     lastLogin: "2024-01-22 08:45:12",
     department: "Operations",
@@ -35,17 +43,17 @@ const users = [
     id: "usr_003",
     name: "Mike Johnson", 
     email: "mike.johnson@company.com",
-    role: "Operator",
+    role: "Viewer",
     status: "Inactive",
     lastLogin: "2024-01-20 16:30:45",
-    department: "Risk Management",
+    department: "Analytics",
     permissions: ["view_transactions", "review_cases"]
   },
   {
     id: "usr_004",
     name: "Emily Davis",
     email: "emily.davis@company.com", 
-    role: "Administrator",
+    role: "Admin",
     status: "Active",
     lastLogin: "2024-01-22 07:20:18", 
     department: "IT Security",
@@ -53,26 +61,34 @@ const users = [
   }
 ];
 
+const userFormSchema = z.object({
+  name: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(100),
+  email: z.string().trim().email({ message: "Invalid email address" }).max(255),
+  role: z.enum(["Admin", "Manager", "Viewer"], { message: "Please select a valid role" }),
+  department: z.string().trim().min(2, { message: "Department is required" }).max(100),
+  notes: z.string().max(500).optional()
+});
+
 const roles = [
   {
-    name: "Administrator",
-    description: "Full system access and user management",
+    name: "Admin",
+    description: "Full system access, user management, and creates new Manager accounts for product settings team",
     userCount: 3,
-    permissions: ["Full Access", "User Management", "System Configuration"],
+    permissions: ["Full Access", "User Management", "System Configuration", "Role Management", "Audit Trail Review"],
     color: "destructive"
   },
   {
-    name: "Supervisor", 
-    description: "Advanced case management",
+    name: "Manager", 
+    description: "Configures product verification settings without accessing user management",
     userCount: 8,
-    permissions: ["Case Management", "Advanced Reports", "Rule Configuration"],
+    permissions: ["Product Settings", "Verification Rules", "Advanced Reports", "Workflow Configuration"],
     color: "default"
   },
   {
-    name: "Operator",
-    description: "Basic transaction review and case handling",
+    name: "Viewer",
+    description: "Analyzes dashboard reports and exports data for presentations",
     userCount: 17,
-    permissions: ["Transaction Review", "Case Handling", "Basic Reports"],
+    permissions: ["View Reports", "Export Data", "Dashboard Access", "Basic Analytics"],
     color: "outline"
   }
 ];
@@ -135,6 +151,42 @@ const getRoleBadge = (role: string, color: string) => {
 export default function UsersAccess() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [users, setUsers] = useState(initialUsers);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof userFormSchema>>({
+    resolver: zodResolver(userFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      role: "Viewer",
+      department: "",
+      notes: ""
+    }
+  });
+
+  const onSubmit = (values: z.infer<typeof userFormSchema>) => {
+    const newUser = {
+      id: `usr_${Date.now()}`,
+      name: values.name,
+      email: values.email,
+      role: values.role,
+      status: "Active" as const,
+      lastLogin: "Never",
+      department: values.department,
+      permissions: roles.find(r => r.name === values.role)?.permissions || []
+    };
+
+    setUsers(prev => [...prev, newUser]);
+    setIsAddUserOpen(false);
+    form.reset();
+    
+    toast({
+      title: "User invitation sent",
+      description: `${values.name} has been invited as ${values.role} with appropriate access level.`
+    });
+  };
   
   // Determine active tab based on current route
   const getActiveTab = () => {
@@ -169,17 +221,116 @@ export default function UsersAccess() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Users & Access Management</h1>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add New User
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Create a new user account</p>
-            </TooltipContent>
-          </Tooltip>
+          <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+            <DialogTrigger asChild>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New User
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Invite a new user and assign role</p>
+                </TooltipContent>
+              </Tooltip>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Invite New User</DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter user's full name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="user@company.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Role</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Admin">Admin - Full system access</SelectItem>
+                            <SelectItem value="Manager">Manager - Product settings only</SelectItem>
+                            <SelectItem value="Viewer">Viewer - Reports and analytics</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="department"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Department</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Product Settings, Analytics" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="notes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Notes (Optional)</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Additional notes about this user..."
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-end gap-3 pt-4">
+                    <Button type="button" variant="outline" onClick={() => setIsAddUserOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      Send Invitation
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
 
       {/* Stats Cards */}
@@ -247,9 +398,9 @@ export default function UsersAccess() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Roles</SelectItem>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                      <SelectItem value="analyst">Analyst</SelectItem>
-                      <SelectItem value="lead">Team Lead</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="viewer">Viewer</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
