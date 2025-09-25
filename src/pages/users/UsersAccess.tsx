@@ -223,17 +223,10 @@ export default function UsersAccess() {
           <h1 className="text-3xl font-bold">Users & Access Management</h1>
           <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
             <DialogTrigger asChild>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add New User
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Invite a new user and assign role</p>
-                </TooltipContent>
-              </Tooltip>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add New User
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
