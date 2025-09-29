@@ -4,10 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Activity, Pause, Play, Settings, Filter, Download, RefreshCw, ChevronLeft, ChevronRight, CalendarIcon, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { format, isAfter, isBefore, isToday, isThisWeek, isThisMonth, parseISO } from "date-fns";
 
 interface Transaction {
   id: string;
@@ -20,6 +24,15 @@ interface Transaction {
   country: string;
   riskScore: number;
   stage: string;
+  processingTime?: number; // in milliseconds
+}
+
+interface FilterState {
+  type: string;
+  status: string;
+  timeRange: string;
+  dateFrom?: Date;
+  dateTo?: Date;
 }
 
 const liveTransactions: Transaction[] = [
@@ -111,6 +124,13 @@ export default function RealTimeFeed() {
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const transactionsPerPage = 10;
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({
+    type: "all",
+    status: "all-status",
+    timeRange: "all"
+  });
+  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>(transactions);
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -129,7 +149,8 @@ export default function RealTimeFeed() {
         status: ["Under Review", "Accepted", "Rejected"][Math.floor(Math.random() * 3)],
         country: ["US", "GB", "DE", "FR", "CA", "AU"][Math.floor(Math.random() * 6)],
         riskScore: Math.floor(Math.random() * 100),
-        stage: ["Document Analysis", "Face Match", "Liveness Detection", "Final Review", "Quality Check", "Manual Review"][Math.floor(Math.random() * 6)]
+        stage: ["Document Analysis", "Face Match", "Liveness Detection", "Final Review", "Quality Check", "Manual Review"][Math.floor(Math.random() * 6)],
+        processingTime: Math.floor(Math.random() * 5000) + 500 // 500ms - 5.5s
       };
       
       setTransactions(prev => [newTransaction, ...prev.slice(0, 49)]); // Keep up to 50 transactions
@@ -138,11 +159,81 @@ export default function RealTimeFeed() {
     return () => clearInterval(interval);
   }, [autoRefresh]);
 
+  // Filter transactions based on current filters
+  useEffect(() => {
+    let filtered = [...transactions];
+
+    // Filter by type
+    if (filters.type !== "all") {
+      const typeMap: { [key: string]: string } = {
+        identity: "Full Identity Verification",
+        age: "Age Verification", 
+        liveness: "Passive Liveness Check",
+        ocr: "OCR"
+      };
+      filtered = filtered.filter(t => t.type === typeMap[filters.type]);
+    }
+
+    // Filter by status
+    if (filters.status !== "all-status") {
+      const statusMap: { [key: string]: string } = {
+        "under-review": "Under Review",
+        accepted: "Accepted",
+        rejected: "Rejected"
+      };
+      filtered = filtered.filter(t => t.status === statusMap[filters.status]);
+    }
+
+    // Filter by time range
+    if (filters.timeRange !== "all") {
+      const now = new Date();
+      filtered = filtered.filter(t => {
+        const transactionDate = parseISO(t.timestamp.replace(' ', 'T'));
+        
+        switch (filters.timeRange) {
+          case "today":
+            return isToday(transactionDate);
+          case "week":
+            return isThisWeek(transactionDate);
+          case "month":
+            return isThisMonth(transactionDate);
+          case "custom":
+            if (filters.dateFrom && filters.dateTo) {
+              return isAfter(transactionDate, filters.dateFrom) && isBefore(transactionDate, filters.dateTo);
+            }
+            return true;
+          default:
+            return true;
+        }
+      });
+    }
+
+    setFilteredTransactions(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [transactions, filters]);
+
+  // Calculate statistics
+  const stats = {
+    total: filteredTransactions.length,
+    successful: filteredTransactions.filter(t => t.status === "Accepted").length,
+    failed: filteredTransactions.filter(t => t.status === "Rejected").length,
+    underReview: filteredTransactions.filter(t => t.status === "Under Review").length,
+    avgProcessingTime: filteredTransactions.reduce((acc, t) => acc + (t.processingTime || 0), 0) / (filteredTransactions.length || 1)
+  };
+
+  // Get transaction counts by type
+  const typeCounts = {
+    "Full Identity Verification": filteredTransactions.filter(t => t.type === "Full Identity Verification").length,
+    "Age Verification": filteredTransactions.filter(t => t.type === "Age Verification").length, 
+    "Passive Liveness Check": filteredTransactions.filter(t => t.type === "Passive Liveness Check").length,
+    "OCR": filteredTransactions.filter(t => t.type === "OCR").length
+  };
+
   // Pagination logic
-  const totalPages = Math.ceil(transactions.length / transactionsPerPage);
+  const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
   const startIndex = (currentPage - 1) * transactionsPerPage;
   const endIndex = startIndex + transactionsPerPage;
-  const displayedTransactions = transactions.slice(startIndex, endIndex);
+  const displayedTransactions = filteredTransactions.slice(startIndex, endIndex);
 
   const goToNextPage = () => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
@@ -161,7 +252,44 @@ export default function RealTimeFeed() {
     if (autoRefresh && currentPage > 1) {
       setCurrentPage(1);
     }
-  }, [transactions.length, autoRefresh]); // Remove currentPage from dependencies to avoid infinite loop
+  }, [filteredTransactions.length, autoRefresh]); // Remove currentPage from dependencies to avoid infinite loop
+
+  const handleFilterChange = (key: keyof FilterState, value: string | Date | undefined) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      type: "all",
+      status: "all-status", 
+      timeRange: "all"
+    });
+  };
+
+  const exportData = () => {
+    const csvContent = [
+      ["Timestamp", "Type", "Name", "User ID", "Status", "Processing Time (ms)", "Risk Score", "Country", "Stage"].join(","),
+      ...filteredTransactions.map(t => [
+        t.timestamp,
+        t.type,
+        t.name,
+        t.userId.replace("usr_", "user_"), // Anonymize user ID
+        t.status,
+        t.processingTime || "N/A",
+        t.riskScore,
+        t.country,
+        t.stage
+      ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `transaction-feed-${format(new Date(), "yyyy-MM-dd-HH-mm")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-6">
@@ -189,57 +317,95 @@ export default function RealTimeFeed() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Enhanced Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Transactions</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Verifications</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">127</div>
-            <p className="text-xs text-muted-foreground">Currently active</p>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">Filtered results</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Throughput</CardTitle>
+            <CardTitle className="text-sm font-medium">Successful</CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">45/min</div>
-            <p className="text-xs text-muted-foreground">Transactions per minute</p>
+            <div className="text-2xl font-bold text-accent">{stats.successful}</div>
+            <p className="text-xs text-muted-foreground">{stats.total > 0 ? Math.round((stats.successful / stats.total) * 100) : 0}% success rate</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Queue Depth</CardTitle>
+            <CardTitle className="text-sm font-medium">Failed Attempts</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">23</div>
-            <p className="text-xs text-muted-foreground">Pending transactions</p>
+            <div className="text-2xl font-bold text-red-600">{stats.failed}</div>
+            <p className="text-xs text-muted-foreground">{stats.total > 0 ? Math.round((stats.failed / stats.total) * 100) : 0}% failure rate</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <CardTitle className="text-sm font-medium">Under Review</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2.1s</div>
-            <p className="text-xs text-muted-foreground">Real-time average</p>
+            <div className="text-2xl font-bold text-yellow-600">{stats.underReview}</div>
+            <p className="text-xs text-muted-foreground">Pending review</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Processing</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{Math.round(stats.avgProcessingTime)}ms</div>
+            <p className="text-xs text-muted-foreground">Average response time</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Controls */}
+      {/* Transaction Type Counts */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-lg font-semibold">{typeCounts["Full Identity Verification"]}</div>
+            <p className="text-sm text-muted-foreground">Full Identity Verifications</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-lg font-semibold">{typeCounts["Age Verification"]}</div>
+            <p className="text-sm text-muted-foreground">Age Verifications</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-lg font-semibold">{typeCounts["Passive Liveness Check"]}</div>
+            <p className="text-sm text-muted-foreground">Liveness Checks</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-lg font-semibold">{typeCounts["OCR"]}</div>
+            <p className="text-sm text-muted-foreground">OCR Verifications</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Enhanced Controls with Filtering */}
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle>Feed Controls</CardTitle>
+            <CardTitle>Feed Controls & Filters</CardTitle>
             <div className="flex gap-2">
-              <Select defaultValue="all">
+              <Select value={filters.type} onValueChange={(value) => handleFilterChange("type", value)}>
                 <SelectTrigger className="w-40">
                   <SelectValue />
                 </SelectTrigger>
@@ -251,7 +417,7 @@ export default function RealTimeFeed() {
                   <SelectItem value="ocr">OCR</SelectItem>
                 </SelectContent>
               </Select>
-              <Select defaultValue="all-status">
+              <Select value={filters.status} onValueChange={(value) => handleFilterChange("status", value)}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
@@ -262,10 +428,93 @@ export default function RealTimeFeed() {
                   <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
+              <Select value={filters.timeRange} onValueChange={(value) => handleFilterChange("timeRange", value)}>
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Time</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">This Week</SelectItem>
+                  <SelectItem value="month">This Month</SelectItem>
+                  <SelectItem value="custom">Custom Range</SelectItem>
+                </SelectContent>
+              </Select>
+              <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Advanced Filter
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle>Advanced Filters</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    {filters.timeRange === "custom" && (
+                      <div className="space-y-4">
+                        <div className="flex gap-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">From Date</label>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {filters.dateFrom ? format(filters.dateFrom, "PPP") : "Select date"}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                  mode="single"
+                                  selected={filters.dateFrom}
+                                  onSelect={(date) => handleFilterChange("dateFrom", date)}
+                                  initialFocus
+                                  className={cn("p-3 pointer-events-auto")}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">To Date</label>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {filters.dateTo ? format(filters.dateTo, "PPP") : "Select date"}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                  mode="single"
+                                  selected={filters.dateTo}
+                                  onSelect={(date) => handleFilterChange("dateTo", date)}
+                                  initialFocus
+                                  className={cn("p-3 pointer-events-auto")}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      <Button onClick={clearFilters} variant="outline" className="flex-1">
+                        Clear Filters
+                      </Button>
+                      <Button onClick={() => setIsFilterOpen(false)} className="flex-1">
+                        Apply Filters
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              {(filters.type !== "all" || filters.status !== "all-status" || filters.timeRange !== "all") && (
+                <Button variant="ghost" size="sm" onClick={clearFilters}>
+                  <X className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -285,9 +534,9 @@ export default function RealTimeFeed() {
                 <label className="text-sm">High-risk only</label>
               </div>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={exportData}>
               <Download className="h-4 w-4 mr-2" />
-              Export Feed
+              Export Feed ({filteredTransactions.length} records)
             </Button>
           </div>
         </CardContent>
@@ -303,11 +552,12 @@ export default function RealTimeFeed() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Last Update</TableHead>
-                  <TableHead>Verification type</TableHead>
+                  <TableHead>Timestamp</TableHead>
+                  <TableHead>Workflow Type</TableHead>
                   <TableHead>Name</TableHead>
-                  <TableHead>Session ID</TableHead>
+                  <TableHead>User ID</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Processing Time</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -332,12 +582,18 @@ export default function RealTimeFeed() {
                     </TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium text-sm">{transaction.sessionId}</div>
-                        <div className="text-xs text-muted-foreground">{transaction.userId}</div>
+                        <div className="font-medium text-sm">{transaction.userId.replace("usr_", "user_")}</div>
+                        <div className="text-xs text-muted-foreground">{transaction.sessionId}</div>
                       </div>
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(transaction.status)}
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        {transaction.processingTime ? `${transaction.processingTime}ms` : "N/A"}
+                        <div className="text-xs text-muted-foreground">{transaction.stage}</div>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -347,7 +603,7 @@ export default function RealTimeFeed() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-4 border-t">
               <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1}-{Math.min(endIndex, transactions.length)} of {transactions.length} transactions
+                Showing {startIndex + 1}-{Math.min(endIndex, filteredTransactions.length)} of {filteredTransactions.length} filtered transactions
               </div>
               <div className="flex items-center gap-2">
                 <Button 
@@ -417,7 +673,7 @@ export default function RealTimeFeed() {
             </div>
           )}
           <div className="flex justify-center pt-2 text-xs text-muted-foreground">
-            Page {currentPage} of {totalPages} • {transactions.length} total transactions
+            Page {currentPage} of {totalPages} • {filteredTransactions.length} filtered transactions • {transactions.length} total
           </div>
         </CardContent>
       </Card>
