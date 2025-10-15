@@ -71,12 +71,12 @@ const failedTransactions = [
 ];
 
 const errorAnalysis = [
-  { code: "DOC_QUALITY_001", description: "Poor document quality", count: 142, percentage: 35.5 },
-  { code: "LIVENESS_002", description: "Liveness check failed", count: 89, percentage: 22.3 },
-  { code: "FACE_MATCH_001", description: "Face match confidence low", count: 67, percentage: 16.8 },
-  { code: "DOC_TAMPER_001", description: "Document tampering detected", count: 45, percentage: 11.3 },
-  { code: "DOC_TYPE_001", description: "Unsupported document type", count: 34, percentage: 8.5 },
-  { code: "NETWORK_001", description: "Network timeout", count: 23, percentage: 5.8 }
+  { code: "INVALID_DATA", description: "Invalid Data", count: 156, percentage: 32.4 },
+  { code: "NO_FACE_DETECTED", description: "No Face Detected", count: 112, percentage: 23.3 },
+  { code: "NOT_ENOUGH_DATA", description: "Not Enough Data", count: 89, percentage: 18.5 },
+  { code: "PAGE_MISMATCH", description: "Page does not match document type previous page", count: 67, percentage: 13.9 },
+  { code: "NO_CORNER_DETECTED", description: "No document corner detected", count: 34, percentage: 7.1 },
+  { code: "DOC_TYPE_NOT_RECOGNIZED", description: "Document type not recognized", count: 23, percentage: 4.8 }
 ];
 
 const getRetryBadge = (canRetry: boolean) => {
