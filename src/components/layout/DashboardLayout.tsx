@@ -1,6 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
+import { EnvironmentBanner } from "./EnvironmentBanner";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <AppSidebar />
         <div className="flex-1 flex flex-col">
           <TopBar />
+          <EnvironmentBanner />
           <main className="flex-1 p-8">
             {children}
           </main>

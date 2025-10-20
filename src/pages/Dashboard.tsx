@@ -61,7 +61,14 @@ export default function Dashboard() {
     { name: "Webhook Delivery", status: "Operational", variant: "accent" as const }
   ];
   return (
-    <div className="min-h-screen bg-background">
+    <div 
+      className="min-h-screen bg-background"
+      style={{
+        backgroundColor: currentEnvironment === 'sandbox' 
+          ? 'hsl(var(--env-sandbox-bg) / 0.3)' 
+          : 'hsl(var(--background))'
+      }}
+    >
       {/* Hero Section */}
       <div className="relative h-32 bg-gradient-to-r from-primary via-secondary-vibrant to-primary-light overflow-hidden rounded-lg mb-8">
         <div 
@@ -77,8 +84,14 @@ export default function Dashboard() {
               Monitor verification activity, manage configurations, and track performance metrics
             </p>
           </div>
-          <Badge variant="outline" className="bg-white/10 text-white border-white/20">
-            {currentEnvironment === 'sandbox' ? 'Sandbox Environment' : 'Production Environment'}
+          <Badge 
+            className={
+              currentEnvironment === 'sandbox'
+                ? "bg-[hsl(var(--env-sandbox-primary))] text-white font-semibold px-4 py-1 text-sm"
+                : "bg-[hsl(var(--env-production-primary))] text-white font-semibold px-4 py-1 text-sm"
+            }
+          >
+            {currentEnvironment === 'sandbox' ? '🧪 SANDBOX' : '✓ LIVE'}
           </Badge>
         </div>
       </div>

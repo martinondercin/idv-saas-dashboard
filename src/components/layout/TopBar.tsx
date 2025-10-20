@@ -106,20 +106,27 @@ export function TopBar() {
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-muted-foreground" />
           <Select value={environment} onValueChange={handleEnvironmentChange}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger 
+              className={
+                environment === 'sandbox'
+                  ? "w-36 border-2 border-[hsl(var(--env-sandbox-primary))] bg-[hsl(var(--env-sandbox-light))]"
+                  : "w-36 border-2 border-[hsl(var(--env-production-primary))] bg-[hsl(var(--env-production-light))]"
+              }
+              aria-label={`Current environment: ${environment === 'production' ? 'Production' : 'Sandbox'}`}
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-background border border-border shadow-lg z-50">
               <SelectItem value="production">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-accent" />
-                  Production
+                  <div className="w-2 h-2 rounded-full bg-[hsl(var(--env-production-primary))]" />
+                  <span>Production</span>
                 </div>
               </SelectItem>
               <SelectItem value="sandbox">
                 <div className="flex items-center gap-2">
-                  <TestTube className="w-3 h-3" />
-                  Sandbox
+                  <div className="w-2 h-2 rounded-full bg-[hsl(var(--env-sandbox-primary))]" />
+                  <span>Sandbox</span>
                 </div>
               </SelectItem>
             </SelectContent>

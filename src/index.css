@@ -99,6 +99,17 @@
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Environment Colors */
+    --env-sandbox-primary: 38 92% 50%;  /* #F59E0B amber-500 */
+    --env-sandbox-light: 48 96% 89%;    /* #FEF3C7 amber-50 */
+    --env-sandbox-dark: 37 91% 27%;     /* #92400E amber-900 */
+    --env-sandbox-bg: 48 100% 96%;      /* #FFFBEB amber-50 lighter */
+    
+    --env-production-primary: 158 64% 52%;  /* #10B981 emerald-500 */
+    --env-production-light: 152 76% 90%;    /* #D1FAE5 emerald-50 */
+    --env-production-dark: 160 84% 20%;     /* #065F46 emerald-900 */
+    --env-production-bg: 152 100% 96%;      /* emerald-50 lighter */
   }
 
   .dark {

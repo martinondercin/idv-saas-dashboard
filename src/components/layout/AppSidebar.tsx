@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Settings,
@@ -103,6 +103,21 @@ export function AppSidebar() {
   const location = useLocation();
   const isCollapsed = state === "collapsed";
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [currentEnvironment, setCurrentEnvironment] = useState(() => {
+    return localStorage.getItem('environment') || 'production';
+  });
+
+  useEffect(() => {
+    const handleEnvironmentChange = (event: CustomEvent) => {
+      setCurrentEnvironment(event.detail);
+    };
+
+    window.addEventListener('environmentChanged', handleEnvironmentChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('environmentChanged', handleEnvironmentChange as EventListener);
+    };
+  }, []);
   
   const isActiveRoute = (url: string) => {
     return location.pathname === url || location.pathname.startsWith(url + "/");
@@ -120,7 +135,14 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={cn("border-r border-sidebar-border bg-sidebar")}>
+    <Sidebar 
+      className={cn(
+        "border-r border-sidebar-border bg-sidebar",
+        currentEnvironment === 'sandbox' 
+          ? "border-l-[3px] border-l-[hsl(var(--env-sandbox-primary))]" 
+          : ""
+      )}
+    >
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center justify-between">
           <NavLink 
