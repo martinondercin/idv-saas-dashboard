@@ -71,31 +71,13 @@ const environments = [
     tls: true
   },
   {
-    name: "Staging", 
-    baseUrl: "https://staging-api.verifyid.com",
-    status: "Online",
-    version: "v1.3.0-beta",
-    uptime: "99.5%", 
-    region: "US West",
-    tls: true
-  },
-  {
-    name: "Development",
-    baseUrl: "https://dev-api.verifyid.com", 
-    status: "Online",
-    version: "v1.4.0-alpha",
-    uptime: "95.2%",
-    region: "EU Central",
-    tls: true
-  },
-  {
     name: "Sandbox",
     baseUrl: "https://sandbox-api.verifyid.com",
-    status: "Offline", 
+    status: "Online", 
     version: "v1.1.0",
-    uptime: "0%",
-    region: "Local",
-    tls: false
+    uptime: "99.8%",
+    region: "US West",
+    tls: true
   }
 ];
 
@@ -325,8 +307,8 @@ export default function EndpointsPage() {
             <Globe className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">Across 4 environments</p>
+            <div className="text-2xl font-bold">8</div>
+            <p className="text-xs text-muted-foreground">Across 2 environments</p>
           </CardContent>
         </Card>
         <Card>
