@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Search, Bell, ChevronDown, Globe, TestTube, Languages, User, Shield, Key, LogOut } from "lucide-react";
+import { Search, Bell, ChevronDown, Globe, Languages, User, Shield, Key, LogOut } from "lucide-react";
+import { EnvironmentSwitchModal } from "./EnvironmentSwitchModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,18 +29,29 @@ export function TopBar() {
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem('language') || 'en';
   });
+  const [pendingEnvironment, setPendingEnvironment] = useState<string | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { toast } = useToast();
 
-  const handleEnvironmentChange = (newEnv: string) => {
-    setEnvironment(newEnv);
-    toast({
-      title: "Environment Changed",
-      description: `Switched to ${newEnv === 'production' ? 'Production' : 'Sandbox'} environment`,
-    });
-    // Store in localStorage to persist the choice
-    localStorage.setItem('environment', newEnv);
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('environmentChanged', { detail: newEnv }));
+  const handleEnvironmentChangeRequest = (newEnv: string) => {
+    // Show confirmation modal
+    setPendingEnvironment(newEnv);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmEnvironmentChange = () => {
+    if (pendingEnvironment) {
+      setEnvironment(pendingEnvironment);
+      toast({
+        title: "Environment Changed",
+        description: `Switched to ${pendingEnvironment === 'production' ? 'Production' : 'Sandbox'} environment`,
+      });
+      // Store in localStorage to persist the choice
+      localStorage.setItem('environment', pendingEnvironment);
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('environmentChanged', { detail: pendingEnvironment }));
+      setPendingEnvironment(null);
+    }
   };
 
   const handleLanguageChange = (newLang: string) => {
@@ -105,7 +117,7 @@ export function TopBar() {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-muted-foreground" />
-          <Select value={environment} onValueChange={handleEnvironmentChange}>
+          <Select value={environment} onValueChange={handleEnvironmentChangeRequest}>
             <SelectTrigger 
               className={
                 environment === 'sandbox'
@@ -246,6 +258,14 @@ export function TopBar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Environment Switch Confirmation Modal */}
+      <EnvironmentSwitchModal
+        open={showConfirmModal}
+        onOpenChange={setShowConfirmModal}
+        targetEnvironment={pendingEnvironment as 'production' | 'sandbox'}
+        onConfirm={handleConfirmEnvironmentChange}
+      />
     </header>
   );
 }
