@@ -23,7 +23,7 @@ const environments = [
     responseTime: "150ms"
   },
   {
-    name: "Staging", 
+    name: "Sandbox",
     status: "Active",
     region: "us-west-2",
     instances: 3,
@@ -33,30 +33,6 @@ const environments = [
     requests: "8.3K/hour", 
     errorRate: "0.3%",
     responseTime: "180ms"
-  },
-  {
-    name: "Development",
-    status: "Active", 
-    region: "eu-central-1",
-    instances: 2,
-    load: 12,
-    memory: 18,
-    cpu: 8,
-    requests: "1.2K/hour",
-    errorRate: "1.2%", 
-    responseTime: "250ms"
-  },
-  {
-    name: "Testing",
-    status: "Maintenance",
-    region: "ap-southeast-1", 
-    instances: 1,
-    load: 5,
-    memory: 15,
-    cpu: 3,
-    requests: "0.3K/hour",
-    errorRate: "0%",
-    responseTime: "300ms"
   }
 ];
 
@@ -124,8 +100,8 @@ export default function EnvironmentsPage() {
             <Server className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">1 in maintenance</p>
+            <div className="text-2xl font-bold">2</div>
+            <p className="text-xs text-muted-foreground">Production & Sandbox</p>
           </CardContent>
         </Card>
         <Card>
@@ -134,8 +110,8 @@ export default function EnvironmentsPage() {
             <Globe className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">14</div>
-            <p className="text-xs text-muted-foreground">Across 4 regions</p>
+            <div className="text-2xl font-bold">11</div>
+            <p className="text-xs text-muted-foreground">Across 2 regions</p>
           </CardContent>
         </Card>
         <Card>
@@ -328,8 +304,7 @@ export default function EnvironmentsPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="production">Production</SelectItem>
-                        <SelectItem value="staging">Staging</SelectItem>
-                        <SelectItem value="development">Development</SelectItem>
+                        <SelectItem value="sandbox">Sandbox</SelectItem>
                         <SelectItem value="all">All Environments</SelectItem>
                       </SelectContent>
                     </Select>
@@ -344,7 +319,7 @@ export default function EnvironmentsPage() {
                   <div className="flex items-center justify-between p-3 bg-muted rounded">
                     <div>
                       <p className="font-mono text-sm">DATABASE_URL</p>
-                      <p className="text-xs text-muted-foreground">Production, Staging</p>
+                      <p className="text-xs text-muted-foreground">Production, Sandbox</p>
                     </div>
                     <Button variant="ghost" size="sm">Edit</Button>
                   </div>
@@ -358,7 +333,7 @@ export default function EnvironmentsPage() {
                   <div className="flex items-center justify-between p-3 bg-muted rounded">
                     <div>
                       <p className="font-mono text-sm">LOG_LEVEL</p>
-                      <p className="text-xs text-muted-foreground">Development</p>
+                      <p className="text-xs text-muted-foreground">Sandbox</p>
                     </div>
                     <Button variant="ghost" size="sm">Edit</Button>
                   </div>
