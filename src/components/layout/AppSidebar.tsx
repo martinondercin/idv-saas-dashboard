@@ -244,10 +244,9 @@ export function AppSidebar() {
                     </AccordionContent>
                   </AccordionItem>
                 ))}
-                <div className="my-2 border-t border-sidebar-border" />
               </>
             )}
-            {navigationItems.map((section) => (
+            {!isAdmin && navigationItems.map((section) => (
               <AccordionItem key={section.title} value={section.title} className="border-none">
                 <AccordionTrigger className="py-2 px-3 hover:no-underline hover:bg-sidebar-accent/50 rounded-md [&[data-state=open]>div>svg]:rotate-180">
                   <div className="flex items-center gap-3 flex-1 text-left">
@@ -304,7 +303,9 @@ export function AppSidebar() {
                 Click to expand
               </p>
             </div>
-            {isAdmin && adminNavigationItems.map((section) => (
+            {isAdmin ? (
+              <>
+                {adminNavigationItems.map((section) => (
               <SidebarGroup key={section.title}>
                 <SidebarGroupContent>
                   <SidebarMenu>
@@ -330,8 +331,11 @@ export function AppSidebar() {
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
-            ))}
-            {navigationItems.map((section) => (
+                ))}
+              </>
+            ) : (
+              <>
+                {navigationItems.map((section) => (
               <SidebarGroup key={section.title}>
                 <SidebarGroupContent>
                   <SidebarMenu>
@@ -357,7 +361,9 @@ export function AppSidebar() {
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
-            ))}
+                ))}
+              </>
+            )}
           </div>
         )}
       </SidebarContent>
