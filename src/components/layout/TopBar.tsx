@@ -180,6 +180,9 @@ export function TopBar() {
 
       {/* Right section - Notifications and Profile */}
       <div className="flex items-center gap-4">
+        {/* Role Switcher */}
+        <RoleSwitcher />
+        
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
