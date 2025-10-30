@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search, Bell, ChevronDown, Globe, Languages, User, Shield, Key, LogOut } from "lucide-react";
 import { EnvironmentSwitchModal } from "./EnvironmentSwitchModal";
+import { RoleSwitcher } from "./RoleSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

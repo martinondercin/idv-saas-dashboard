@@ -11,6 +11,8 @@ import {
   Shield,
   ChevronLeft,
   ChevronRight,
+  Building2,
+  LayoutDashboard,
 } from "lucide-react";
 import {
   Sidebar,
@@ -28,6 +30,23 @@ import {
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+// Mock role check - in production this should check server-side authentication
+const isInnovatricsAdmin = () => {
+  return localStorage.getItem('userRole') === 'innovatrics_admin';
+};
+
+const adminNavigationItems = [
+  {
+    title: "Global Admin",
+    url: "/admin",
+    icon: LayoutDashboard,
+    items: [
+      { title: "Overview", url: "/admin/overview" },
+      { title: "Tenant Management", url: "/admin/tenants" },
+    ],
+  },
+];
 
 const navigationItems = [
   {
@@ -106,6 +125,7 @@ export function AppSidebar() {
   const [currentEnvironment, setCurrentEnvironment] = useState(() => {
     return localStorage.getItem('environment') || 'production';
   });
+  const isAdmin = isInnovatricsAdmin();
 
   useEffect(() => {
     const handleEnvironmentChange = (event: CustomEvent) => {
@@ -129,7 +149,8 @@ export function AppSidebar() {
 
   // Auto-expand section if it contains the active route
   const getDefaultExpandedSections = () => {
-    return navigationItems
+    const allItems = isAdmin ? [...adminNavigationItems, ...navigationItems] : navigationItems;
+    return allItems
       .filter(section => isActiveRoute(section.url) || hasActiveChild(section.items || []))
       .map(section => section.title);
   };
@@ -185,6 +206,47 @@ export function AppSidebar() {
             defaultValue={getDefaultExpandedSections()}
             className="w-full"
           >
+            {isAdmin && (
+              <>
+                {adminNavigationItems.map((section) => (
+                  <AccordionItem key={section.title} value={section.title} className="border-none">
+                    <AccordionTrigger className="py-2 px-3 hover:no-underline hover:bg-sidebar-accent/50 rounded-md [&[data-state=open]>div>svg]:rotate-180">
+                      <div className="flex items-center gap-3 flex-1 text-left">
+                        <section.icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="text-sm font-medium">{section.title}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-1">
+                      <SidebarMenu>
+                        {section.items && (
+                          <>
+                            {section.items.map((item) => (
+                              <SidebarMenuItem key={item.url}>
+                                <SidebarMenuButton
+                                  asChild
+                                  size="sm"
+                                  className={cn(
+                                    "w-full justify-start transition-colors ml-7",
+                                    isActiveRoute(item.url)
+                                      ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
+                                      : "text-sidebar-foreground/80 hover:bg-sidebar-accent/30"
+                                  )}
+                                >
+                                  <NavLink to={item.url} className="text-sm">
+                                    {item.title}
+                                  </NavLink>
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                            ))}
+                          </>
+                        )}
+                      </SidebarMenu>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+                <div className="my-2 border-t border-sidebar-border" />
+              </>
+            )}
             {navigationItems.map((section) => (
               <AccordionItem key={section.title} value={section.title} className="border-none">
                 <AccordionTrigger className="py-2 px-3 hover:no-underline hover:bg-sidebar-accent/50 rounded-md [&[data-state=open]>div>svg]:rotate-180">
@@ -242,6 +304,33 @@ export function AppSidebar() {
                 Click to expand
               </p>
             </div>
+            {isAdmin && adminNavigationItems.map((section) => (
+              <SidebarGroup key={section.title}>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton 
+                        asChild
+                        className={cn(
+                          "w-full justify-center transition-colors h-10",
+                          isActiveRoute(section.url) || hasActiveChild(section.items || [])
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+                        )}
+                      >
+                        <NavLink 
+                          to={section.url} 
+                          className="flex items-center justify-center"
+                          title={section.title}
+                        >
+                          <section.icon className="h-4 w-4" />
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            ))}
             {navigationItems.map((section) => (
               <SidebarGroup key={section.title}>
                 <SidebarGroupContent>

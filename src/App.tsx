@@ -29,6 +29,9 @@ import UsersAccess from "./pages/users/UsersAccess";
 import BillingDashboard from "./pages/billing/BillingDashboard";
 import NoCodeVerification from "./pages/integration/NoCodeVerification";
 import VerificationStart from "./pages/VerificationStart";
+import AdminOverview from "./pages/admin/AdminOverview";
+import TenantsPage from "./pages/admin/TenantsPage";
+import TenantDetailsPage from "./pages/admin/TenantDetailsPage";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +94,13 @@ const App = () => (
           <Route path="/billing/usage" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
           <Route path="/billing/payment-methods" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
           <Route path="/billing/invoices" element={<DashboardLayout><BillingDashboard /></DashboardLayout>} />
+
+          {/* Global Admin Routes */}
+          <Route path="/admin" element={<DashboardLayout><AdminOverview /></DashboardLayout>} />
+          <Route path="/admin/overview" element={<DashboardLayout><AdminOverview /></DashboardLayout>} />
+          <Route path="/admin/tenants" element={<DashboardLayout><TenantsPage /></DashboardLayout>} />
+          <Route path="/admin/tenants/:tenantId" element={<DashboardLayout><TenantDetailsPage /></DashboardLayout>} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
